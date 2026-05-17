@@ -1,0 +1,9 @@
+version: '3.8'
+services:
+  selenium:
+    image: selenium/standalone-chrome:latest
+    container_name: selenium-standalone
+    ports:
+      - "4444:4444"
+    shm_size: '2g'
+    restart: unless-stopped

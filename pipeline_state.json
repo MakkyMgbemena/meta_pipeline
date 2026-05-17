@@ -1,0 +1,2966 @@
+[
+    {
+        "client_id": "client_enterprise_777"
+    },
+    {
+        "client_id": "client_enterprise_777",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "ok"
+    },
+    {
+        "client_id": "client_enterprise_777",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "failed",
+        "timestamp": "2026-05-12T02:22:08.240423",
+        "errors": [
+            "Missing required field: timestamp"
+        ],
+        "warnings": []
+    },
+    {
+        "client_id": "client_enterprise_777",
+        "timestamp": "2026-05-12T13:52:52.921913"
+    },
+    {
+        "client_id": "client_enterprise_777",
+        "timestamp": "2026-05-12T13:52:52.921913",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "ok"
+    },
+    {
+        "client_id": "client_enterprise_777",
+        "timestamp": "2026-05-12T13:52:52.960208",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "verified",
+        "errors": [],
+        "warnings": []
+    },
+    {
+        "client_id": "client_enterprise_777",
+        "timestamp": "2026-05-12T14:30:20.780563"
+    },
+    {
+        "client_id": "client_enterprise_777",
+        "timestamp": "2026-05-12T14:30:20.780563",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "ok"
+    },
+    {
+        "client_id": "client_enterprise_777",
+        "timestamp": "2026-05-12T14:30:20.806106",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "verified",
+        "errors": [],
+        "warnings": []
+    },
+    {
+        "client_id": "client_enterprise_777",
+        "timestamp": "2026-05-12T14:43:13.714272"
+    },
+    {
+        "client_id": "client_enterprise_777",
+        "timestamp": "2026-05-12T14:43:13.714272",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "ok"
+    },
+    {
+        "client_id": "client_enterprise_777",
+        "timestamp": "2026-05-12T14:43:13.766620",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "verified",
+        "errors": [],
+        "warnings": []
+    },
+    {
+        "client_id": "client_enterprise_777",
+        "timestamp": "2026-05-12T14:48:22.713547"
+    },
+    {
+        "client_id": "client_enterprise_777",
+        "timestamp": "2026-05-12T14:48:22.713547",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "ok"
+    },
+    {
+        "client_id": "client_enterprise_777",
+        "timestamp": "2026-05-12T14:48:22.738499",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "verified",
+        "errors": [],
+        "warnings": []
+    },
+    {
+        "client_id": "client_enterprise_777",
+        "timestamp": "2026-05-12T15:20:50.086018"
+    },
+    {
+        "client_id": "client_enterprise_777",
+        "timestamp": "2026-05-12T15:20:50.086018",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "ok"
+    },
+    {
+        "client_id": "client_enterprise_777",
+        "timestamp": "2026-05-12T15:20:50.120756",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "verified",
+        "errors": [],
+        "warnings": []
+    },
+    {
+        "client_id": "client_enterprise_777",
+        "timestamp": "2026-05-12T15:27:27.581355"
+    },
+    {
+        "client_id": "client_enterprise_777",
+        "timestamp": "2026-05-12T15:27:27.595851",
+        "status": "verified",
+        "errors": [],
+        "warnings": []
+    },
+    {
+        "client_id": "client_enterprise_777",
+        "timestamp": "2026-05-12T15:33:45.074451"
+    },
+    {
+        "client_id": "client_enterprise_777",
+        "timestamp": "2026-05-12T15:33:45.090429",
+        "status": "verified",
+        "errors": [],
+        "warnings": []
+    },
+    {
+        "client_id": "client_new_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "stage": "converted",
+        "notes": "First successful conversion from LinkedIn outreach.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T15:40:05.497901",
+            "client_id": "client_new_deal_001",
+            "funnel_stage": "converted",
+            "platform": "direct",
+            "notes": "First successful conversion from LinkedIn outreach."
+        }
+    },
+    {
+        "client_id": "client_new_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "stage": "converted",
+        "notes": "First successful conversion from LinkedIn outreach.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T15:40:05.497901",
+            "client_id": "client_new_deal_001",
+            "funnel_stage": "converted",
+            "platform": "direct",
+            "notes": "First successful conversion from LinkedIn outreach."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T15:40:05.508375",
+            "client_id": "client_new_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        }
+    },
+    {
+        "client_id": "client_new_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "stage": "converted",
+        "notes": "First successful conversion from LinkedIn outreach.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T15:40:05.497901",
+            "client_id": "client_new_deal_001",
+            "funnel_stage": "converted",
+            "platform": "direct",
+            "notes": "First successful conversion from LinkedIn outreach."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T15:40:05.508375",
+            "client_id": "client_new_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        },
+        "registry_entry": {
+            "client_id": "client_new_deal_001",
+            "last_activity": "2026-05-12T15:40:05.530890",
+            "status": "success",
+            "metadata": {}
+        }
+    },
+    {
+        "client_id": "client_new_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "stage": "converted",
+        "notes": "First successful conversion from LinkedIn outreach.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T15:49:17.558107",
+            "client_id": "client_new_deal_001",
+            "funnel_stage": "converted",
+            "platform": "direct",
+            "notes": "First successful conversion from LinkedIn outreach."
+        }
+    },
+    {
+        "client_id": "client_new_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "stage": "converted",
+        "notes": "First successful conversion from LinkedIn outreach.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T15:49:17.558107",
+            "client_id": "client_new_deal_001",
+            "funnel_stage": "converted",
+            "platform": "direct",
+            "notes": "First successful conversion from LinkedIn outreach."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T15:49:17.594695",
+            "client_id": "client_new_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        }
+    },
+    {
+        "client_id": "client_new_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "stage": "converted",
+        "notes": "First successful conversion from LinkedIn outreach.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T15:49:17.558107",
+            "client_id": "client_new_deal_001",
+            "funnel_stage": "converted",
+            "platform": "direct",
+            "notes": "First successful conversion from LinkedIn outreach."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T15:49:17.594695",
+            "client_id": "client_new_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        },
+        "registry_entry": {
+            "client_id": "client_new_deal_001",
+            "last_activity": "2026-05-12T15:49:17.637748",
+            "status": "success",
+            "metadata": {}
+        }
+    },
+    {
+        "client_id": "client_new_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "stage": "converted",
+        "notes": "First successful conversion from LinkedIn outreach.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T15:54:34.323765",
+            "client_id": "client_new_deal_001",
+            "funnel_stage": "converted",
+            "platform": "direct",
+            "notes": "First successful conversion from LinkedIn outreach."
+        }
+    },
+    {
+        "client_id": "client_new_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "stage": "converted",
+        "notes": "First successful conversion from LinkedIn outreach.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T15:54:34.323765",
+            "client_id": "client_new_deal_001",
+            "funnel_stage": "converted",
+            "platform": "direct",
+            "notes": "First successful conversion from LinkedIn outreach."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T15:54:34.353240",
+            "client_id": "client_new_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        }
+    },
+    {
+        "client_id": "client_new_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "stage": "converted",
+        "notes": "First successful conversion from LinkedIn outreach.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T15:54:34.323765",
+            "client_id": "client_new_deal_001",
+            "funnel_stage": "converted",
+            "platform": "direct",
+            "notes": "First successful conversion from LinkedIn outreach."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T15:54:34.353240",
+            "client_id": "client_new_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        },
+        "registry_entry": {
+            "client_id": "client_new_deal_001",
+            "last_activity": "2026-05-12T15:54:34.389200",
+            "status": "success",
+            "metadata": {}
+        }
+    },
+    {
+        "client_id": "client_new_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "stage": "converted",
+        "notes": "First successful conversion from LinkedIn outreach.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T15:58:31.821489",
+            "client_id": "client_new_deal_001",
+            "funnel_stage": "converted",
+            "platform": "direct",
+            "notes": "First successful conversion from LinkedIn outreach."
+        }
+    },
+    {
+        "client_id": "client_new_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "stage": "converted",
+        "notes": "First successful conversion from LinkedIn outreach.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T15:58:31.821489",
+            "client_id": "client_new_deal_001",
+            "funnel_stage": "converted",
+            "platform": "direct",
+            "notes": "First successful conversion from LinkedIn outreach."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T15:58:31.866267",
+            "client_id": "client_new_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        }
+    },
+    {
+        "client_id": "client_new_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "stage": "converted",
+        "notes": "First successful conversion from LinkedIn outreach.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T15:58:31.821489",
+            "client_id": "client_new_deal_001",
+            "funnel_stage": "converted",
+            "platform": "direct",
+            "notes": "First successful conversion from LinkedIn outreach."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T15:58:31.866267",
+            "client_id": "client_new_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        },
+        "registry_entry": {
+            "client_id": "client_new_deal_001",
+            "last_activity": "2026-05-12T15:58:31.898458",
+            "status": "success",
+            "metadata": {}
+        }
+    },
+    {
+        "client_id": "client_new_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "stage": "converted",
+        "notes": "First successful conversion from LinkedIn outreach.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T15:58:55.235756",
+            "client_id": "client_new_deal_001",
+            "funnel_stage": "converted",
+            "platform": "direct",
+            "notes": "First successful conversion from LinkedIn outreach."
+        }
+    },
+    {
+        "client_id": "client_new_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "stage": "converted",
+        "notes": "First successful conversion from LinkedIn outreach.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T15:58:55.235756",
+            "client_id": "client_new_deal_001",
+            "funnel_stage": "converted",
+            "platform": "direct",
+            "notes": "First successful conversion from LinkedIn outreach."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T15:58:55.259853",
+            "client_id": "client_new_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        }
+    },
+    {
+        "client_id": "client_new_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "stage": "converted",
+        "notes": "First successful conversion from LinkedIn outreach.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T15:58:55.235756",
+            "client_id": "client_new_deal_001",
+            "funnel_stage": "converted",
+            "platform": "direct",
+            "notes": "First successful conversion from LinkedIn outreach."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T15:58:55.259853",
+            "client_id": "client_new_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        },
+        "registry_entry": {
+            "client_id": "client_new_deal_001",
+            "last_activity": "2026-05-12T15:58:55.290951",
+            "status": "success",
+            "metadata": {}
+        }
+    },
+    {
+        "client_id": "client_new_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "stage": "converted",
+        "notes": "First successful conversion from LinkedIn outreach.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T16:03:09.992456",
+            "client_id": "client_new_deal_001",
+            "funnel_stage": "converted",
+            "platform": "direct",
+            "notes": "First successful conversion from LinkedIn outreach."
+        }
+    },
+    {
+        "client_id": "client_new_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "stage": "converted",
+        "notes": "First successful conversion from LinkedIn outreach.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T16:03:09.992456",
+            "client_id": "client_new_deal_001",
+            "funnel_stage": "converted",
+            "platform": "direct",
+            "notes": "First successful conversion from LinkedIn outreach."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T16:03:10.009149",
+            "client_id": "client_new_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        }
+    },
+    {
+        "client_id": "client_new_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "stage": "converted",
+        "notes": "First successful conversion from LinkedIn outreach.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T16:03:09.992456",
+            "client_id": "client_new_deal_001",
+            "funnel_stage": "converted",
+            "platform": "direct",
+            "notes": "First successful conversion from LinkedIn outreach."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T16:03:10.009149",
+            "client_id": "client_new_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        },
+        "registry_entry": {
+            "client_id": "client_new_deal_001",
+            "last_activity": "2026-05-12T16:03:10.029899",
+            "status": "success",
+            "metadata": {}
+        }
+    },
+    {
+        "client_id": "client_new_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "stage": "converted",
+        "notes": "First successful conversion from LinkedIn outreach.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T16:05:02.048986",
+            "client_id": "client_new_deal_001",
+            "funnel_stage": "converted",
+            "platform": "direct",
+            "notes": "First successful conversion from LinkedIn outreach."
+        }
+    },
+    {
+        "client_id": "client_new_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "stage": "converted",
+        "notes": "First successful conversion from LinkedIn outreach.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T16:05:02.048986",
+            "client_id": "client_new_deal_001",
+            "funnel_stage": "converted",
+            "platform": "direct",
+            "notes": "First successful conversion from LinkedIn outreach."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T16:05:02.072956",
+            "client_id": "client_new_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        }
+    },
+    {
+        "client_id": "client_new_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "stage": "converted",
+        "notes": "First successful conversion from LinkedIn outreach.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T16:05:02.048986",
+            "client_id": "client_new_deal_001",
+            "funnel_stage": "converted",
+            "platform": "direct",
+            "notes": "First successful conversion from LinkedIn outreach."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T16:05:02.072956",
+            "client_id": "client_new_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        },
+        "registry_entry": {
+            "client_id": "client_new_deal_001",
+            "last_activity": "2026-05-12T16:05:02.106165",
+            "status": "success",
+            "metadata": {}
+        }
+    },
+    {
+        "client_id": "client_new_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "stage": "converted",
+        "notes": "First successful conversion from LinkedIn outreach.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T16:06:03.782625",
+            "client_id": "client_new_deal_001",
+            "funnel_stage": "converted",
+            "platform": "direct",
+            "notes": "First successful conversion from LinkedIn outreach."
+        }
+    },
+    {
+        "client_id": "client_new_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "stage": "converted",
+        "notes": "First successful conversion from LinkedIn outreach.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T16:06:03.782625",
+            "client_id": "client_new_deal_001",
+            "funnel_stage": "converted",
+            "platform": "direct",
+            "notes": "First successful conversion from LinkedIn outreach."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T16:06:03.812639",
+            "client_id": "client_new_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        }
+    },
+    {
+        "client_id": "client_new_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "stage": "converted",
+        "notes": "First successful conversion from LinkedIn outreach.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T16:06:03.782625",
+            "client_id": "client_new_deal_001",
+            "funnel_stage": "converted",
+            "platform": "direct",
+            "notes": "First successful conversion from LinkedIn outreach."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T16:06:03.812639",
+            "client_id": "client_new_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        },
+        "registry_entry": {
+            "client_id": "client_new_deal_001",
+            "last_activity": "2026-05-12T16:06:03.850553",
+            "status": "success",
+            "metadata": {}
+        }
+    },
+    {
+        "client_id": "GTA_Expansion_2026",
+        "operation_mode": "linkedin_outreach",
+        "target_region": "Toronto, Canada",
+        "niche": "SMB Operations",
+        "status": "success",
+        "engagement_plan": {
+            "platform": "LinkedIn",
+            "target_clusters": [
+                "#OperationsManagement",
+                "#Scalability",
+                "#FractionalCOO",
+                "#BusinessOperations"
+            ],
+            "boolean_search": "(\"COO\" OR \"VP Operations\") AND (\"SMB\" OR \"Agency\")",
+            "outbound_hook": "Building a bridge between business goals and affordable AI systems."
+        }
+    },
+    {
+        "client_id": "GTA_Expansion_2026",
+        "operation_mode": "linkedin_outreach",
+        "notes": "Marketing campaign for Toronto SMBs",
+        "status": "success",
+        "engagement_plan": {
+            "platform": "LinkedIn",
+            "target_clusters": [
+                "#OperationsManagement",
+                "#Scalability",
+                "#FractionalCOO",
+                "#BusinessOperations"
+            ],
+            "boolean_search": "(\"COO\" OR \"VP Operations\") AND (\"SMB\" OR \"Agency\")",
+            "outbound_hook": "Building a bridge between business goals and affordable AI systems."
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Automated onboarding for first Fiverr customer",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T16:18:01.050767",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Automated onboarding for first Fiverr customer"
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Automated onboarding for first Fiverr customer",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T16:18:01.050767",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Automated onboarding for first Fiverr customer"
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T16:18:01.087661",
+            "client_id": "client_fiverr_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Automated onboarding for first Fiverr customer",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T16:18:01.050767",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Automated onboarding for first Fiverr customer"
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T16:18:01.087661",
+            "client_id": "client_fiverr_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        },
+        "registry_entry": {
+            "client_id": "client_fiverr_deal_001",
+            "last_activity": "2026-05-12T16:18:01.147779",
+            "status": "success",
+            "metadata": {}
+        }
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "val": "messy"
+            },
+            {
+                "id": 1,
+                "val": "messy"
+            }
+        ]
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "val": "messy"
+            },
+            {
+                "id": 1,
+                "val": "messy"
+            }
+        ],
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "ok"
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "val": "messy"
+            },
+            {
+                "id": 1,
+                "val": "messy"
+            }
+        ],
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "failed",
+        "timestamp": "2026-05-12T16:18:01.219571",
+        "errors": [
+            "Missing required field: timestamp"
+        ],
+        "warnings": []
+    },
+    {
+        "client_id": "GTA_Expansion_2026",
+        "operation_mode": "linkedin_outreach",
+        "target_region": "Toronto, Canada",
+        "notes": "Triggering GTA-specific Boolean search and hashtag clusters.",
+        "status": "success",
+        "engagement_plan": {
+            "platform": "LinkedIn",
+            "target_clusters": [
+                "#OperationsManagement",
+                "#Scalability",
+                "#FractionalCOO",
+                "#BusinessOperations"
+            ],
+            "boolean_search": "(\"COO\" OR \"VP Operations\") AND (\"SMB\" OR \"Agency\")",
+            "outbound_hook": "Building a bridge between business goals and affordable AI systems."
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T16:36:14.941721",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T16:36:14.941721",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T16:36:14.957724",
+            "client_id": "client_fiverr_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T16:36:14.941721",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T16:36:14.957724",
+            "client_id": "client_fiverr_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        },
+        "registry_entry": {
+            "client_id": "client_fiverr_deal_001",
+            "last_activity": "2026-05-12T16:36:14.974904",
+            "status": "success",
+            "metadata": {}
+        }
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent."
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent.",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "ok"
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent.",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "failed",
+        "timestamp": "2026-05-12T16:36:15.015328",
+        "errors": [
+            "Missing required field: timestamp"
+        ],
+        "warnings": []
+    },
+    {
+        "client_id": "high_ticket_bid_001",
+        "operation_mode": "upwork_proposal",
+        "notes": "Generating high-ticket strategic bid for Upwork.",
+        "status": "success",
+        "strategy": {
+            "platform": "Upwork",
+            "focus": "Enterprise Data Auditing & Compliance",
+            "hourly_rate_target": "75 - 150 CAD",
+            "proposal_hook": "Providing <1% error rate data pipelines for growth-stage agencies."
+        }
+    },
+    {
+        "client_id": "GTA_Expansion_2026",
+        "operation_mode": "linkedin_outreach",
+        "target_region": "Toronto, Canada",
+        "notes": "Triggering GTA-specific Boolean search and hashtag clusters.",
+        "status": "success",
+        "engagement_plan": {
+            "platform": "LinkedIn",
+            "target_clusters": [
+                "#OperationsManagement",
+                "#Scalability",
+                "#FractionalCOO",
+                "#BusinessOperations"
+            ],
+            "boolean_search": "(\"COO\" OR \"VP Operations\") AND (\"SMB\" OR \"Agency\")",
+            "outbound_hook": "Building a bridge between business goals and affordable AI systems."
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T21:01:22.927830",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T21:01:22.927830",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T21:01:22.947308",
+            "client_id": "client_fiverr_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T21:01:22.927830",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T21:01:22.947308",
+            "client_id": "client_fiverr_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        },
+        "registry_entry": {
+            "client_id": "client_fiverr_deal_001",
+            "last_activity": "2026-05-12T21:01:22.963836",
+            "status": "success",
+            "metadata": {}
+        }
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent."
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent.",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "ok"
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent.",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "failed",
+        "timestamp": "2026-05-12T21:01:23.002490",
+        "errors": [
+            "Missing required field: timestamp"
+        ],
+        "warnings": []
+    },
+    {
+        "client_id": "high_ticket_bid_001",
+        "operation_mode": "upwork_proposal",
+        "notes": "Generating high-ticket strategic bid for Upwork.",
+        "status": "success",
+        "strategy": {
+            "platform": "Upwork",
+            "focus": "Enterprise Data Auditing & Compliance",
+            "hourly_rate_target": "75 - 150 CAD",
+            "proposal_hook": "Providing <1% error rate data pipelines for growth-stage agencies."
+        }
+    },
+    {
+        "client_id": "GTA_Expansion_2026",
+        "operation_mode": "linkedin_outreach",
+        "target_region": "Toronto, Canada",
+        "notes": "Triggering GTA-specific Boolean search and hashtag clusters.",
+        "status": "success",
+        "engagement_plan": {
+            "platform": "LinkedIn",
+            "target_clusters": [
+                "#OperationsManagement",
+                "#Scalability",
+                "#FractionalCOO",
+                "#BusinessOperations"
+            ],
+            "boolean_search": "(\"COO\" OR \"VP Operations\") AND (\"SMB\" OR \"Agency\")",
+            "outbound_hook": "Building a bridge between business goals and affordable AI systems."
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T21:01:45.227749",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T21:01:45.227749",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T21:01:45.252398",
+            "client_id": "client_fiverr_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T21:01:45.227749",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T21:01:45.252398",
+            "client_id": "client_fiverr_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        },
+        "registry_entry": {
+            "client_id": "client_fiverr_deal_001",
+            "last_activity": "2026-05-12T21:01:45.267710",
+            "status": "success",
+            "metadata": {}
+        }
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent."
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent.",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "ok"
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent.",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "failed",
+        "timestamp": "2026-05-12T21:01:45.310379",
+        "errors": [
+            "Missing required field: timestamp"
+        ],
+        "warnings": []
+    },
+    {
+        "client_id": "high_ticket_bid_001",
+        "operation_mode": "upwork_proposal",
+        "notes": "Generating high-ticket strategic bid for Upwork.",
+        "status": "success",
+        "strategy": {
+            "platform": "Upwork",
+            "focus": "Enterprise Data Auditing & Compliance",
+            "hourly_rate_target": "75 - 150 CAD",
+            "proposal_hook": "Providing <1% error rate data pipelines for growth-stage agencies."
+        }
+    },
+    {
+        "client_id": "GTA_Expansion_2026",
+        "operation_mode": "linkedin_outreach",
+        "target_region": "Toronto, Canada",
+        "notes": "Triggering GTA-specific Boolean search and hashtag clusters.",
+        "status": "success",
+        "engagement_plan": {
+            "platform": "LinkedIn",
+            "target_clusters": [
+                "#OperationsManagement",
+                "#Scalability",
+                "#FractionalCOO",
+                "#BusinessOperations"
+            ],
+            "boolean_search": "(\"COO\" OR \"VP Operations\") AND (\"SMB\" OR \"Agency\")",
+            "outbound_hook": "Building a bridge between business goals and affordable AI systems."
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T21:04:21.602242",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T21:04:21.602242",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T21:04:21.626205",
+            "client_id": "client_fiverr_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T21:04:21.602242",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T21:04:21.626205",
+            "client_id": "client_fiverr_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        },
+        "registry_entry": {
+            "client_id": "client_fiverr_deal_001",
+            "last_activity": "2026-05-12T21:04:21.638993",
+            "status": "success",
+            "metadata": {}
+        }
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent."
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent.",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "ok"
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent.",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "failed",
+        "timestamp": "2026-05-12T21:04:21.681876",
+        "errors": [
+            "Missing required field: timestamp"
+        ],
+        "warnings": []
+    },
+    {
+        "client_id": "high_ticket_bid_001",
+        "operation_mode": "upwork_proposal",
+        "notes": "Generating high-ticket strategic bid for Upwork.",
+        "status": "success",
+        "strategy": {
+            "platform": "Upwork",
+            "focus": "Enterprise Data Auditing & Compliance",
+            "hourly_rate_target": "75 - 150 CAD",
+            "proposal_hook": "Providing <1% error rate data pipelines for growth-stage agencies."
+        }
+    },
+    {
+        "client_id": "GTA_Expansion_2026",
+        "operation_mode": "linkedin_outreach",
+        "target_region": "Toronto, Canada",
+        "notes": "Triggering GTA-specific Boolean search and hashtag clusters.",
+        "status": "success",
+        "engagement_plan": {
+            "platform": "LinkedIn",
+            "target_clusters": [
+                "#OperationsManagement",
+                "#Scalability",
+                "#FractionalCOO",
+                "#BusinessOperations"
+            ],
+            "boolean_search": "(\"COO\" OR \"VP Operations\") AND (\"SMB\" OR \"Agency\")",
+            "outbound_hook": "Building a bridge between business goals and affordable AI systems."
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T21:05:01.413370",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T21:05:01.413370",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T21:05:01.440218",
+            "client_id": "client_fiverr_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T21:05:01.413370",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T21:05:01.440218",
+            "client_id": "client_fiverr_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        },
+        "registry_entry": {
+            "client_id": "client_fiverr_deal_001",
+            "last_activity": "2026-05-12T21:05:01.454212",
+            "status": "success",
+            "metadata": {}
+        }
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent."
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent.",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "ok"
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent.",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "failed",
+        "timestamp": "2026-05-12T21:05:01.495466",
+        "errors": [
+            "Missing required field: timestamp"
+        ],
+        "warnings": []
+    },
+    {
+        "client_id": "high_ticket_bid_001",
+        "operation_mode": "upwork_proposal",
+        "notes": "Generating high-ticket strategic bid for Upwork.",
+        "status": "success",
+        "strategy": {
+            "platform": "Upwork",
+            "focus": "Enterprise Data Auditing & Compliance",
+            "hourly_rate_target": "75 - 150 CAD",
+            "proposal_hook": "Providing <1% error rate data pipelines for growth-stage agencies."
+        }
+    },
+    {
+        "client_id": "GTA_Expansion_2026",
+        "operation_mode": "linkedin_outreach",
+        "target_region": "Toronto, Canada",
+        "notes": "Triggering GTA-specific Boolean search and hashtag clusters.",
+        "status": "success",
+        "engagement_plan": {
+            "platform": "LinkedIn",
+            "target_clusters": [
+                "#OperationsManagement",
+                "#Scalability",
+                "#FractionalCOO",
+                "#BusinessOperations"
+            ],
+            "boolean_search": "(\"COO\" OR \"VP Operations\") AND (\"SMB\" OR \"Agency\")",
+            "outbound_hook": "Building a bridge between business goals and affordable AI systems."
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T21:09:03.663178",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T21:09:03.663178",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T21:09:03.689117",
+            "client_id": "client_fiverr_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T21:09:03.663178",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T21:09:03.689117",
+            "client_id": "client_fiverr_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        },
+        "registry_entry": {
+            "client_id": "client_fiverr_deal_001",
+            "last_activity": "2026-05-12T21:09:03.702912",
+            "status": "success",
+            "metadata": {}
+        }
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent."
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent.",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "ok"
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent.",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "failed",
+        "timestamp": "2026-05-12T21:09:03.743431",
+        "errors": [
+            "Missing required field: timestamp"
+        ],
+        "warnings": []
+    },
+    {
+        "client_id": "high_ticket_bid_001",
+        "operation_mode": "upwork_proposal",
+        "notes": "Generating high-ticket strategic bid for Upwork.",
+        "status": "success",
+        "strategy": {
+            "platform": "Upwork",
+            "focus": "Enterprise Data Auditing & Compliance",
+            "hourly_rate_target": "75 - 150 CAD",
+            "proposal_hook": "Providing <1% error rate data pipelines for growth-stage agencies."
+        }
+    },
+    {
+        "client_id": "GTA_Expansion_2026",
+        "operation_mode": "linkedin_outreach",
+        "target_region": "Toronto, Canada",
+        "notes": "Triggering GTA-specific Boolean search and hashtag clusters.",
+        "status": "success",
+        "engagement_plan": {
+            "platform": "LinkedIn",
+            "target_clusters": [
+                "#OperationsManagement",
+                "#Scalability",
+                "#FractionalCOO",
+                "#BusinessOperations"
+            ],
+            "boolean_search": "(\"COO\" OR \"VP Operations\") AND (\"SMB\" OR \"Agency\")",
+            "outbound_hook": "Building a bridge between business goals and affordable AI systems."
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T21:34:36.380198",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T21:34:36.380198",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T21:34:36.444427",
+            "client_id": "client_fiverr_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T21:34:36.380198",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T21:34:36.444427",
+            "client_id": "client_fiverr_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        },
+        "registry_entry": {
+            "client_id": "client_fiverr_deal_001",
+            "last_activity": "2026-05-12T21:34:36.478871",
+            "status": "success",
+            "metadata": {}
+        }
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent."
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent.",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "ok"
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent.",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "failed",
+        "timestamp": "2026-05-12T21:34:36.559595",
+        "errors": [
+            "Missing required field: timestamp"
+        ],
+        "warnings": []
+    },
+    {
+        "client_id": "high_ticket_bid_001",
+        "operation_mode": "upwork_proposal",
+        "notes": "Generating high-ticket strategic bid for Upwork.",
+        "status": "success",
+        "strategy": {
+            "platform": "Upwork",
+            "focus": "Enterprise Data Auditing & Compliance",
+            "hourly_rate_target": "75 - 150 CAD",
+            "proposal_hook": "Providing <1% error rate data pipelines for growth-stage agencies."
+        }
+    },
+    {
+        "client_id": "GTA_Expansion_2026",
+        "operation_mode": "linkedin_outreach",
+        "target_region": "Toronto, Canada",
+        "notes": "Triggering GTA-specific Boolean search and hashtag clusters.",
+        "status": "success",
+        "engagement_plan": {
+            "platform": "LinkedIn",
+            "target_clusters": [
+                "#OperationsManagement",
+                "#Scalability",
+                "#FractionalCOO",
+                "#BusinessOperations"
+            ],
+            "boolean_search": "(\"COO\" OR \"VP Operations\") AND (\"SMB\" OR \"Agency\")",
+            "outbound_hook": "Building a bridge between business goals and affordable AI systems."
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T21:36:12.877063",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T21:36:12.877063",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T21:36:12.932372",
+            "client_id": "client_fiverr_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T21:36:12.877063",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T21:36:12.932372",
+            "client_id": "client_fiverr_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        },
+        "registry_entry": {
+            "client_id": "client_fiverr_deal_001",
+            "last_activity": "2026-05-12T21:36:12.956604",
+            "status": "success",
+            "metadata": {}
+        }
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent."
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent.",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "ok"
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent.",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "failed",
+        "timestamp": "2026-05-12T21:36:13.023091",
+        "errors": [
+            "Missing required field: timestamp"
+        ],
+        "warnings": []
+    },
+    {
+        "client_id": "high_ticket_bid_001",
+        "operation_mode": "upwork_proposal",
+        "notes": "Generating high-ticket strategic bid for Upwork.",
+        "status": "success",
+        "strategy": {
+            "platform": "Upwork",
+            "focus": "Enterprise Data Auditing & Compliance",
+            "hourly_rate_target": "75 - 150 CAD",
+            "proposal_hook": "Providing <1% error rate data pipelines for growth-stage agencies."
+        }
+    },
+    {
+        "client_id": "GTA_Expansion_2026",
+        "operation_mode": "linkedin_outreach",
+        "target_region": "Toronto, Canada",
+        "notes": "Triggering GTA-specific Boolean search and hashtag clusters.",
+        "status": "success",
+        "engagement_plan": {
+            "platform": "LinkedIn",
+            "target_clusters": [
+                "#OperationsManagement",
+                "#Scalability",
+                "#FractionalCOO",
+                "#BusinessOperations"
+            ],
+            "boolean_search": "(\"COO\" OR \"VP Operations\") AND (\"SMB\" OR \"Agency\")",
+            "outbound_hook": "Building a bridge between business goals and affordable AI systems."
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T21:50:34.946239",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T21:50:34.946239",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T21:50:34.987670",
+            "client_id": "client_fiverr_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T21:50:34.946239",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T21:50:34.987670",
+            "client_id": "client_fiverr_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        },
+        "registry_entry": {
+            "client_id": "client_fiverr_deal_001",
+            "last_activity": "2026-05-12T21:50:35.011836",
+            "status": "success",
+            "metadata": {}
+        }
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent."
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent.",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "ok"
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent.",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "failed",
+        "timestamp": "2026-05-12T21:50:35.078828",
+        "errors": [
+            "Missing required field: timestamp"
+        ],
+        "warnings": []
+    },
+    {
+        "client_id": "high_ticket_bid_001",
+        "operation_mode": "upwork_proposal",
+        "notes": "Generating high-ticket strategic bid for Upwork.",
+        "status": "success",
+        "strategy": {
+            "platform": "Upwork",
+            "focus": "Enterprise Data Auditing & Compliance",
+            "hourly_rate_target": "75 - 150 CAD",
+            "proposal_hook": "Providing <1% error rate data pipelines for growth-stage agencies."
+        }
+    },
+    {
+        "client_id": "GTA_Expansion_2026",
+        "operation_mode": "linkedin_outreach",
+        "target_region": "Toronto, Canada",
+        "notes": "Triggering GTA-specific Boolean search and hashtag clusters.",
+        "status": "success",
+        "engagement_plan": {
+            "platform": "LinkedIn",
+            "target_clusters": [
+                "#OperationsManagement",
+                "#Scalability",
+                "#FractionalCOO",
+                "#BusinessOperations"
+            ],
+            "boolean_search": "(\"COO\" OR \"VP Operations\") AND (\"SMB\" OR \"Agency\")",
+            "outbound_hook": "Building a bridge between business goals and affordable AI systems."
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T21:54:07.389953",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T21:54:07.389953",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T21:54:07.432574",
+            "client_id": "client_fiverr_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T21:54:07.389953",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T21:54:07.432574",
+            "client_id": "client_fiverr_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        },
+        "registry_entry": {
+            "client_id": "client_fiverr_deal_001",
+            "last_activity": "2026-05-12T21:54:07.458946",
+            "status": "success",
+            "metadata": {}
+        }
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent."
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent.",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "ok"
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent.",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "failed",
+        "timestamp": "2026-05-12T21:54:07.547159",
+        "errors": [
+            "Missing required field: timestamp"
+        ],
+        "warnings": []
+    },
+    {
+        "client_id": "high_ticket_bid_001",
+        "operation_mode": "upwork_proposal",
+        "notes": "Generating high-ticket strategic bid for Upwork.",
+        "status": "success",
+        "strategy": {
+            "platform": "Upwork",
+            "focus": "Enterprise Data Auditing & Compliance",
+            "hourly_rate_target": "75 - 150 CAD",
+            "proposal_hook": "Providing <1% error rate data pipelines for growth-stage agencies."
+        }
+    },
+    {
+        "client_id": "GTA_Expansion_2026",
+        "operation_mode": "linkedin_outreach",
+        "target_region": "Toronto, Canada",
+        "notes": "Triggering GTA-specific Boolean search and hashtag clusters.",
+        "status": "success",
+        "engagement_plan": {
+            "platform": "LinkedIn",
+            "target_clusters": [
+                "#OperationsManagement",
+                "#Scalability",
+                "#FractionalCOO",
+                "#BusinessOperations"
+            ],
+            "boolean_search": "(\"COO\" OR \"VP Operations\") AND (\"SMB\" OR \"Agency\")",
+            "outbound_hook": "Building a bridge between business goals and affordable AI systems."
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T22:00:31.909394",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T22:00:31.909394",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T22:00:31.950061",
+            "client_id": "client_fiverr_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T22:00:31.909394",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T22:00:31.950061",
+            "client_id": "client_fiverr_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        },
+        "registry_entry": {
+            "client_id": "client_fiverr_deal_001",
+            "last_activity": "2026-05-12T22:00:31.974981",
+            "status": "success",
+            "metadata": {}
+        }
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent."
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent.",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "ok"
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent.",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "failed",
+        "timestamp": "2026-05-12T22:00:32.042923",
+        "errors": [
+            "Missing required field: timestamp"
+        ],
+        "warnings": []
+    },
+    {
+        "client_id": "high_ticket_bid_001",
+        "operation_mode": "upwork_proposal",
+        "notes": "Generating high-ticket strategic bid for Upwork.",
+        "status": "success",
+        "strategy": {
+            "platform": "Upwork",
+            "focus": "Enterprise Data Auditing & Compliance",
+            "hourly_rate_target": "75 - 150 CAD",
+            "proposal_hook": "Providing <1% error rate data pipelines for growth-stage agencies."
+        }
+    },
+    {
+        "client_id": "GTA_Expansion_2026",
+        "operation_mode": "linkedin_outreach",
+        "target_region": "Toronto, Canada",
+        "notes": "Triggering GTA-specific Boolean search and hashtag clusters.",
+        "status": "success",
+        "engagement_plan": {
+            "platform": "LinkedIn",
+            "target_clusters": [
+                "#OperationsManagement",
+                "#Scalability",
+                "#FractionalCOO",
+                "#BusinessOperations"
+            ],
+            "boolean_search": "(\"COO\" OR \"VP Operations\") AND (\"SMB\" OR \"Agency\")",
+            "outbound_hook": "Building a bridge between business goals and affordable AI systems."
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T22:02:24.196773",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T22:02:24.196773",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T22:02:24.233832",
+            "client_id": "client_fiverr_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T22:02:24.196773",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T22:02:24.233832",
+            "client_id": "client_fiverr_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        },
+        "registry_entry": {
+            "client_id": "client_fiverr_deal_001",
+            "last_activity": "2026-05-12T22:02:24.258306",
+            "status": "success",
+            "metadata": {}
+        }
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent."
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent.",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "ok"
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent.",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "failed",
+        "timestamp": "2026-05-12T22:02:24.324821",
+        "errors": [
+            "Missing required field: timestamp"
+        ],
+        "warnings": []
+    },
+    {
+        "client_id": "high_ticket_bid_001",
+        "operation_mode": "upwork_proposal",
+        "notes": "Generating high-ticket strategic bid for Upwork.",
+        "status": "success",
+        "strategy": {
+            "platform": "Upwork",
+            "focus": "Enterprise Data Auditing & Compliance",
+            "hourly_rate_target": "75 - 150 CAD",
+            "proposal_hook": "Providing <1% error rate data pipelines for growth-stage agencies."
+        }
+    },
+    {
+        "client_id": "GTA_Expansion_2026",
+        "operation_mode": "linkedin_outreach",
+        "target_region": "Toronto, Canada",
+        "notes": "Triggering GTA-specific Boolean search and hashtag clusters.",
+        "status": "success",
+        "engagement_plan": {
+            "platform": "LinkedIn",
+            "target_clusters": [
+                "#OperationsManagement",
+                "#Scalability",
+                "#FractionalCOO",
+                "#BusinessOperations"
+            ],
+            "boolean_search": "(\"COO\" OR \"VP Operations\") AND (\"SMB\" OR \"Agency\")",
+            "outbound_hook": "Building a bridge between business goals and affordable AI systems."
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T22:02:49.038173",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T22:02:49.038173",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T22:02:49.102698",
+            "client_id": "client_fiverr_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        }
+    },
+    {
+        "client_id": "client_fiverr_deal_001",
+        "operation_mode": "onboarding",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json.",
+        "status": "success",
+        "nurture_entry": {
+            "timestamp": "2026-05-12T22:02:49.038173",
+            "client_id": "client_fiverr_deal_001",
+            "funnel_stage": "captured",
+            "platform": "direct",
+            "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+        },
+        "ledger_entry": {
+            "timestamp": "2026-05-12T22:02:49.102698",
+            "client_id": "client_fiverr_deal_001",
+            "revenue": 65.0,
+            "cost": 5.0,
+            "margin": 60.0,
+            "description": "Standard Pipeline Run"
+        },
+        "registry_entry": {
+            "client_id": "client_fiverr_deal_001",
+            "last_activity": "2026-05-12T22:02:49.134184",
+            "status": "success",
+            "metadata": {}
+        }
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent."
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent.",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "ok"
+    },
+    {
+        "client_id": "enterprise_corp_777",
+        "operation_mode": "full_audit",
+        "data": [
+            {
+                "id": 1,
+                "company": "Clean Corp",
+                "status": "Active"
+            },
+            {
+                "id": 2,
+                "company": "Tech Solutions",
+                "status": "Pending"
+            }
+        ],
+        "notes": "Processing clean data to verify the PASS status of the VerifierAgent.",
+        "missing_fields": [],
+        "empty_values": [],
+        "type_mismatches": [],
+        "status": "failed",
+        "timestamp": "2026-05-12T22:02:49.222087",
+        "errors": [
+            "Missing required field: timestamp"
+        ],
+        "warnings": []
+    },
+    {
+        "client_id": "high_ticket_bid_001",
+        "operation_mode": "upwork_proposal",
+        "notes": "Generating high-ticket strategic bid for Upwork.",
+        "status": "success",
+        "strategy": {
+            "platform": "Upwork",
+            "focus": "Enterprise Data Auditing & Compliance",
+            "hourly_rate_target": "75 - 150 CAD",
+            "proposal_hook": "Providing <1% error rate data pipelines for growth-stage agencies."
+        }
+    }
+]

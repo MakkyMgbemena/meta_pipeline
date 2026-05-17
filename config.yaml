@@ -1,0 +1,106 @@
+# --- PHASE 7: MASTER ENTERPRISE CONFIGURATION ---
+meta_pipeline:
+  environment: DEVELOPMENT
+  base_currency: CAD
+  
+  # --- AI ENGINE REDUNDANCY [Source 442, 443] ---
+  # Drives automatic failover if primary service hits limits
+  api_redundancy:
+    primary_llm: "openai"
+    fallback_llm: "gemini"
+    max_retries: 3
+
+  # --- PRICING & LOGIC ---
+  pricing:
+    smart_cleaner_rate: 65.00
+    currency: CAD
+  imputation:
+    fallback_vector_target: "unknown"
+
+  # --- CLEANING ENGINE SCOPE [Source 443, 444] ---
+  # Defines which social networks the SmartCleaner processes
+  target_platforms:
+    - google
+    - x
+    - linkedin
+    - instagram
+    - tiktok
+    - facebook
+
+  # --- CLIENT REGISTRY & ROUTING ---
+  clients:
+    client_enterprise_777:
+      priority: high
+      profile:
+        name: "Enterprise Client 777"
+        email: "enterprise777@example.com"
+        industry: "Enterprise SaaS"
+        location: "Toronto, Canada"
+        social_platforms: ["linkedin", "email"]
+      routing_chain:
+        - smart_cleaner
+        - seo_optimize
+        - socialmedia_agent    # HYBRID BRIDGE: Uses LinkedIn Key or Headless Fallback
+        - ledger_entry     # Commits financial data to PostgreSQL
+        - client_registry  # Syncs lifecycle data to PostgreSQL
+        - verifier_agent   # Final relational integrity check
+
+    client_ecom_099:
+      priority: medium
+      profile:
+        name: "E-Commerce Client 099"
+        location: "Vancouver, Canada"
+        social_platforms: ["instagram", "tiktok"]
+      routing_chain:
+        - smart_cleaner
+        - socialmedia_agent    # HYBRID BRIDGE: Prioritizes API for cleaning history
+        - ledger_entry
+        - verifier_agent
+
+    test_social:
+      priority: high
+      profile:
+        name: "Social Test Client"
+      routing_chain:
+        - socialmedia_agent
+        - verifier_agent
+
+  # --- AGENT REGISTRY [Source 325, 613] ---
+  # Single source of truth for the MetaOrchestrator
+  agents:
+    smart_cleaner:
+      enabled: true
+      description: "Cleans and normalizes tabular digital data."
+    ghost_audit:
+      enabled: true
+      description: "Passive anomaly detection and risk flagging."
+    seo_optimize:
+      enabled: true
+      description: "4-pass metadata and GMB keyword audit."
+    google_manage:
+      enabled: true
+      description: "GMB profile synchronization and maps management."
+    socialmedia_agent:
+      enabled: true
+      description: "Hybrid bridge between Authorized APIs and Headless Stealth."
+    ledger_entry:
+      enabled: true
+      description: "Relational financial recording in PostgreSQL headquarters."
+    client_registry:
+      enabled: true
+      description: "Persistent client lifecycle and lineage tracking."
+    lead_nurture:
+      enabled: true
+      description: "CRM automated lead progression engine."
+    dual_write:
+      enabled: true
+      description: "Transactional gatekeeper for atomic writes."
+    verifier_agent:
+      enabled: true
+      description: "Final safety layer for output bundle reconciliation."
+
+  # --- OBSERVABILITY ---
+  logging:
+    level: INFO
+    file: "pipeline.log"
+    format: "%(asctime)s | %(name)s | %(levelname)s | %(message)s"

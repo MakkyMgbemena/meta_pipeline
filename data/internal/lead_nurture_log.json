@@ -1,0 +1,156 @@
+[
+    {
+        "timestamp": "2026-05-12T15:40:05.497901",
+        "client_id": "client_new_deal_001",
+        "funnel_stage": "converted",
+        "platform": "direct",
+        "notes": "First successful conversion from LinkedIn outreach."
+    },
+    {
+        "timestamp": "2026-05-12T15:49:17.558107",
+        "client_id": "client_new_deal_001",
+        "funnel_stage": "converted",
+        "platform": "direct",
+        "notes": "First successful conversion from LinkedIn outreach."
+    },
+    {
+        "timestamp": "2026-05-12T15:54:34.323765",
+        "client_id": "client_new_deal_001",
+        "funnel_stage": "converted",
+        "platform": "direct",
+        "notes": "First successful conversion from LinkedIn outreach."
+    },
+    {
+        "timestamp": "2026-05-12T15:58:31.821489",
+        "client_id": "client_new_deal_001",
+        "funnel_stage": "converted",
+        "platform": "direct",
+        "notes": "First successful conversion from LinkedIn outreach."
+    },
+    {
+        "timestamp": "2026-05-12T15:58:55.235756",
+        "client_id": "client_new_deal_001",
+        "funnel_stage": "converted",
+        "platform": "direct",
+        "notes": "First successful conversion from LinkedIn outreach."
+    },
+    {
+        "timestamp": "2026-05-12T16:03:09.992456",
+        "client_id": "client_new_deal_001",
+        "funnel_stage": "converted",
+        "platform": "direct",
+        "notes": "First successful conversion from LinkedIn outreach."
+    },
+    {
+        "timestamp": "2026-05-12T16:05:02.048986",
+        "client_id": "client_new_deal_001",
+        "funnel_stage": "converted",
+        "platform": "direct",
+        "notes": "First successful conversion from LinkedIn outreach."
+    },
+    {
+        "timestamp": "2026-05-12T16:06:03.782625",
+        "client_id": "client_new_deal_001",
+        "funnel_stage": "converted",
+        "platform": "direct",
+        "notes": "First successful conversion from LinkedIn outreach."
+    },
+    {
+        "timestamp": "2026-05-12T16:18:01.050767",
+        "client_id": "client_fiverr_deal_001",
+        "funnel_stage": "captured",
+        "platform": "direct",
+        "notes": "Automated onboarding for first Fiverr customer"
+    },
+    {
+        "timestamp": "2026-05-12T16:36:14.941721",
+        "client_id": "client_fiverr_deal_001",
+        "funnel_stage": "captured",
+        "platform": "direct",
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+    },
+    {
+        "timestamp": "2026-05-12T21:01:22.927830",
+        "client_id": "client_fiverr_deal_001",
+        "funnel_stage": "captured",
+        "platform": "direct",
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+    },
+    {
+        "timestamp": "2026-05-12T21:01:45.227749",
+        "client_id": "client_fiverr_deal_001",
+        "funnel_stage": "captured",
+        "platform": "direct",
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+    },
+    {
+        "timestamp": "2026-05-12T21:04:21.602242",
+        "client_id": "client_fiverr_deal_001",
+        "funnel_stage": "captured",
+        "platform": "direct",
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+    },
+    {
+        "timestamp": "2026-05-12T21:05:01.413370",
+        "client_id": "client_fiverr_deal_001",
+        "funnel_stage": "captured",
+        "platform": "direct",
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+    },
+    {
+        "timestamp": "2026-05-12T21:09:03.663178",
+        "client_id": "client_fiverr_deal_001",
+        "funnel_stage": "captured",
+        "platform": "direct",
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+    },
+    {
+        "timestamp": "2026-05-12T21:34:36.380198",
+        "client_id": "client_fiverr_deal_001",
+        "funnel_stage": "captured",
+        "platform": "direct",
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+    },
+    {
+        "timestamp": "2026-05-12T21:36:12.877063",
+        "client_id": "client_fiverr_deal_001",
+        "funnel_stage": "captured",
+        "platform": "direct",
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+    },
+    {
+        "timestamp": "2026-05-12T21:50:34.946239",
+        "client_id": "client_fiverr_deal_001",
+        "funnel_stage": "captured",
+        "platform": "direct",
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+    },
+    {
+        "timestamp": "2026-05-12T21:54:07.389953",
+        "client_id": "client_fiverr_deal_001",
+        "funnel_stage": "captured",
+        "platform": "direct",
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+    },
+    {
+        "timestamp": "2026-05-12T22:00:31.909394",
+        "client_id": "client_fiverr_deal_001",
+        "funnel_stage": "captured",
+        "platform": "direct",
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+    },
+    {
+        "timestamp": "2026-05-12T22:02:24.196773",
+        "client_id": "client_fiverr_deal_001",
+        "funnel_stage": "captured",
+        "platform": "direct",
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+    },
+    {
+        "timestamp": "2026-05-12T22:02:49.038173",
+        "client_id": "client_fiverr_deal_001",
+        "funnel_stage": "captured",
+        "platform": "direct",
+        "notes": "Recording $65.0 CAD revenue to financial_ledger.json."
+    }
+]
