@@ -51,6 +51,12 @@ class Orchestrator:
         if context is None:
             context = {"client_id": client_id}
             
+        from utils.brief_storage import load_brief
+        brief = load_brief(client_id)
+        if brief:
+            context["mission_brief"] = brief
+            self.logger.info(f"Loaded mission brief for {client_id}")
+
         # Get the routing chain from the Mission Switcher
         routing_chain = self.mission_switcher.resolve_routing(client_id)
         self.logger.info(f"Resolved routing chain: {routing_chain}")
