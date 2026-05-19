@@ -1,0 +1,9 @@
+{
+  "mission": "UNLIKE",
+  "platform": "x",
+  "success_criteria": "Delete 10 promotional posts",
+  "destructive_allowed": true,
+  "client_id": "test_social",
+  "industry": "social_media",
+  "created_at": "20260519_030754_326081"
+}

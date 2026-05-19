@@ -1,7 +1,7 @@
 class MultiTenantManager:
     """
     Phase 7 Enterprise Infrastructure.
-    Enforces data isolation between distinct client schemas [Source 484].
+    Enforces data isolation between distinct client schemas.
     Prevents cross-tenant query contamination in the PostgreSQL vault.
     """
     def __init__(self, db_manager):
@@ -9,13 +9,13 @@ class MultiTenantManager:
 
     def set_tenant_context(self, client_id: str):
         """
-        Switches the active database schema to the client-specific vault [Source 484].
+        Switches the active database schema to the client-specific vault.
         Essential for enterprise security compliance.
         """
         # Logic to execute 'SET search_path TO client_schema' in PostgreSQL
         pass
 
     def provision_new_tenant(self, client_id: str):
-        """Creates a dedicated, isolated schema for a new enterprise user [Source 674]."""
+        """Creates a dedicated, isolated schema for a new enterprise user."""
         # Logic to programmatically generate isolated PostgreSQL tables
         pass
