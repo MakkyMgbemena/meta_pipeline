@@ -1,3 +1,5 @@
+# WARNING: Do not overwrite this file with `pip freeze > requirements.txt`.
+# Install packages with pip and update this file manually instead.
 fastapi
 psycopg2-binary
 pydantic
@@ -9,3 +11,6 @@ uvicorn
 selenium
 webdriver-manager
 numpy
+resend==2.30.1
+google-cloud-storage
+cloud-sql-python-connector

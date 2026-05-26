@@ -23,13 +23,43 @@ class SocialMediaAgent(UnifiedAgent):
             "UNFOLLOW": '//button[contains(@aria-label, "Following")]'
         }
 
-    def _take_screenshot(self, driver, stage: str) -> str:
-        """Saves screenshot before/after mission. Stage = 'before' or 'after'"""
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    def _upload_to_gcs(self, local_path: str, destination_blob: str) -> str:
+        from google.cloud import storage
+        import os
+        
+        client = storage.Client()
+        bucket_name = os.getenv("GCS_BUCKET_NAME")
+        if not bucket_name:
+            self.logger.warning("GCS_BUCKET_NAME not set, using local path")
+            return local_path
+        
+        bucket = client.bucket(bucket_name)
+        blob = bucket.blob(destination_blob)
+        blob.upload_from_filename(local_path)
+        blob.make_public()
+        
+        return blob.public_url
+
+    def _take_screenshot(self, driver, stage: str) -> dict:
+        from datetime import datetime
+        import os
+        
+        os.makedirs("reports/screenshots", exist_ok=True)
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")[:-3]
         filename = f"reports/screenshots/{self.client_id}_{stage}_{timestamp}.png"
         driver.save_screenshot(filename)
-        self.logger.info(f"Screenshot saved: {filename}")
-        return filename
+        
+        gcs_blob = f"screenshots/{self.client_id}/{stage}_{timestamp}.png"
+        public_url = self._upload_to_gcs(filename, gcs_blob)
+        
+        # Clean up local ephemeral disk file
+        if os.path.exists(filename):
+            os.remove(filename)
+        
+        return {
+            "local_path": filename,
+            "public_url": public_url
+        }
     
     def run(self, payload: dict = None) -> dict:
         """
@@ -91,11 +121,14 @@ class SocialMediaAgent(UnifiedAgent):
                 
             after_path = self._take_screenshot(driver, "after")
             return {
-                "status": "success",
-                "method": "HEADLESS_STEALTH",
-                "platform": platform,
-                "screenshots": {"before": before_path, "after": after_path}
+            "status": "success",
+            "method": "HEADLESS_STEALTH",
+            "platform": platform,
+            "screenshots": {
+                "before": before_path.get("public_url") if isinstance(before_path, dict) else before_path,
+                "after": after_path.get("public_url") if isinstance(after_path, dict) else after_path
             }
+        }
         finally:
             driver.quit()
 

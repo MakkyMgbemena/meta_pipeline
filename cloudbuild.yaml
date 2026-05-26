@@ -1,0 +1,26 @@
+steps:
+- name: gcr.io/cloud-builders/docker
+  args:
+  - build
+  - --no-cache
+  - -t
+  - northamerica-northeast2-docker.pkg.dev/$PROJECT_ID/meta-pipeline/meta-pipeline:$BUILD_ID
+  - .
+- name: gcr.io/cloud-builders/docker
+  args:
+  - push
+  - northamerica-northeast2-docker.pkg.dev/$PROJECT_ID/meta-pipeline/meta-pipeline:$BUILD_ID
+- name: gcr.io/google.com/cloudsdktool/cloud-sdk
+  entrypoint: gcloud
+  args:
+  - run
+  - deploy
+  - meta-pipeline
+  - --image=northamerica-northeast2-docker.pkg.dev/$PROJECT_ID/meta-pipeline/meta-pipeline:$BUILD_ID
+  - --region=northamerica-northeast2
+  - --platform=managed
+  - --allow-unauthenticated
+  - --memory=2Gi
+images:
+- northamerica-northeast2-docker.pkg.dev/$PROJECT_ID/meta-pipeline/meta-pipeline:$BUILD_ID
+timeout: 1200s
