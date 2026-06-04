@@ -14,3 +14,12 @@ pyyaml
 psycopg2-binary
 streamlit
 pandas
+langchain
+langchain-openai
+langchain-community
+langgraph
+langgraph-checkpoint-postgres
+beautifulsoup4
+pypdf
+ragatouille
+webdriver-manager
