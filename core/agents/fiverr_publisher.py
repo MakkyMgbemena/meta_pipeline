@@ -7,8 +7,8 @@ class FiverrPublisher(UnifiedAgent):
     Tiers are grounded in actual system pipeline depth.
     """
 
-    def __init__(self, config: dict, client_id: str = None):
-        super().__init__(config, client_id)
+    def __init__(self, config: dict, client_id: str = None, db=None):
+        super().__init__(config, client_id, db)
         self.logger = get_logger("FiverrPublisher")
 
     def run(self, payload: dict = None):

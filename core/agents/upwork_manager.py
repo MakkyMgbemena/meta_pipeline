@@ -4,8 +4,8 @@ from utils.logger import get_logger
 class UpworkManager(UnifiedAgent):
     """Handles Upwork profile optimization and project proposal logic."""
 
-    def __init__(self, config: dict, client_id: str = None):
-        super().__init__(config, client_id)
+    def __init__(self, config: dict, client_id: str = None, db=None):
+        super().__init__(config, client_id, db)
         self.logger = get_logger("UpworkManager")
 
     def run(self, payload: dict = None):

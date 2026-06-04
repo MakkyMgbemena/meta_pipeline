@@ -13,8 +13,17 @@ def main():
     orchestrator = Orchestrator(config)
     
     # Triggering the default mission for high-trust verification
-    result = orchestrator.run_for_client("client_enterprise_777", {"task": "cleanup"})
-    logger.info(f"CLI mission result: {result.get('status')}")
+    test_payload = {
+        "task": "cleanup",
+        "revenue": 150.0,
+        "data": {
+            "title": "Meta Pipeline Enterprise Solutions",
+            "description": "High-integrity multi-agent automation systems for data engineering."
+        }
+    }
+    result = orchestrator.run_for_client("client_enterprise_777", test_payload)
+    final_status = result.get("verifier_agent", {}).get("status", "UNKNOWN")
+    logger.info(f"CLI mission result: {final_status}")
 
 if __name__ == "__main__":
     main()

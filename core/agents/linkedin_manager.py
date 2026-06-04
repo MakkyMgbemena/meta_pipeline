@@ -4,9 +4,9 @@ from utils.logger import get_logger
 class LinkedInManager(UnifiedAgent):
     """Generates targeted outbound engagement and algorithmic hashtag clusters for LinkedIn."""
 
-    def __init__(self, config: dict, client_id: str = None):
+    def __init__(self, config: dict, client_id: str = None, db=None):
         # Inherit from UnifiedAgent to get shared logging and config access [4, 5]
-        super().__init__(config, client_id)
+        super().__init__(config, client_id, db)
         self.logger = get_logger("LinkedInManager")
 
     def run(self, payload: dict = None):

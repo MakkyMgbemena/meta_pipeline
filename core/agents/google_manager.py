@@ -9,8 +9,8 @@ class GoogleManager(UnifiedAgent):
     Search Console, and Ads. Functions as a Bridge Agent.
     """
     
-    def __init__(self, config: dict, client_id: str):
-        super().__init__(config, client_id)
+    def __init__(self, config: dict, client_id: str, db=None):
+        super().__init__(config, client_id, db)
         self.logger = get_logger("GoogleManager")
         self.env = EnvLoader()  # Load secure API credentials
         self.bridge_log = []

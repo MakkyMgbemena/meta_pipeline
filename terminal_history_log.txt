@@ -1,0 +1,493 @@
+    1  CMD ["python", "main.py"]
+    2  EOF
+    3  echo "pg8000>=1.30.1" >> requirements.txt
+    4  PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format="value(projectNumber)")
+    5  gcloud projects add-iam-policy-binding $PROJECT_ID   --member="serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com"   --role="roles/cloudsql.client"
+    6  export PROJECT_ID="project-24b04b3d-fdd9-4b07-855"
+    7  export PROJECT_NUMBER="680132354800"
+    8  gcloud projects add-iam-policy-binding $PROJECT_ID   --member="serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com"   --role="roles/cloudsql.client"
+    9  gcloud projects add-iam-policy-binding $PROJECT_ID   --member="serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com"   --role="roles/cloudsql.instanceUser"
+   10  PROJECT_ID="project-24b04b3d-fdd9-4b07-855"
+   11  PROJECT_NUMBER="680132354800"
+   12  gcloud projects add-iam-policy-binding $PROJECT_ID     --member="serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com"     --role="roles/cloudsql.client"
+   13  gcloud projects add-iam-policy-binding $PROJECT_ID     --member="serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com"     --role="roles/cloudsql.instanceUser"
+   14  gcloud run deploy meta-pipeline-main   --image northamerica-northeast2-docker.pkg.dev/$PROJECT_ID/meta-pipeline/meta-pipeline-main:latest   --set-env-vars="INSTANCE_CONNECTION_NAME=project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db"   --set-env-vars="SELENIUM_REMOTE_URL=https://[YOUR-BROWSER-SERVICE-URL]/wd/hub"   --add-cloudsql-instances project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db   --region northamerica-northeast2   --allow-unauthenticated
+   15  # Set your project context
+   16  gcloud config set project project-24b04b3d-fdd9-4b07-855
+   17  # Grant yourself Cloud Run Admin and Service Account User roles
+   18  gcloud projects add-iam-policy-binding project-24b04b3d-fdd9-4b07-855   --member="user:annastecias@gmail.com"   --role="roles/run.admin"
+   19  gcloud projects add-iam-policy-binding project-24b04b3d-fdd9-4b07-855   --member="user:annastecias@gmail.com"   --role="roles/iam.serviceAccountUser"
+   20  export PROJECT_ID="project-24b04b3d-fdd9-4b07-855"
+   21  export BROWSER_URL="https://meta-pipeline-browser-680132354800.northamerica-northeast2.run.app"
+   22  export DB_CONN="project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db"
+   23  gcloud run deploy meta-pipeline-main   --image northamerica-northeast2-docker.pkg.dev/$PROJECT_ID/meta-pipeline/meta-pipeline-main:latest   --set-env-vars="INSTANCE_CONNECTION_NAME=$DB_CONN,SELENIUM_REMOTE_URL=$BROWSER_URL/wd/hub"   --add-cloudsql-instances $DB_CONN   --region northamerica-northeast2   --allow-unauthenticated
+   24  gcloud run deploy meta-pipeline-main   --image northamerica-northeast2-docker.pkg.dev/project-24b04b3d-fdd9-4b07-855/meta-pipeline/meta-pipeline:latest   --set-env-vars="INSTANCE_CONNECTION_NAME=$DB_CONN,SELENIUM_REMOTE_URL=$BROWSER_URL/wd/hub"   --add-cloudsql-instances $DB_CONN   --region northamerica-northeast2   --allow-unauthenticated
+   25  export BROWSER_URL="https://meta-pipeline-browser-680132354800.northamerica-northeast2.run.app"
+   26  export DB_CONN="project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db"
+   27  # 1. Remove public access from the browser service
+   28  gcloud run services remove-iam-policy-binding meta-pipeline-browser   --member="allUsers"   --role="roles/run.invoker"   --region=northamerica-northeast2
+   29  # 2. Grant the Main App's Service Account permission to call the Browser Service
+   30  gcloud run services add-iam-policy-binding meta-pipeline-browser   --member="serviceAccount:680132354800-compute@developer.gserviceaccount.com"   --role="roles/run.invoker"   --region=northamerica-northeast2
+   31  mkdir -p ~/meta_pipeline/utils && cat << 'EOF' > ~/meta_pipeline/utils/auth.py
+   32  import google.auth
+   33  import google.auth.transport.requests
+   34  from google.oauth2 import id_token
+   35  def get_browser_token(audience_url):
+   36      """
+   37      Fetches a Google-signed OpenID Connect (OIDC) ID token.
+   38      The audience_url should be the URL of the receiving Browser Service.
+   39      """
+   40      auth_req = google.auth.transport.requests.Request()
+   41      return id_token.fetch_id_token(auth_req, audience_url)
+   42  EOF
+   43  cat << 'EOF' > ~/meta_pipeline/utils/auth.py
+   44  import os
+   45  import google.auth
+   46  import google.auth.transport.requests
+   47  from google.oauth2 import id_token
+   48  from selenium import webdriver
+   49  def get_browser_token(audience_url):
+   50      """Fetches the OIDC token required to bypass the 403 lock."""
+   51      auth_req = google.auth.transport.requests.Request()
+   52      # The audience_url MUST be the base URL of your Browser Service
+   53      return id_token.fetch_id_token(auth_req, audience_url)
+   54  def init_secure_driver():
+   55      """Initializes the Remote WebDriver with the required OIDC Bearer Token."""
+   56      browser_url = os.environ.get("SELENIUM_REMOTE_URL")
+   57      
+   58      if not browser_url:
+   59          raise EnvironmentError("SELENIUM_REMOTE_URL is not set in the environment.")
+   60      # 1. Fetch the fresh token for the specific browser service audience
+   61      token = get_browser_token(browser_url)
+   62      
+   63      # 2. Configure Chrome options for the cloud environment
+   64      options = webdriver.ChromeOptions()
+   65      options.add_argument("--headless=new")
+   66      options.add_argument("--no-sandbox")
+   67      options.add_argument("--disable-dev-shm-usage")
+   68      
+   69      # 3. Apply capabilities. Note: Standard Selenium Remote may require 
+   70      # a proxy or custom header wrapper to send the 'Authorization: Bearer' header.
+   71      capabilities = options.to_capabilities()
+   72      
+   73      # Cloud Run requires the token in the 'Authorization' or 'X-Serverless-Authorization' header
+   74      # This utility prepares the driver to reach your private service endpoint
+   75      driver = webdriver.Remote(
+   76          command_executor=f"{browser_url}/wd/hub",
+   77          desired_capabilities=capabilities
+   78      )
+   79      return driver
+   80  EOF
+   81  gcloud builds submit --config cloudbuild.yaml .
+   82  clear
+   83  RUN pip3 install --no-cache-dir --break-system-packages -r requirements.txt
+   84  cd ~/meta_pipeline/browser-service
+   85  RUN pip3 install --no-cache-dir --break-system-packages -r requirements.txt
+   86  gcloud builds submit --config cloudbuild.yaml .
+   87  gcloud run services add-iam-policy-binding meta-pipeline-browser   --member="serviceAccount:680132354800-compute@developer.gserviceaccount.com"   --role="roles/run.invoker"   --region=northamerica-northeast2
+   88  export PROJECT_ID="project-24b04b3d-fdd9-4b07-855"
+   89  export BROWSER_URL="https://meta-pipeline-browser-680132354800.northamerica-northeast2.run.app"
+   90  gcloud builds submit --config cloudbuild.yaml .
+   91  gcloud run deploy meta-pipeline-main   --image northamerica-northeast2-docker.pkg.dev/$PROJECT_ID/meta-pipeline/meta-pipeline:latest   --set-env-vars="SELENIUM_REMOTE_URL=$BROWSER_URL/wd/hub,INSTANCE_CONNECTION_NAME=$PROJECT_ID:northamerica-northeast2:meta-pipeline-db"   --add-cloudsql-instances $PROJECT_ID:northamerica-northeast2:meta-pipeline-db   --region northamerica-northeast2   --no-allow-unauthenticated
+   92  python3 ~/meta_pipeline/main.py
+   93  python -m pip install python-dotenv
+   94  python3 ~/meta_pipeline/main.py
+   95  python -m pip install fastapi uvicorn pydantic 
+   96  python3 ~/meta_pipeline/main.py
+   97  pip3 install --upgrade   resend   fastapi   uvicorn   google-auth   google-cloud-sql-connector[pg8000]   sqlalchemy   requests   selenium   playwright   pydantic   python-dotenv
+   98  pip3 install --upgrade   resend   fastapi   uvicorn   google-auth   cloud-sql-python-connector[pg8000]   sqlalchemy   requests   selenium   playwright   pydantic   python-dotenv
+   99  cat <<EOF > ~/meta_pipeline/requirements.txt
+  100  resend
+  101  fastapi
+  102  uvicorn
+  103  google-auth
+  104  cloud-sql-python-connector[pg8000]
+  105  sqlalchemy
+  106  requests
+  107  selenium
+  108  playwright
+  109  pydantic
+  110  python-dotenv
+  111  EOF
+  112  # 1. Move to the root project directory
+  113  cd ~/meta_pipeline
+  114  # 2. Run the script from the root
+  115  python3 main.py
+  116  # 1. Set the database credentials for this session
+  117  export DB_USER="postgres"
+  118  export DB_NAME="meta_pipeline"
+  119  export INSTANCE_CONNECTION_NAME="project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db"
+  120  # 2. Run the production test
+  121  python3 main.py
+  122  gcloud sql users set-password postgres     --instance=meta-pipeline-db     --prompt-for-password
+  123  success_z_989898!
+  124  gcloud sql users set-password postgres     --instance=meta-pipeline-db     --prompt-for-password
+  125  gcloud sql users set-password postgres     --instance=meta-pipeline-db     --prompt-for-password
+  126  # 1. Set the database credentials for this session
+  127  export DB_USER="postgres"
+  128  export DB_PASS="Success_z_989898!"
+  129  export DB_NAME="meta_pipeline"
+  130  export INSTANCE_CONNECTION_NAME="project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db"
+  131  # 2. Run the production test
+  132  python3 main.py
+  133  # Download and start the proxy in the background
+  134  curl -o cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.11.0/cloud-sql-proxy.linux.amd64
+  135  chmod +x cloud-sql-proxy
+  136  ./cloud-sql-proxy project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db &
+  137  # 1. Set the database credentials for this session
+  138  export DB_USER="postgres"
+  139  export DB_PASS="Success_z_989898!"
+  140  export DB_NAME="meta_pipeline"
+  141  export INSTANCE_CONNECTION_NAME="project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db"
+  142  # 2. Run the production test
+  143  python3 main.py
+  144  'cloud-sql-python-connector')
+  145  pip3 install fastapi uvicorn pydantic cloud-sql-python-connector[pg8000]
+  146  python -m pip install fastapi uvicorn pydantic cloud-sql-python-connector[pg8000]
+  147  -- Grant permission to the postgres user for all existing tables
+  148  GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO postgres;
+  149  -- Ensure future tables are also accessible
+  150  ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO postgres;
+  151  -- Grant the postgres user permission to everything in the public schema
+  152  GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO postgres;
+  153  GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO postgres;
+  154  clear
+  155  -- Grant the postgres user permission to everything in the public schema
+  156  GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO postgres;
+  157  GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO postgres;
+  158  -- Grant permission to the postgres user for all existing tables
+  159  GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO postgres;
+  160  -- Ensure future tables are also accessible
+  161  ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO postgres;
+  162  export DB_USER="postgres"
+  163  export DB_NAME="meta_pipeline"
+  164  export INSTANCE_CONNECTION_NAME="project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db"
+  165  python3 main.py
+  166  clear
+  167  python3 ~/meta_pipeline/main.py
+  168  cli gemini
+  169  sudo cli gemini
+  170  clear
+  171  cd ~/meta_pipeline && python3 main.py
+  172  export DB_USER="postgres"
+  173  export DB_NAME="meta_pipeline"
+  174  export INSTANCE_CONNECTION_NAME="project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db"
+  175  python3 main.py
+  176  # 1. Set the database credentials for this session
+  177  export DB_USER="postgres"
+  178  export DB_PASS="Success_z_989898!"
+  179  export DB_NAME="meta_pipeline"
+  180  export INSTANCE_CONNECTION_NAME="project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db"
+  181  # 2. Run the production test
+  182  python3 main.py
+  183  # 1. Set the database credentials for this session
+  184  export DB_USER="postgres"
+  185  export DB_PASS="Success_z_989898!"
+  186  export DB_NAME="meta_pipeline"
+  187  export INSTANCE_CONNECTION_NAME="project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db"
+  188  # 2. Run the production test
+  189  python3 main.py
+  190  export DB_PASS="meta_pipeline_989898!"
+  191  clear
+  192  tail -n 100 ~/meta_pipeline/pipeline.log 2>/dev/null || tail -n 100 var/log/pipeline.log 2>/dev/null || echo "No local log file found. Checking stdout/stderr records instead."
+  193  echo "=== ACTIVE ENVIRONMENT ===" && env | grep -E "DB_|INSTANCE_CONNECTION"
+  194  export DB_USER="postgres"
+  195  export DB_PASS="Success_z_989898!"
+  196  export DB_NAME="meta_pipeline"
+  197  export INSTANCE_CONNECTION_NAME="project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db"
+  198  # 2. Run the production test
+  199  python3 main.py
+  200  # 1. Set the database credentials for this session
+  201  export DB_USER="postgres"
+  202  export DB_PASS="Meta-pipeline-989898!"
+  203  export DB_NAME="meta_pipeline"
+  204  export INSTANCE_CONNECTION_NAME="project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db"
+  205  # 2. Run the production test
+  206  python3 main.py
+  207  # 1. Set the database credentials for this session
+  208  export DB_USER="postgres"
+  209  export DB_PASS="Meta-pipeline-989898!"
+  210  export DB_NAME="meta_pipeline"
+  211  export INSTANCE_CONNECTION_NAME="project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db"
+  212  # 2. Run the production test
+  213  python3 main.py
+  214  # 1. Set the database credentials for this session
+  215  export DB_USER="postgres"
+  216  export DB_PASS="Meta-pipeline-989898!"
+  217  export DB_NAME="meta_pipeline"
+  218  export INSTANCE_CONNECTION_NAME="project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db"
+  219  # 2. Run the production test
+  220  python3 main.py
+  221  # 1. Set the database credentials for this session
+  222  export DB_USER="postgres"
+  223  export DB_PASS="Meta-pipeline-989898!"
+  224  export DB_NAME="meta_pipeline"
+  225  export INSTANCE_CONNECTION_NAME="project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db"
+  226  # 2. Run the production test
+  227  python3 main.py
+  228  export SKIP_HEADLESS="1"
+  229  python3 main.py
+  230  # 1. Set the database credentials for this session
+  231  export DB_USER="postgres"
+  232  export DB_PASS="Meta-pipeline-989898!"
+  233  export DB_NAME="meta_pipeline"
+  234  export INSTANCE_CONNECTION_NAME="project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db"
+  235  # 2. Run the production test
+  236  python3 main.py
+  237  clear
+  238  unset SKIP_HEADLESS
+  239  clear
+  240  # 1. Set the database credentials for this session
+  241  export DB_USER="postgres"
+  242  export DB_PASS="Meta-pipeline-989898!"
+  243  export DB_NAME="meta_pipeline"
+  244  export INSTANCE_CONNECTION_NAME="project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db"
+  245  # 2. Run the production test
+  246  python3 main.py
+  247  gcloud builds submit --config browser-service/cloudbuild.yaml
+  248  gcloud artifacts repositories create meta-pipeline     --repository-format=docker     --location=northamerica-northeast2
+  249  gcloud artifacts repositories list --location=northamerica-northeast2
+  250  gcloud builds submit --config browser-service/cloudbuild.yaml
+  251  gcloud builds submit --config browser-service/cloudbuild.yaml .
+  252  pwd
+  253  gcloud builds submit --config browser-service/cloudbuild.yaml . 
+  254  python3 main.py
+  255  # 1. Set the database credentials for this session
+  256  export DB_USER="postgres"
+  257  export DB_PASS="Meta-pipeline-989898!"
+  258  export DB_NAME="meta_pipeline"
+  259  export INSTANCE_CONNECTION_NAME="project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db"
+  260  # 2. Run the production test
+  261  python3 main.py
+  262  export SELENIUM_REMOTE_URL="https://meta-pipeline-browser-680132354800.northamerica-northeast2.run.app/wd/hub"
+  263  python3 main.py
+  264  grep -rn "resend" ~/meta_pipeline/
+  265  export RESEND_API_KEY="re_cMQFqMW3_5JaTmraR23kcgGWPdJWrZ18a"
+  266  python3 delivery/email_sender.py
+  267  python3 main.py
+  268  cd ~/meta_pipeline/browser-service
+  269  # 1. Point to the live cloud browser to avoid connection errors
+  270  export SELENIUM_REMOTE_URL="https://meta-pipeline-browser-680132354800.northamerica-northeast2.run.app/ui/"
+  271  # 2. Set the database credentials for this session
+  272  export DB_USER="postgres"
+  273  export DB_NAME="meta_pipeline"
+  274  export INSTANCE_CONNECTION_NAME="project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db"
+  275  # 3. Run the production test
+  276  python3 main.py
+  277  find ~/meta_pipeline -name "main.py"
+  278  # 0. Move into the correct service directory
+  279  cd /home/annastecias/meta_pipeline/
+  280  # 1. Point to the live cloud browser to avoid connection errors
+  281  export SELENIUM_REMOTE_URL="https://meta-pipeline-browser-680132354800.northamerica-northeast2.run.app/ui/"
+  282  # 2. Set the database credentials for this session
+  283  export DB_USER="postgres"
+  284  export DB_PASS='[meta_pipeline_989898!]'
+  285  export DB_NAME="meta_pipeline"
+  286  export INSTANCE_CONNECTION_NAME="project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db"
+  287  # 3. Run the production test
+  288  python3 main.py
+  289  # Start the Cloud SQL Proxy
+  290  curl -o cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.11.0/cloud-sql-proxy.linux.amd64
+  291  chmod +x cloud-sql-proxy
+  292  ./cloud-sql-proxy project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db
+  293  clear
+  294  # Start the Cloud SQL Proxy
+  295  curl -o cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.11.0/cloud-sql-proxy.linux.amd64
+  296  chmod +x cloud-sql-proxy
+  297  ./cloud-sql-proxy project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db
+  298  export RESEND_API_KEY='your-actual-resend-key-here'
+  299  python3 main.py
+  300  # Move into your service directory
+  301  cd /home/annastecias/meta_pipeline/
+  302  # Export your Resend API key
+  303  export RESEND_API_KEY='your-actual-resend-key-here'
+  304  # Run the production test
+  305  python3 main.py
+  306  # 1. Set the database credentials for this session
+  307  export DB_USER="postgres"
+  308  export DB_PASS='[meta_pipeline_989898!]'
+  309  export DB_NAME="meta_pipeline"
+  310  export INSTANCE_CONNECTION_NAME="project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db"
+  311  # 2. Run the production test
+  312  python3 main.py
+  313  clear
+  314  curl -o cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.11.0/cloud-sql-proxy.linux.amd64
+  315  chmod +x cloud-sql-proxy
+  316  ./cloud-sql-proxy project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db
+  317  # Start the Cloud SQL Proxy
+  318  curl -o cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.11.0/cloud-sql-proxy.linux.amd64
+  319  chmod +x cloud-sql-proxy
+  320  ./cloud-sql-proxy project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db
+  321  export RESEND_API_KEY='your-actual-resend-key-here'
+  322  # 1. Set the database credentials for this session
+  323  export DB_USER="postgres"
+  324  export DB_PASS='[meta_pipeline_989898!]'
+  325  export DB_NAME="meta_pipeline"
+  326  export INSTANCE_CONNECTION_NAME="project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db"
+  327  # 2. Run the production test
+  328  python3 main.py
+  329  du -hs ~/meta_pipeline/* | sort -rh
+  330  clear
+  331  # 1. Create the Service Account
+  332  gcloud iam service-accounts create dashboard-manager --display-name="Dashboard Manager"
+  333  # 2. Assign the role to invoke Cloud Run
+  334  gcloud projects add-iam-policy-binding project-24b04b3d-fdd9-4b07-855     --member="serviceAccount:dashboard-manager@project-24b04b3d-fdd9-4b07-855.iam.gserviceaccount.com"     --role="roles/run.invoker"
+  335  # 3. Assign the role to connect to Cloud SQL
+  336  gcloud projects add-iam-policy-binding project-24b04b3d-fdd9-4b07-855     --member="serviceAccount:dashboard-manager@project-24b04b3d-fdd9-4b07-855.iam.gserviceaccount.com"     --role="roles/cloudsql.client"
+  337  # 4. Generate the JSON key file (The 'Shopping List' item)
+  338  gcloud iam service-accounts keys create dashboard-key.json     --iam-account=dashboard-manager@project-24b04b3d-fdd9-4b07-855.iam.gserviceaccount.com
+  339  clear
+  340  # . Move into the correct service directory
+  341  cd /home/annastecias/meta_pipeline/
+  342  # 1. Create the Service Account
+  343  gcloud iam service-accounts create dashboard-manager --display-name="Dashboard Manager"
+  344  # 2. Assign the role to invoke Cloud Run
+  345  gcloud projects add-iam-policy-binding project-24b04b3d-fdd9-4b07-855     --member="serviceAccount:dashboard-manager@project-24b04b3d-fdd9-4b07-855.iam.gserviceaccount.com"     --role="roles/run.invoker"
+  346  # 3. Assign the role to connect to Cloud SQL
+  347  gcloud projects add-iam-policy-binding project-24b04b3d-fdd9-4b07-855     --member="serviceAccount:dashboard-manager@project-24b04b3d-fdd9-4b07-855.iam.gserviceaccount.com"     --role="roles/cloudsql.client"
+  348  # 4. Generate the JSON key file (The 'Shopping List' item)
+  349  gcloud iam service-accounts keys create dashboard-key.json     --iam-account=dashboard-manager@project-24b04b3d-fdd9-4b07-855.iam.gserviceaccount.com
+  350  gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=YOUR_SERVICE_NAME" --limit 20 --order="timestamp desc"
+  351  clear
+  352  gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=meta-pipeline" --limit 20 --order=desc
+  353  ls -R
+  354  streamlit run app.py
+  355  cls
+  356  clear 
+  357  chmod +x cloud-sql-proxy
+  358  # 1. Clear the Streamlit port and ensure a fresh start
+  359  lsof -ti:8501 | xargs kill -9
+  360  # 2. Navigate to your project root and activate the environment
+  361  cd ~/meta_pipeline && source venv/bin/activate
+  362  # 3. Start the Cloud SQL Auth Proxy in the background (Required for DB access in Cloud Shell)
+  363  ./cloud-sql-proxy project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db &
+  364  # 4. Launch the Dashboard
+  365  streamlit run app.py
+  366  # 1. Install System Utilities (Resolves 'lsof' and 'venv' errors)
+  367  sudo apt-get update && sudo apt-get install -y lsof python3-venv
+  368  # 2. Re-create and Activate the Virtual Environment
+  369  cd ~/meta_pipeline
+  370  python3 -m venv venv
+  371  source venv/bin/activate
+  372  # 3. Comprehensive Python Package Installation (Bulk Download)
+  373  pip install --upgrade pip
+  374  pip install   streamlit   fastapi uvicorn   python-dotenv   langchain langchain-openai langchain-community   langgraph langgraph-checkpoint-postgres   google-cloud-sql-python-connector[pg8000]   sqlalchemy psycopg2-binary   pydantic>=2.0.0   numpy pandas   selenium webdriver-manager playwright   resend   beautifulsoup4 pypdf   ragatouille
+  375  clear
+  376  # 1. Install System Utilities (Resolves 'lsof' and 'venv' errors)
+  377  sudo apt-get update && sudo apt-get install -y lsof python3-venv
+  378  # 2. Re-create and Activate the Virtual Environment
+  379  cd ~/meta_pipeline && python3 -m venv venv && source venv/bin/activate
+  380  # 3. Verified Bulk Installation (Corrected SQL name and Health Check support)
+  381  pip install --upgrade pip
+  382  pip install   streamlit   fastapi uvicorn   python-dotenv   langchain langchain-openai langchain-community   langgraph langgraph-checkpoint-postgres   cloud-sql-python-connector[pg8000]   sqlalchemy psycopg2-binary   "pydantic>=2.0.0"   numpy pandas   selenium webdriver-manager playwright   resend   beautifulsoup4 pypdf   ragatouille
+  383  clear
+  384  # Clear the pip cache
+  385  pip cache purge
+  386  # Remove temporary files and build artifacts
+  387  rm -rf ~/.cache/*
+  388  rm -rf /tmp/*
+  389  # 1. Purge the pip cache (the biggest hidden space hog)
+  390  python3 -m pip cache purge
+  391  # 2. Force delete the .cache folder in your home directory
+  392  rm -rf ~/.cache
+  393  # 3. Clear the temporary directory we created earlier
+  394  rm -rf ~/tmp/*
+  395  # 4. (Optional) Check for other heavy folders if space is still low
+  396  du -hs * .* | sort -h
+  397  # 5. Verify that you now have available space (look for the '/' or '/home' row)
+  398  df -h
+  399  clear
+  400  # 1. Execute the bootstrap script
+  401  ~/customize_environment.sh
+  402  # 2. Verify that your disk still has breathing room
+  403  df -h
+  404  # Start the proxy (Must stay running in this terminal tab)
+  405  ./cloud-sql-proxy project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db &
+  406  # 1. Refresh your Cloud Shell Identity (Fixes the 'invalid token' error)
+  407  gcloud auth application-default login
+  408  # 2. Clear any ghost processes on the Streamlit port
+  409  lsof -ti:8501 | xargs kill -9
+  410  # 3. Execute your bootstrap script (Ensures lsof, venv, and packages are ready)
+  411  ~/customize_environment.sh
+  412  # 4. Start the Proxy (Wait for the 'Ready for new connections' message)
+  413  ./cloud-sql-proxy project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db &
+  414  # 5. Launch the Dashboard
+  415  streamlit run app.py
+  416  gemini
+  417  # 1. Locate the file (fixes the 'No such file' error)
+  418  # If this returns an error, the file was likely saved with a typo (like ~?)
+  419  ls -l ~/customize_environment.sh
+  420  # 2. Force Refresh Identity (Answer 'Y' when prompted)
+  421  # This fixes the 'invalid token JSON from metadata: EOF' error
+  422  gcloud auth application-default login
+  423  # 3. Apply Execute Permissions
+  424  chmod +x ~/customize_environment.sh
+  425  # 4. Run the Bootstrap Script (Installs lsof, venv, and all packages)
+  426  # This fixes 'lsof: command not found' and 'streamlit: command not found'
+  427  ~/customize_environment.sh
+  428  # 5. Restart the Proxy in the background
+  429  ./cloud-sql-proxy project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db &
+  430  # 6. Launch the Dashboard
+  431  streamlit run app.py
+  432  cls
+  433  clear
+  434  # A. Apply permissions and run your automated bootstrap script
+  435  # This installs lsof, sets up the venv, and bulk-downloads all packages
+  436  chmod +x ~/customize_environment.sh && ~/customize_environment.sh
+  437  # B. Re-seal your Cloud Shell Identity (Answer 'Y' when prompted)
+  438  # This fixes the 'invalid token JSON from metadata: EOF' error for the proxy
+  439  gcloud auth application-default login
+  440  # C. Establish the Database Bridge (Proxy) in the background
+  441  # Wait for the message: "The proxy has started successfully!"
+  442  ./cloud-sql-proxy project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db &
+  443  # D. Launch the Streamlit Dashboard
+  444  streamlit run app.py
+  445  curl --include --request GET "http://localhost:8501/health"
+  446  clear
+  447  # 1. Ensure system tools (lsof) and venv are installed
+  448  ~/customize_environment.sh
+  449  # 2. Re-seal your Cloud Shell Identity (Address the 'invalid token JSON' error)
+  450  # Note: Answer 'Y' when prompted to authenticate.
+  451  gcloud auth application-default login
+  452  # 3. Force clear the 'ghost' processes on both app and DB ports
+  453  # Addresses "address already in use" for port 5432
+  454  sudo lsof -ti:8501,5432 | xargs kill -9
+  455  # 4. Activate the environment in this specific terminal session
+  456  # Addresses "streamlit: command not found"
+  457  cd ~/meta_pipeline && source venv/bin/activate
+  458  # 5. Start the Database Bridge in the background
+  459  ./cloud-sql-proxy project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db &
+  460  # 6. Launch the Dashboard
+  461  streamlit run app.py
+  462  cd ~/meta_pipeline
+  463  source venv/bin/activate
+  464  # Now you can run streamlit or main.py
+  465  streamlit run your_app.py
+  466  geemini
+  467  1 # 1. Activate the environment                                                                                                                                                
+  468  clear
+  469  ~/customize_environment.sh && sudo lsof -ti:8501,5432 | xargs kill -9 && cd ~/meta_pipeline && source venv/bin/activate && ./cloud-sql-proxy project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db & cd ~/meta_pipeline && streamlit run app.py
+  470  clear
+  471  1 cd ~ 2 chmod +x customize_environment.sh 3 ./customize_environment.sh
+  472  clear
+  473  cd ~/meta_pipeline
+  474  ./cloud-sql-proxy project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db &
+  475  clear
+  476  cd ~/meta_pipeline
+  477  chmod +x customize_environment.sh
+  478  ./customize_environment.sh
+  479  gcloud auth application-default login
+  480  clear
+  481  cd ~/meta_pipeline 
+  482  gcloud auth application-default login
+  483  chmod +x ~/customize_environment.sh && ~/customize_environment.sh 
+  484  sudo lsof -ti:8501,5432 | xargs kill -9 
+  485  cd ~/meta_pipeline && source venv/bin/activate 
+  486  ./cloud-sql-proxy project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db &                                     
+  487  streamlit run your_app_name.py --server.enableCORS=false --server.enableXsrfProtection=false
+  488  streamlit run app.py
+  489  clear
+  490  ~/customize_environment.sh && sudo lsof -ti:8501,5432 | xargs kill -9 && cd ~/meta_pipeline && source venv/bin/activate && ./cloud-sql-proxy project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db & sleep 5 && streamlit run app.py
+  491  ~/customize_environment.sh.
+  492  sudo lsof -ti:8501,5432 | xargs kill -9 2>/dev/null; cd ~/meta_pipeline && source venv/bin/activate && ./cloud-sql-proxy project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db & sleep 3 && streamlit run app.py
+  493  history > ~/meta_pipeline/terminal_history_log.txt

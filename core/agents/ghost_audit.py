@@ -9,8 +9,8 @@ class GhostAudit(UnifiedAgent):
     This agent does not modify data — it inspects, validates, and reports.
     """
 
-    def __init__(self, config: dict, client_id: str):
-        super().__init__(config, client_id)
+    def __init__(self, config: dict, client_id: str, db=None):
+        super().__init__(config, client_id, db)
         self.logger = get_logger("GhostAudit")
 
     # ---------------------------------------------------------

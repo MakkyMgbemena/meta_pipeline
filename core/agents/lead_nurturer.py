@@ -13,8 +13,8 @@ class LeadNurturer(UnifiedAgent):
     # Path aligned with Phase 3 Internal Operations vault
     NURTURE_LOG_PATH = "data/internal/lead_nurture_log.json"
 
-    def __init__(self, config: dict, client_id: str = None):
-        super().__init__(config, client_id)
+    def __init__(self, config: dict, client_id: str = None, db=None):
+        super().__init__(config, client_id, db)
         self.logger = get_logger("LeadNurturer")
         
         # Ensure the internal data directory exists safely
