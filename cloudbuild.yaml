@@ -17,6 +17,8 @@ steps:
   - deploy
   - meta-pipeline
   - --image=northamerica-northeast2-docker.pkg.dev/$PROJECT_ID/meta-pipeline/meta-pipeline:$BUILD_ID
+  - --add-cloudsql-instances=project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db
+  - --set-env-vars=DB_HOST=/cloudsql/project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db,DB_USER=postgres,DB_PASS=Meta-pipeline-989898!,DB_NAME=meta_pipeline,GCS_BUCKET_NAME=meta-pipeline-storage,RESEND_FROM_EMAIL=reports@yourverifieddomain.com
   - --region=northamerica-northeast2
   - --platform=managed
   - --allow-unauthenticated

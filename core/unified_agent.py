@@ -7,22 +7,34 @@ class UnifiedAgent:
     Base class providing Database and Logger access to all agents.
     Anchors the system in Phase 7 (Enterprise Scale) persistence [Source 481].
     """
-    def __init__(self, config: dict, client_id: str = None):
+    def __init__(self, config: dict, client_id: str = None, db=None):
         # Dynamically names the logger after the specific child agent (e.g., 'LedgerAgent')
         self.logger = get_logger(self.__class__.__name__)
         self.config = config or {}
         self.client_id = client_id
         
-        # Initialize Database Manager for permanent Phase 7 relational persistence
-        db_config = {
-            "dbname": os.getenv("DB_NAME"),
-            "user": os.getenv("DB_USER"),
-            "password": os.getenv("DB_PASS"),
-            "host": os.getenv("DB_HOST", "127.0.0.1"),
-            "port": os.getenv("DB_PORT", "5432")
-        }
-        self.db = DatabaseManager(db_config)
+        # FIX: Use injected DB session to prevent connection pool exhaustion
+        if db:
+            self.db = db
+        else:
+            db_config = {
+                "dbname": os.getenv("DB_NAME"),
+                "user": os.getenv("DB_USER"),
+                "password": os.getenv("DB_PASS"),
+                "host": os.getenv("DB_HOST", "127.0.0.1"),
+                "port": os.getenv("DB_PORT", "5432")
+            }
+            self.db = DatabaseManager(db_config)
         self.logger.info(f"{self.__class__.__name__} armed for {self.client_id}.")
+
+    def _capture_state(self, driver, filename: str):
+        """Ensures the screenshots directory exists and saves the state."""
+        # Standardize on ./reports/screenshots for consistency
+        path = f"./reports/screenshots/{filename}"
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        driver.save_screenshot(path)
+        self.logger.info(f"Visual state captured: {path}")
+        return path
 
     def _load_client_profile(self, client_id: str) -> dict:
         """

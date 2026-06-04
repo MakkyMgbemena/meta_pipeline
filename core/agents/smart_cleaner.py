@@ -10,8 +10,8 @@ class SmartCleaner(UnifiedAgent):
     This is the first agent in the routing chain for most clients.
     """
 
-    def __init__(self, config: dict, client_id: str):
-        super().__init__(config, client_id)
+    def __init__(self, config: dict, client_id: str, db=None):
+        super().__init__(config, client_id, db)
         self.logger = get_logger("SmartCleaner")
 
     # ---------------------------------------------------------

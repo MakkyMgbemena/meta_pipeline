@@ -1,13 +1,18 @@
 import json
 import os
 import re
+import logging
 from pathlib import Path
 from datetime import datetime
+from google.cloud import storage
 
 # ==============================================================================
 # CONFIGURATION & CONSTANTS
 # ==============================================================================
 BASE_DIR = Path("data/mission_briefs")
+# FIX: Target the primary bucket found in your environment
+BUCKET_NAME = os.getenv("GCS_BUCKET_NAME", "meta-pipeline-storage")
+logger = logging.getLogger("BriefStorage")
 
 # ==============================================================================
 # HELPER FUNCTIONS (SANITIZATION & VALIDATION)
@@ -19,29 +24,39 @@ def clean_client_id(client_id: str) -> str:
     return re.sub(r'[^a-zA-Z0-9_]', '', client_id)
 
 # ==============================================================================
-# CORE OPERATIONS: SAVE & LOAD
+# CORE OPERATIONS: SAVE & LOAD (GCS & LOCAL)
 # ==============================================================================
-def save_brief(client_id: str, industry: str, brief_data: dict) -> str:
+def save_brief(client_id: str, industry: str, brief_data: dict) -> dict:
     """
-    Saves a mission brief with security and concurrency hardening.
+    Saves a mission brief to GCS (preferred) or local disk.
     """
     safe_id = clean_client_id(client_id)
     safe_industry = clean_client_id(industry).lower()
     
-    client_dir = BASE_DIR / safe_id
-    client_dir.mkdir(parents=True, exist_ok=True)
-    
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
-    filename = client_dir / f"brief_{timestamp}.json"
+    filename = f"briefs/{safe_id}/brief_{timestamp}.json"
     
     brief_data["client_id"] = safe_id
     brief_data["industry"] = safe_industry
     brief_data["created_at"] = timestamp
     
-    with open(filename, "w") as f:
+    if BUCKET_NAME:
+        try:
+            client = storage.Client()
+            bucket = client.bucket(BUCKET_NAME)
+            blob = bucket.blob(filename)
+            blob.upload_from_string(json.dumps(brief_data, indent=2), content_type='application/json')
+            return {"status": "gcs", "path": f"gs://{BUCKET_NAME}/{filename}"}
+        except Exception as e:
+            logger.error(f"GCS Upload failed, falling back to local: {e}")
+
+    # Local Fallback
+    local_path = BASE_DIR / safe_id
+    local_path.mkdir(parents=True, exist_ok=True)
+    full_local_file = local_path / f"brief_{timestamp}.json"
+    with open(full_local_file, "w") as f:
         json.dump(brief_data, f, indent=2)
-        
-    return str(filename)
+    return {"status": "local", "path": str(full_local_file)}
 
 def load_brief(client_id: str) -> dict:
     """

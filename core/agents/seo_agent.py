@@ -2,7 +2,9 @@ from core.unified_agent import UnifiedAgent
 from utils.logger import get_logger
 from utils.file_utils import normalize_text, clean_whitespace
 from utils.json_store import JSONStore
+from utils.auth import init_secure_driver
 import datetime
+import os
 
 class SEOAgent(UnifiedAgent):
     """
@@ -10,8 +12,8 @@ class SEOAgent(UnifiedAgent):
     Follows the 4-pass logic to ensure search engine dominance.
     """
     
-    def __init__(self, config: dict, client_id: str):
-        super().__init__(config, client_id)
+    def __init__(self, config: dict, client_id: str, db=None):
+        super().__init__(config, client_id, db)
         self.logger = get_logger("SEOAgent")
         self.audit_trail = []
 
@@ -23,14 +25,28 @@ class SEOAgent(UnifiedAgent):
         Pass 3: Structural Tagging
         Pass 4: Integrity Verification
         """
-        if not payload or "data" not in payload:
+        # Attempt to resolve data from direct payload or previous agent results
+        data = payload.get("data") or payload.get("smart_cleaner", {}).get("data")
+
+        if not data:
             self.logger.warning("Empty payload received. Skipping SEO optimization.")
             return {"status": "skipped", "reason": "no_data"}
 
         self.logger.info(f"Starting SEO Optimization for client: {self.client_id}")
         
-        data = payload["data"]
-        
+        # Human-in-the-loop: Capture 'BEFORE' state if possible
+        before_img = None
+        try:
+            # We use a temporary driver session for the 'before' audit
+            driver = init_secure_driver()
+            # Navigate to the client's URL if available in brief or payload
+            url = payload.get("url") or "https://google.com" # Placeholder
+            driver.get(url)
+            before_img = self._capture_state(driver, f"before_{self.client_id}.png")
+            driver.quit()
+        except Exception as e:
+            self.logger.error(f"SEO Before-Screenshot failed: {str(e)}")
+
         # Pass 1: Keyword Audit (Discriminative Analysis)
         data = self._keyword_audit(data)
         
@@ -48,7 +64,8 @@ class SEOAgent(UnifiedAgent):
             "client_id": self.client_id,
             "optimized_data": data,
             "seo_report": report,
-            "audit_trail": self.audit_trail
+            "audit_trail": self.audit_trail,
+            "before_screenshot": before_img
         }
 
     def _keyword_audit(self, data):

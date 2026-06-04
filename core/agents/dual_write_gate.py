@@ -8,9 +8,9 @@ class DualWriteGate(UnifiedAgent):
     Ensures financial data (ledger) is written before registry data.
     """
 
-    def __init__(self, config: dict, client_id: str = None):
+    def __init__(self, config: dict, client_id: str = None, db=None):
         # Pass context to parent class for standardized logging and config access
-        super().__init__(config, client_id)
+        super().__init__(config, client_id, db)
         self.logger = get_logger("DualWriteGate")
 
     def run(self, payload: dict = None):
