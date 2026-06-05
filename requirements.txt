@@ -23,3 +23,8 @@ beautifulsoup4
 pypdf
 ragatouille
 webdriver-manager
+openpyxl
+pdfplumber
+python-multipart
+google-cloud-storage
+aiofiles

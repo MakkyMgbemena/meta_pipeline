@@ -1,11 +1,12 @@
 from sqlalchemy import Column, Integer, String, Float, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from pydantic import BaseModel
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 import datetime
 
 # --- PART 1: DATABASE MODELS (The Vault Drawers) ---
 Base = declarative_base()
+
 
 class FinancialLedger(Base):
     """Blueprints for the Financial Ledger table."""
@@ -46,3 +47,50 @@ class MissionResponse(BaseModel):
     status: str
     client_id: str
     results: Dict[str, Any]
+
+
+# -------------------------
+# Upload pipeline contracts
+# -------------------------
+
+class ValidationError(BaseModel):
+    type: str
+    message: str
+    field: Optional[str] = None
+
+
+class UploadStorageInfo(BaseModel):
+    mode: str
+    path: str
+    gcs_uri: Optional[str] = None
+
+
+class ProcessingSummary(BaseModel):
+    # Flexible summary payload per file type
+    data: Dict[str, Any] = {}
+
+
+class ProcessingPreview(BaseModel):
+    data: Dict[str, Any] = {}
+
+
+class ProcessingStatus(BaseModel):
+    status: str
+    summary: Dict[str, Any] = {}
+    preview: Dict[str, Any] = {}
+    errors: List[ValidationError] = []
+
+
+class JobInfo(BaseModel):
+    job_id: str
+    status: str
+
+
+class UploadFileResponse(BaseModel):
+    success: bool
+    message: str
+    file_name: Optional[str] = None
+    file_type: Optional[str] = None
+    storage: Optional[UploadStorageInfo] = None
+    processing: Optional[ProcessingStatus] = None
+    job: Optional[JobInfo] = None

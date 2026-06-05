@@ -4,7 +4,11 @@ import re
 import logging
 from pathlib import Path
 from datetime import datetime
-from google.cloud import storage
+
+try:
+    from google.cloud import storage
+except ImportError:
+    storage = None
 
 # ==============================================================================
 # CONFIGURATION & CONSTANTS
@@ -40,7 +44,7 @@ def save_brief(client_id: str, industry: str, brief_data: dict) -> dict:
     brief_data["industry"] = safe_industry
     brief_data["created_at"] = timestamp
     
-    if BUCKET_NAME:
+    if BUCKET_NAME and storage is not None:
         try:
             client = storage.Client()
             bucket = client.bucket(BUCKET_NAME)

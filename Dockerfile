@@ -21,5 +21,6 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Copy the rest of the application files
 COPY . .
 
-# Cloud Run injects a dynamic $PORT variable, so we grab it automatically
-CMD ["sh", "-c", "uvicorn services.fastapi.api:app --host 0.0.0.0 --port ${PORT:-8080}"]
+# Cloud Run injects a dynamic $PORT variable and we choose the service type via SERVICE_TYPE.
+COPY entrypoint.sh .
+CMD ["sh", "entrypoint.sh"]
