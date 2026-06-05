@@ -16,4 +16,5 @@ venv/
 
 # --- SYSTEM TELEMETRY ---
 pipeline.log
-logs/
+logs/dashboard-key.json
+dashboard-key.json
