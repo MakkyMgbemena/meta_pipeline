@@ -25,10 +25,15 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-
       - name: Configure Docker auth
         run: |
           gcloud auth configure-docker ${{ secrets.GCP_REGION }}-docker.pkg.dev --quiet
+
+      - name: Build and push Docker image
+        run: |
+          IMAGE=${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/meta-pipeline/meta-pipeline:${{ github.sha }}
+          docker build -t "$IMAGE" .
+          docker push "$IMAGE"
 
       - name: Deploy dashboard and backend
         env:
@@ -36,8 +41,6 @@ jobs:
           REGION: ${{ secrets.GCP_REGION }}
           BACKEND_URL: ${{ secrets.BACKEND_URL }}
         run: |
-          # NOTE: This uses Cloud Run deploy through gcloud. Update service names/images as needed.
-          # Backend image/tag
           IMAGE=${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/meta-pipeline/meta-pipeline:${{ github.sha }}
           gcloud run deploy meta-pipeline-backend \
             --image "$IMAGE" \
@@ -54,4 +57,3 @@ jobs:
             --allow-unauthenticated \
             --set-env-vars SERVICE_TYPE=streamlit,BACKEND_URL="$BACKEND_URL" \
             --memory 2Gi --cpu 1 --timeout 300
-
