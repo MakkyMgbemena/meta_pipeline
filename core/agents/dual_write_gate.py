@@ -50,5 +50,5 @@ class DualWriteGate(UnifiedAgent):
         results["result_b"] = self.orchestrator.route(agent_b, data)
 
         self.logger.info("DualWriteGate transaction completed successfully.")
-        
+
         return {"status": "success", "transaction_results": results}

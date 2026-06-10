@@ -56,4 +56,3 @@ def serialize_job(rec: JobRecord) -> Dict[str, Any]:
         "processing": rec.processing,
         "errors": rec.errors,
     }
-

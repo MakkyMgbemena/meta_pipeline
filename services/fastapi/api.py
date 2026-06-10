@@ -1,32 +1,28 @@
-from fastapi import FastAPI, Depends, HTTPException, APIRouter, UploadFile, File, Form
-from dotenv import load_dotenv
-load_dotenv()
-
+import os
 from typing import Any, Dict, Optional
+
+from dotenv import load_dotenv
+from fastapi import APIRouter, Depends, File, Form, FastAPI, HTTPException, UploadFile
 from pydantic import BaseModel
+import resend
 
+from core.agents.ledger import seed_financial_ledger
+from services.fastapi.dependencies import get_orchestrator
 from services.fastapi.models import (
-
+    JobInfo,
     MissionRequest,
     MissionResponse,
-    UploadFileResponse,
     ProcessingStatus,
-    ValidationError,
+    UploadFileResponse,
     UploadStorageInfo,
-    JobInfo,
+    ValidationError,
 )
-
-
-from services.fastapi.dependencies import get_orchestrator
 from utils.auth import ensure_client_registered
-from utils.data_seeder import seed_financial_ledger
-from utils.brief_storage import save_brief, clean_client_id
-
+from utils.brief_storage import clean_client_id, save_brief
 from utils.logger import get_logger
-import os
-import resend
-from pathlib import Path
-from datetime import datetime
+
+# Initialize environment
+load_dotenv()
 
 app = FastAPI(title="Unified AI Meta Pipeline - Web Engine")
 router = APIRouter()
@@ -67,6 +63,10 @@ class MissionTriggerRequest(BaseModel):
     client_id: str
     task_name: Optional[str] = None
     payload: Optional[Dict[str, Any]] = None
+
+class ResumeMissionRequest(BaseModel):
+    client_id: str
+    context: Dict[str, Any]
 
 
 @router.post("/run-mission")
@@ -113,7 +113,7 @@ async def run_mission_trigger(request: MissionTriggerRequest, orchestrator = Dep
 @router.post("/unified")
 async def run_unified_mission(payload: dict, orchestrator = Depends(get_orchestrator)):
     client_id = payload.get("client_id", "unknown_client")
-    
+
     # Auto-Onboarding Workflow (Client lookup -> Insert -> Seed trigger)
     if not ensure_client_registered(client_id, orchestrator):
         seed_financial_ledger(orchestrator.db, client_id)
@@ -247,7 +247,7 @@ async def upload_file(
     from utils.upload_processing import detect_file_type, process_by_type, ProcessResult
 
     from utils.storage import save_upload_bytes
-    from utils.jobs import create_job, get_job, update_job, serialize_job
+    from utils.jobs import create_job, update_job
 
     ext, file_type = detect_file_type(raw_filename)
     safe_client = clean_client_id(client_id or "anonymous")
@@ -310,7 +310,7 @@ async def upload_file(
 
 @router.get("/upload-status/{job_id}", response_model=UploadFileResponse)
 async def upload_status(job_id: str):
-    from utils.jobs import get_job, serialize_job
+    from utils.jobs import get_job
 
     rec = get_job(job_id)
     if not rec:
@@ -336,5 +336,20 @@ async def upload_status(job_id: str):
     )
 
 
+@router.post("/resume-mission")
+async def resume_mission(request: ResumeMissionRequest, orchestrator = Depends(get_orchestrator)):
+    logger.info(f"RESUME_REQUEST: client_id={request.client_id}")
+    try:
+        result = orchestrator.resume_mission(
+            client_id=request.client_id,
+            context=request.context
+        )
+        return {
+            "status": "resumed",
+            "client_id": request.client_id,
+            "result": result
+        }
+    except Exception as e:
+        logger.error(f"RESUME_FAILED: client_id={request.client_id} error={e}")
+        raise HTTPException(status_code=500, detail=str(e))
 app.include_router(router)
-

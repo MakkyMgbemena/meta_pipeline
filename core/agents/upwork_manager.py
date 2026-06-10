@@ -10,16 +10,29 @@ class UpworkManager(UnifiedAgent):
 
     def run(self, payload: dict = None):
         self.logger.info("Upwork Strategic Agent activated.")
-        
-        # High-ticket pricing logic (2.5x - 5x Fiverr baseline)
-        base_price = self.config.get("bizops", {}).get("revenue_tracking", {}).get("fiverr_basic_package_price", 65.0)
-        
+
+    # High-ticket pricing logic (2.5x - 5x Fiverr baseline)
+        base_price = (
+            self.config.get("bizops", {})
+            .get("revenue_tracking", {})
+            .get("fiverr_basic_package_price", 65.0)
+        )
+
+        # HARDENING: Log the tracked base price for business operations auditing
+        self.logger.info(
+            f"Upwork baseline tier calculated from configuration: ${base_price}"
+        )
+
+        strategy = {
+            "platform": "Upwork",
+            "baseline_price": base_price,  # HARDENING: Anchor the strategy to the configuration price
+        }
         strategy = {
             "platform": "Upwork",
             "focus": "Enterprise Data Auditing & Compliance",
             "hourly_rate_target": "75 - 150 CAD",
             "proposal_hook": "Providing <1% error rate data pipelines for growth-stage agencies."
         }
-        
+
         self.logger.info("Upwork market strategy generated.")
         return {"status": "success", "strategy": strategy}

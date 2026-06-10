@@ -2,7 +2,7 @@
 meta_pipeline:
   environment: DEVELOPMENT
   base_currency: CAD
-  
+
   # --- AI ENGINE REDUNDANCY [Source 442, 443] ---
   # Drives automatic failover if primary service hits limits
   api_redundancy:

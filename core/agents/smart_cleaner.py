@@ -1,7 +1,6 @@
 from core.unified_agent import UnifiedAgent
 from utils.logger import get_logger
 from utils.file_utils import normalize_text, clean_whitespace
-from utils.json_store import JSONStore
 
 
 class SmartCleaner(UnifiedAgent):

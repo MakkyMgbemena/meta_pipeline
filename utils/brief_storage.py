@@ -36,14 +36,14 @@ def save_brief(client_id: str, industry: str, brief_data: dict) -> dict:
     """
     safe_id = clean_client_id(client_id)
     safe_industry = clean_client_id(industry).lower()
-    
+
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
     filename = f"briefs/{safe_id}/brief_{timestamp}.json"
-    
+
     brief_data["client_id"] = safe_id
     brief_data["industry"] = safe_industry
     brief_data["created_at"] = timestamp
-    
+
     if BUCKET_NAME and storage is not None:
         try:
             client = storage.Client()
@@ -68,16 +68,16 @@ def load_brief(client_id: str) -> dict:
     """
     safe_id = clean_client_id(client_id)
     client_dir = BASE_DIR / safe_id
-    
+
     if not client_dir.exists():
         return {}
-        
+
     files = list(client_dir.glob("brief_*.json"))
     if not files:
         return {}
-        
+
     latest_file = max(files, key=os.path.getmtime)
-    
+
     try:
         with open(latest_file, "r") as f:
             return json.load(f)
@@ -93,10 +93,10 @@ def get_briefs_by_industry(target_industry: str) -> list:
     """
     matching_briefs = []
     safe_industry = clean_client_id(target_industry).lower()
-    
+
     if not BASE_DIR.exists():
         return []
-        
+
     for file_path in BASE_DIR.rglob("brief_*.json"):
         try:
             with open(file_path, "r") as f:
@@ -105,5 +105,5 @@ def get_briefs_by_industry(target_industry: str) -> list:
                     matching_briefs.append(data)
         except (json.JSONDecodeError, FileNotFoundError):
             continue
-            
+
     return matching_briefs

@@ -24,11 +24,11 @@ class MissionSwitcher:
             return ["smart_cleaner", "ghost_audit", "verifier_agent"]
 
         routing_chain = client_data.get("routing_chain", [])
-        
+
         # Log the trigger based on mission context [Source 294, 301]
         if "lead_nurture" in routing_chain:
             self.logger.info(f"PHASE 3 TRIGGER: Planning onboarding chain for {client_id}")
         elif "linkedin_manage" in routing_chain or "upwork_manage" in routing_chain:
             self.logger.info(f"MARKETING TRIGGER: Resolving outreach strategy for {client_id}")
-            
+
         return routing_chain

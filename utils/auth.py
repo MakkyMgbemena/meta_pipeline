@@ -29,7 +29,7 @@ def get_browser_token(audience_url):
 def init_secure_driver():
     """Initializes the Remote WebDriver with the required OIDC Bearer Token."""
     browser_url = os.environ.get("SELENIUM_REMOTE_URL")
-    
+
     if not browser_url:
         logger.error("SELENIUM_REMOTE_URL not detected. Ensure your environment variables are set.")
         raise EnvironmentError("SELENIUM_REMOTE_URL is not set. Point this to your cloud service URL.")
@@ -38,7 +38,7 @@ def init_secure_driver():
 
     # 1. Fetch the fresh token for the specific browser service audience
     token = get_browser_token(browser_url)
-    
+
     # 2. Configure Chrome options for the cloud environment
     options = webdriver.ChromeOptions()
     options.add_argument("--headless=new")
@@ -48,10 +48,10 @@ def init_secure_driver():
     # 3. Use custom connection to ensure headers are sent during session creation
     # Standard RemoteConnection doesn't send the token on the first POST /session
     remote_conn = AuthenticatedRemoteConnection(
-        f"{browser_url}/wd/hub", 
+        f"{browser_url}/wd/hub",
         token=token
     )
-    
+
     driver = webdriver.Remote(
         command_executor=remote_conn,
         options=options

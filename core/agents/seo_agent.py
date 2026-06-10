@@ -1,17 +1,15 @@
 from core.unified_agent import UnifiedAgent
 from utils.logger import get_logger
 from utils.file_utils import normalize_text, clean_whitespace
-from utils.json_store import JSONStore
 from utils.auth import init_secure_driver
 import datetime
-import os
 
 class SEOAgent(UnifiedAgent):
     """
     SEO Agent: Conducts keyword auditing and metadata optimization.
     Follows the 4-pass logic to ensure search engine dominance.
     """
-    
+
     def __init__(self, config: dict, client_id: str, db=None):
         super().__init__(config, client_id, db)
         self.logger = get_logger("SEOAgent")
@@ -33,7 +31,7 @@ class SEOAgent(UnifiedAgent):
             return {"status": "skipped", "reason": "no_data"}
 
         self.logger.info(f"Starting SEO Optimization for client: {self.client_id}")
-        
+
         # Human-in-the-loop: Capture 'BEFORE' state if possible
         before_img = None
         try:
@@ -49,13 +47,13 @@ class SEOAgent(UnifiedAgent):
 
         # Pass 1: Keyword Audit (Discriminative Analysis)
         data = self._keyword_audit(data)
-        
+
         # Pass 2: Metadata Normalization (Text Cleaning)
         data = self._normalize_metadata(data)
-        
+
         # Pass 3: Search Intensity Analysis (Residual Mapping)
         data = self._search_intensity_check(data)
-        
+
         # Pass 4: Verification & Audit Trail (Local Accuracy Reconcile)
         report = self._generate_seo_report(data)
 
@@ -72,7 +70,9 @@ class SEOAgent(UnifiedAgent):
         """Identifies missing primary service keywords as defined in GhostAudit flags."""
         # Logic: Cross-reference data against config-defined 'primary_keywords'
         keywords = self.config.get("seo", {}).get("primary_keywords", ["ai", "automation"])
-        self.audit_trail.append("Pass 1: Completed Keyword Audit against primary targets.")
+
+        # HARDENING: Explicitly register the audited keywords into the platform's immutable trail
+        self.audit_trail.append(f"Pass 1: Completed Keyword Audit against primary targets: {', '.join(keywords)}")
         return data
 
     def _normalize_metadata(self, data):

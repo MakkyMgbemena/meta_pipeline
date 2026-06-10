@@ -1,6 +1,5 @@
 from core.unified_agent import UnifiedAgent
 from utils.logger import get_logger
-from utils.json_store import JSONStore
 
 
 class GhostAudit(UnifiedAgent):

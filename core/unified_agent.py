@@ -12,7 +12,7 @@ class UnifiedAgent:
         self.logger = get_logger(self.__class__.__name__)
         self.config = config or {}
         self.client_id = client_id
-        
+
         # FIX: Use injected DB session to prevent connection pool exhaustion
         if db:
             self.db = db

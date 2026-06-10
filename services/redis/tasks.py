@@ -13,10 +13,10 @@ def execute_mission_task(client_id: str, payload: dict):
         # Re-initialize the brain within the worker context
         config = ConfigLoader().config
         orchestrator = Orchestrator(config)
-        
+
         logger.info(f"Worker starting background mission for: {client_id}")
         result = orchestrator.run_for_client(client_id, payload)
-        
+
         return {"status": "success", "client_id": client_id, "result": result}
     except Exception as e:
         logger.error(f"Background Mission Failed for {client_id}: {str(e)}")

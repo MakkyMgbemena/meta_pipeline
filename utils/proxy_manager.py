@@ -20,6 +20,6 @@ class ProxyManager:
         if not self.gateway:
             self.logger.warning("Stealth Warning: BRIGHTDATA_PROXY not found in .env. Running on local IP.")
             return None
-            
+
         self.logger.info("Stealth Mode: Injected Bright Data ISP Gateway for this mission.")
         return f"--proxy-server={self.gateway}"

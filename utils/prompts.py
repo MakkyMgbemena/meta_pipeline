@@ -12,14 +12,14 @@ Requirements:
 
 VALIDATION_GRADER_PROMPT = """
 You are a high-trust verification agent. Evaluate the execution context for the following client: {client_id}.
-Analyze the status of all prior nodes. 
+Analyze the status of all prior nodes.
 - If any critical failure exists, return 'FAIL'.
 - If all steps are successful or gracefully skipped, return 'PASS'.
 - Provide a brief rationale for your verdict.
 """
 
 NARRATIVE_GRADER_PROMPT = """
-You are a quality control agent for narrative generation. 
+You are a quality control agent for narrative generation.
 Review the following HTML report:
 {generated_narrative}
 

@@ -40,12 +40,12 @@ class StripeWebhookHandler:
         """Triggers Dual-Write: User Registry + Financial Ledger [Source 478, 672]."""
         client_email = session.get("customer_details", {}).get("email")
         amount = session.get("amount_total") / 100 # Convert to CAD
-        
+
         self.logger.info(f"Fulfillment Triggered: {client_email} | ${amount} CAD")
-        
+
         # 1. Update User Tier to PRO in PostgreSQL
         self.user_store.create_user(client_email, tier="pro")
-        
+
         # 2. Log Revenue in the Phase 3 Financial Ledger
         ledger = LedgerAgent(config={}, client_id=client_email)
         ledger.run({

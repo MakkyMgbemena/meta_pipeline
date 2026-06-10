@@ -39,7 +39,7 @@ def _safe_preview_rows(df: pd.DataFrame, max_rows: int = 5) -> List[Dict[str, An
 
 
 def detect_file_type(filename: str) -> Tuple[Optional[str], Optional[str]]:
-    
+
     if not filename or "." not in filename:
         return None, None
     ext = "." + filename.rsplit(".", 1)[-1].lower()
@@ -151,4 +151,3 @@ def process_by_type(file_type: str, data: bytes) -> ProcessResult:
     if file_type == "pdf":
         return process_pdf(data)
     return ProcessResult(status="error", summary={}, preview={}, errors=[{"type": "unsupported", "message": f"Unsupported file_type={file_type}"}])
-

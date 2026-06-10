@@ -7,7 +7,6 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from core.unified_agent import UnifiedAgent
 from utils.logger import get_logger
-from datetime import datetime
 
 class SocialMediaAgent(UnifiedAgent):
     """
@@ -17,7 +16,7 @@ class SocialMediaAgent(UnifiedAgent):
     def __init__(self, config: dict, client_id: str = None, db=None):
         super().__init__(config, client_id, db)
         self.logger = get_logger("SocialMediaAgent")
-        # Standard selectors derived from Gaussian pattern matching 
+        # Standard selectors derived from Gaussian pattern matching
         self.targets = {
             "UNLIKE": '//button[@data-testid="unlike"]',
             "DELETE": '//button[@data-testid="caret"]',
@@ -28,17 +27,17 @@ class SocialMediaAgent(UnifiedAgent):
         from google.cloud import storage
         import os
         import datetime
-        
+
         client = storage.Client()
         bucket_name = os.getenv("GCS_BUCKET_NAME")
         if not bucket_name:
             self.logger.warning("GCS_BUCKET_NAME not set, using local path")
             return local_path
-        
+
         bucket = client.bucket(bucket_name)
         blob = bucket.blob(destination_blob)
         blob.upload_from_filename(local_path)
-        
+
         # Bypasses Public Access Prevention policies safely using Signed URLs
         try:
             signed_url = blob.generate_signed_url(
@@ -52,13 +51,12 @@ class SocialMediaAgent(UnifiedAgent):
             return blob.public_url
 
     def _take_screenshot(self, driver, stage: str) -> dict:
-        from datetime import datetime
         import os
-        
+
         os.makedirs("reports/screenshots", exist_ok=True)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")[:-3]
         filename = f"reports/screenshots/{self.client_id}_{stage}_{timestamp}.png"
-        
+
         try:
             driver.save_screenshot(filename)
             gcs_blob = f"screenshots/{self.client_id}/{stage}_{timestamp}.png"
@@ -73,29 +71,29 @@ class SocialMediaAgent(UnifiedAgent):
                 os.remove(filename)
             except OSError:
                 pass
-        
+
         return {
             "local_path": filename,
             "public_url": public_url
         }
-    
+
     def run(self, payload: dict = None) -> dict:
         """
-        Main execution gate. Checks for authorization before falling back 
+        Main execution gate. Checks for authorization before falling back
         to stealth headless automation.
         """
         if payload is None:
             payload = {}
         platform = payload.get("platform", "X").upper()
         task = payload.get("task", "UNLIKE").upper()
-        
+
         # 1. AUTH CHECK: Check .env for live keys
         api_key = os.getenv(f"{platform}_API_KEY")
-        
+
         if api_key and "SCAFFOLD" not in api_key:
             return self._execute_via_api(platform, task, payload)
-        
-        # 2. HACKER FALLBACK: Activate Headless Stealth if no key exists 
+
+        # 2. HACKER FALLBACK: Activate Headless Stealth if no key exists
         self.logger.info(f"Authorization not detected for {platform}. Launching Headless Stealth...")
         return self._execute_via_headless(platform, task)
 
@@ -122,24 +120,24 @@ class SocialMediaAgent(UnifiedAgent):
 
         options = self._get_stealth_options()
         driver = self._create_webdriver(options)
-        
+
         # Prevent screenshots running on an uninitialized browser view
         before_path = self._take_screenshot(driver, "before")
-        
+
         try:
             driver.get(f"https://{platform.lower()}.com")
             self.logger.info(f"Navigated to {platform}. Proceeding with automated cloud execution...")
-            
+
             xpath = self.targets.get(task, self.targets["UNLIKE"])
             btns = driver.find_elements(By.XPATH, xpath)
-            
+
             for btn in btns:
                 driver.execute_script("arguments[0].click();", btn)
                 self._gaussian_wait() # Bypasses algorithmic detection
-                
+
             # Human-in-the-loop: Capture 'AFTER' state for the report
             after_img = self._capture_state(driver, f"after_{self.client_id}.png")
-            
+
             after_path = self._take_screenshot(driver, "after")
             return {
                 "status": "success",
@@ -175,14 +173,14 @@ class SocialMediaAgent(UnifiedAgent):
             path = os.path.join(os.environ.get('USERPROFILE', ''), 'Desktop', 'SaaS_Bot_Session')
         else: # Linux / Cloud Run Production Environment
             path = "/tmp/selenium_session"
-            
+
         options.add_argument(f"--user-data-dir={path}")
         return options
 
     def _create_webdriver(self, options):
         """Creates a Selenium WebDriver, defaulting to remote Selenium via localhost."""
         remote_url = os.getenv("SELENIUM_REMOTE_URL", "http://localhost:4444/wd/hub")
-        
+
         if "localhost" in remote_url:
             self.logger.warning("SELENIUM_REMOTE_URL is set to localhost. Ensure you export your Cloud URL for production.")
 

@@ -2,7 +2,6 @@ from utils.config_loader import ConfigLoader
 from core.orchestrator import Orchestrator
 from utils.logger import get_logger
 # THIS LINE IS THE PHASE 5 "BRIDGE" TO YOUR SAAS DASHBOARD [Source 481]
-from services.fastapi.api import app 
 
 logger = get_logger("MAIN")
 
@@ -11,7 +10,7 @@ def main():
     logger.info("Universal Headquarters: STARTING PRODUCTION RUN (CLI)...")
     config = ConfigLoader().config
     orchestrator = Orchestrator(config)
-    
+
     # Triggering the default mission for high-trust verification
     test_payload = {
         "task": "cleanup",

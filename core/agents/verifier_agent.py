@@ -1,6 +1,5 @@
 from core.unified_agent import UnifiedAgent
 from services.fastapi.models import FinancialLedger, ClientRegistry
-from utils.logger import get_logger
 
 class VerifierAgent(UnifiedAgent):
     """

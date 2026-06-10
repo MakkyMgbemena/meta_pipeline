@@ -1,8 +1,6 @@
-from google.cloud.sql.connector import Connector, IPTypes
 import os
 import datetime
 from sqlalchemy import create_engine, text
-from sqlalchemy.engine import make_url
 from sqlalchemy.orm import sessionmaker
 from utils.logger import get_logger
 from contextlib import contextmanager
@@ -106,7 +104,7 @@ class DatabaseManager:
                     record.last_sync = datetime.datetime.utcnow()
                     session.commit() # Mandatory persistence fix [2]
                     client_found = True
-            
+
             if client_found:
                 self.logger.info(f"PostgreSQL Registry update successful for: {client_id}")
             else:

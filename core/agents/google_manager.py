@@ -5,10 +5,10 @@ import datetime
 
 class GoogleManager(UnifiedAgent):
     """
-    Google Agent Manager: Orchestrates interactions with Google Business, 
+    Google Agent Manager: Orchestrates interactions with Google Business,
     Search Console, and Ads. Functions as a Bridge Agent.
     """
-    
+
     def __init__(self, config: dict, client_id: str, db=None):
         super().__init__(config, client_id, db)
         self.logger = get_logger("GoogleManager")
@@ -27,7 +27,7 @@ class GoogleManager(UnifiedAgent):
             return {"status": "skipped", "reason": "no_task"}
 
         self.logger.info(f"Executing Google Management task: {payload['task']} for {self.client_id}")
-        
+
         # Step 1: Secure Credential Retrieval (Phase 2 Hardening)
         api_key = self.env.get("GOOGLE_API_KEY")
         if not api_key:
@@ -37,7 +37,7 @@ class GoogleManager(UnifiedAgent):
         # Step 2: Orchestration Logic (Deterministic Mapping)
         task = payload.get("task")
         data = payload.get("data", {})
-        
+
         if task == "gmb_update":
             result = self._orchestrate_business_profile(data)
         elif task == "search_console_audit":

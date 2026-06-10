@@ -11,7 +11,7 @@ class LinkedInManager(UnifiedAgent):
 
     def run(self, payload: dict = None):
         self.logger.info("LinkedIn Manager Agent activated.")
-        
+
         # Technical engagement blueprint for the Greater Toronto Area market [6, 7]
         engagement_plan = {
             "platform": "LinkedIn",
@@ -19,6 +19,6 @@ class LinkedInManager(UnifiedAgent):
             "boolean_search": '("COO" OR "VP Operations") AND ("SMB" OR "Agency")',
             "outbound_hook": "Building a bridge between business goals and affordable AI systems."
         }
-        
+
         self.logger.info("LinkedIn engagement blueprint generated successfully.")
         return {"status": "success", "engagement_plan": engagement_plan}

@@ -7,4 +7,3 @@ Write-Host "Deploying Streamlit..." -ForegroundColor Cyan
 & "$PSScriptRoot\deploy_streamlit.ps1"
 
 Write-Host "All services deployed." -ForegroundColor Green
-

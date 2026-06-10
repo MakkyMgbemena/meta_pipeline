@@ -54,22 +54,22 @@
    54  def init_secure_driver():
    55      """Initializes the Remote WebDriver with the required OIDC Bearer Token."""
    56      browser_url = os.environ.get("SELENIUM_REMOTE_URL")
-   57      
+   57
    58      if not browser_url:
    59          raise EnvironmentError("SELENIUM_REMOTE_URL is not set in the environment.")
    60      # 1. Fetch the fresh token for the specific browser service audience
    61      token = get_browser_token(browser_url)
-   62      
+   62
    63      # 2. Configure Chrome options for the cloud environment
    64      options = webdriver.ChromeOptions()
    65      options.add_argument("--headless=new")
    66      options.add_argument("--no-sandbox")
    67      options.add_argument("--disable-dev-shm-usage")
-   68      
-   69      # 3. Apply capabilities. Note: Standard Selenium Remote may require 
+   68
+   69      # 3. Apply capabilities. Note: Standard Selenium Remote may require
    70      # a proxy or custom header wrapper to send the 'Authorization: Bearer' header.
    71      capabilities = options.to_capabilities()
-   72      
+   72
    73      # Cloud Run requires the token in the 'Authorization' or 'X-Serverless-Authorization' header
    74      # This utility prepares the driver to reach your private service endpoint
    75      driver = webdriver.Remote(
@@ -92,7 +92,7 @@
    92  python3 ~/meta_pipeline/main.py
    93  python -m pip install python-dotenv
    94  python3 ~/meta_pipeline/main.py
-   95  python -m pip install fastapi uvicorn pydantic 
+   95  python -m pip install fastapi uvicorn pydantic
    96  python3 ~/meta_pipeline/main.py
    97  pip3 install --upgrade   resend   fastapi   uvicorn   google-auth   google-cloud-sql-connector[pg8000]   sqlalchemy   requests   selenium   playwright   pydantic   python-dotenv
    98  pip3 install --upgrade   resend   fastapi   uvicorn   google-auth   cloud-sql-python-connector[pg8000]   sqlalchemy   requests   selenium   playwright   pydantic   python-dotenv
@@ -250,7 +250,7 @@
   250  gcloud builds submit --config browser-service/cloudbuild.yaml
   251  gcloud builds submit --config browser-service/cloudbuild.yaml .
   252  pwd
-  253  gcloud builds submit --config browser-service/cloudbuild.yaml . 
+  253  gcloud builds submit --config browser-service/cloudbuild.yaml .
   254  python3 main.py
   255  # 1. Set the database credentials for this session
   256  export DB_USER="postgres"
@@ -353,7 +353,7 @@
   353  ls -R
   354  streamlit run app.py
   355  cls
-  356  clear 
+  356  clear
   357  chmod +x cloud-sql-proxy
   358  # 1. Clear the Streamlit port and ensure a fresh start
   359  lsof -ti:8501 | xargs kill -9
@@ -464,7 +464,7 @@
   464  # Now you can run streamlit or main.py
   465  streamlit run your_app.py
   466  geemini
-  467  1 # 1. Activate the environment                                                                                                                                                
+  467  1 # 1. Activate the environment
   468  clear
   469  ~/customize_environment.sh && sudo lsof -ti:8501,5432 | xargs kill -9 && cd ~/meta_pipeline && source venv/bin/activate && ./cloud-sql-proxy project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db & cd ~/meta_pipeline && streamlit run app.py
   470  clear
@@ -478,12 +478,12 @@
   478  ./customize_environment.sh
   479  gcloud auth application-default login
   480  clear
-  481  cd ~/meta_pipeline 
+  481  cd ~/meta_pipeline
   482  gcloud auth application-default login
-  483  chmod +x ~/customize_environment.sh && ~/customize_environment.sh 
-  484  sudo lsof -ti:8501,5432 | xargs kill -9 
-  485  cd ~/meta_pipeline && source venv/bin/activate 
-  486  ./cloud-sql-proxy project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db &                                     
+  483  chmod +x ~/customize_environment.sh && ~/customize_environment.sh
+  484  sudo lsof -ti:8501,5432 | xargs kill -9
+  485  cd ~/meta_pipeline && source venv/bin/activate
+  486  ./cloud-sql-proxy project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db &
   487  streamlit run your_app_name.py --server.enableCORS=false --server.enableXsrfProtection=false
   488  streamlit run app.py
   489  clear

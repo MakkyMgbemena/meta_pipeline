@@ -13,7 +13,7 @@ def get_orchestrator() -> Orchestrator:
     Guarantees the engine is armed with the latest config.yaml and .env secrets [Source 436].
     """
     global _orchestrator_instance
-    
+
     if _orchestrator_instance is None:
         logger.info("Initializing MetaOrchestrator for Web Engine...")
         try:
@@ -24,5 +24,5 @@ def get_orchestrator() -> Orchestrator:
         except Exception as e:
             logger.error(f"Engine Injection FAILED: {str(e)}")
             raise RuntimeError(f"Could not initialize system brain: {e}")
-            
+
     return _orchestrator_instance
