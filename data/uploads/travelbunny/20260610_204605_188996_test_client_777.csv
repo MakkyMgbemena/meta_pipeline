@@ -1,0 +1,6 @@
+﻿client_id,transaction_date,amount,description,category,transaction_id
+test_client_777,2026-05-15,1250,Consulting fee - Enterprise contract,Revenue,txn_001
+test_client_777,2026-05-16,-450,AWS hosting payment,Expense,txn_002
+test_client_777,2026-05-17,3800,Net margin settlement,Adjustment,txn_003
+test_client_777,2026-05-18,750,Software license renewal,Expense,txn_004
+test_client_777,2026-05-19,-125,Refund - customer dispute,Expense,txn_005

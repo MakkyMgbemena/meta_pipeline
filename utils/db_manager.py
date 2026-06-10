@@ -17,19 +17,17 @@ class DatabaseManager:
         # 1. Environment-aware Authentication [Source 453, 468]
         user = os.getenv("DB_USER", "postgres")
         password = os.getenv("DB_PASS")
-        host = os.getenv("DB_HOST", "127.0.0.1")
+        host = os.getenv("DB_HOST", "34.130.156.62")
         port = os.getenv("DB_PORT", "5432")
-        db_name = os.getenv("DB_NAME", "meta_pipeline_prod")
+        db_name = os.getenv("DB_NAME", "meta_pipeline")
 
         if not password:
             self.logger.error("CRITICAL: DB_PASS not found!")
             raise ValueError("Database password is required.")
 
-        db_uri = f"postgresql://{user}:{password}@{host}:{port}/{db_name}"
-
         try:
             # 2. Establish the Physical Bridge via native container socket
-            db_uri = f"postgresql+psycopg2://{user}:{password}@/{db_name}?host={host}"
+            db_uri = f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{db_name}"
             self.engine = create_engine(db_uri)
 
             # Auto-initialize missing database tables natively
