@@ -1,3 +1,5 @@
+from turtle import back
+
 import streamlit as st
 import pandas as pd
 import os
@@ -64,7 +66,8 @@ st.header("Run Mission")
 
 # Default to a local dev backend so the UI (upload/trigger) appears during development.
 # Override by setting the BACKEND_URL environment variable.
-backend_url = os.getenv("BACKEND_URL", "http://localhost:8000")
+backend_url = os.getenv("BACKEND_URL", "https://meta-pipeline-680132354800.northamerica-northeast2.run.app")
+
 if "BACKEND_URL" not in os.environ:
     st.info(
         "BACKEND_URL not set; using default http://localhost:8080 for development. Set BACKEND_URL to override."
