@@ -1,8 +1,7 @@
-from turtle import back
-
 import streamlit as st
 import pandas as pd
 import os
+import time
 import requests
 from dotenv import load_dotenv
 
@@ -70,7 +69,7 @@ backend_url = os.getenv("BACKEND_URL", "https://meta-pipeline-680132354800.north
 
 if "BACKEND_URL" not in os.environ:
     st.info(
-        "BACKEND_URL not set; using default http://localhost:8080 for development. Set BACKEND_URL to override."
+        "BACKEND_URL not set; using default backend for production. Set BACKEND_URL to override."
     )
 
 mission_id = st.text_input("Mission ID")
@@ -168,8 +167,6 @@ with st.expander("Upload a brief, asset, or CSV"):
                         st.json(payload)
                         job_id = (payload.get("job") or {}).get("job_id")
                         if job_id:
-                            import time
-
                             status_placeholder = st.empty()
                             max_checks = 120
                             for _ in range(max_checks):
