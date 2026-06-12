@@ -1,0 +1,178 @@
+[
+    {
+        "timestamp": "2026-05-12T15:40:05.508375",
+        "client_id": "client_new_deal_001",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "margin": 60.0,
+        "description": "Standard Pipeline Run"
+    },
+    {
+        "timestamp": "2026-05-12T15:49:17.594695",
+        "client_id": "client_new_deal_001",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "margin": 60.0,
+        "description": "Standard Pipeline Run"
+    },
+    {
+        "timestamp": "2026-05-12T15:54:34.353240",
+        "client_id": "client_new_deal_001",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "margin": 60.0,
+        "description": "Standard Pipeline Run"
+    },
+    {
+        "timestamp": "2026-05-12T15:58:31.866267",
+        "client_id": "client_new_deal_001",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "margin": 60.0,
+        "description": "Standard Pipeline Run"
+    },
+    {
+        "timestamp": "2026-05-12T15:58:55.259853",
+        "client_id": "client_new_deal_001",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "margin": 60.0,
+        "description": "Standard Pipeline Run"
+    },
+    {
+        "timestamp": "2026-05-12T16:03:10.009149",
+        "client_id": "client_new_deal_001",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "margin": 60.0,
+        "description": "Standard Pipeline Run"
+    },
+    {
+        "timestamp": "2026-05-12T16:05:02.072956",
+        "client_id": "client_new_deal_001",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "margin": 60.0,
+        "description": "Standard Pipeline Run"
+    },
+    {
+        "timestamp": "2026-05-12T16:06:03.812639",
+        "client_id": "client_new_deal_001",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "margin": 60.0,
+        "description": "Standard Pipeline Run"
+    },
+    {
+        "timestamp": "2026-05-12T16:18:01.087661",
+        "client_id": "client_fiverr_deal_001",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "margin": 60.0,
+        "description": "Standard Pipeline Run"
+    },
+    {
+        "timestamp": "2026-05-12T16:36:14.957724",
+        "client_id": "client_fiverr_deal_001",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "margin": 60.0,
+        "description": "Standard Pipeline Run"
+    },
+    {
+        "timestamp": "2026-05-12T21:01:22.947308",
+        "client_id": "client_fiverr_deal_001",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "margin": 60.0,
+        "description": "Standard Pipeline Run"
+    },
+    {
+        "timestamp": "2026-05-12T21:01:45.252398",
+        "client_id": "client_fiverr_deal_001",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "margin": 60.0,
+        "description": "Standard Pipeline Run"
+    },
+    {
+        "timestamp": "2026-05-12T21:04:21.626205",
+        "client_id": "client_fiverr_deal_001",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "margin": 60.0,
+        "description": "Standard Pipeline Run"
+    },
+    {
+        "timestamp": "2026-05-12T21:05:01.440218",
+        "client_id": "client_fiverr_deal_001",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "margin": 60.0,
+        "description": "Standard Pipeline Run"
+    },
+    {
+        "timestamp": "2026-05-12T21:09:03.689117",
+        "client_id": "client_fiverr_deal_001",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "margin": 60.0,
+        "description": "Standard Pipeline Run"
+    },
+    {
+        "timestamp": "2026-05-12T21:34:36.444427",
+        "client_id": "client_fiverr_deal_001",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "margin": 60.0,
+        "description": "Standard Pipeline Run"
+    },
+    {
+        "timestamp": "2026-05-12T21:36:12.932372",
+        "client_id": "client_fiverr_deal_001",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "margin": 60.0,
+        "description": "Standard Pipeline Run"
+    },
+    {
+        "timestamp": "2026-05-12T21:50:34.987670",
+        "client_id": "client_fiverr_deal_001",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "margin": 60.0,
+        "description": "Standard Pipeline Run"
+    },
+    {
+        "timestamp": "2026-05-12T21:54:07.432574",
+        "client_id": "client_fiverr_deal_001",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "margin": 60.0,
+        "description": "Standard Pipeline Run"
+    },
+    {
+        "timestamp": "2026-05-12T22:00:31.950061",
+        "client_id": "client_fiverr_deal_001",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "margin": 60.0,
+        "description": "Standard Pipeline Run"
+    },
+    {
+        "timestamp": "2026-05-12T22:02:24.233832",
+        "client_id": "client_fiverr_deal_001",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "margin": 60.0,
+        "description": "Standard Pipeline Run"
+    },
+    {
+        "timestamp": "2026-05-12T22:02:49.102698",
+        "client_id": "client_fiverr_deal_001",
+        "revenue": 65.0,
+        "cost": 5.0,
+        "margin": 60.0,
+        "description": "Standard Pipeline Run"
+    }
+]

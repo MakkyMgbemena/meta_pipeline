@@ -1,0 +1,30 @@
+./services/fastapi/dependencies.py:1:from core.orchestrator import Orchestrator
+./services/fastapi/dependencies.py:10:def get_orchestrator() -> Orchestrator:
+./services/fastapi/dependencies.py:12:    Dependency Injector: Provides the active MetaOrchestrator instance.
+./services/fastapi/dependencies.py:18:        logger.info("Initializing MetaOrchestrator for Web Engine...")
+./services/fastapi/dependencies.py:22:            _orchestrator_instance = Orchestrator(config)
+./services/fastapi/dependencies.py:23:            logger.info("MetaOrchestrator successfully injected into API scope.")
+./services/fastapi/api.py:93:            result = orchestrator.run_for_client(request.client_id, context=context)
+./services/fastapi/api.py:121:    result = orchestrator.run_for_client(client_id, context=payload)
+./services/fastapi/api.py:195:@router.post("/upload-file", response_model=UploadFileResponse)
+./services/fastapi/api.py:311:@router.get("/upload-status/{job_id}", response_model=UploadFileResponse)
+./services/fastapi/api.py:312:async def upload_status(job_id: str):
+./services/redis/tasks.py:1:from core.orchestrator import Orchestrator
+./services/redis/tasks.py:9:    Background task wrapper for the MetaOrchestrator.
+./services/redis/tasks.py:15:        orchestrator = Orchestrator(config)
+./services/redis/tasks.py:18:        result = orchestrator.run_for_client(client_id, payload)
+./services/redis/worker.py:5:from core.orchestrator import Orchestrator
+./services/redis/worker.py:19:        self.orchestrator = Orchestrator(config)
+./services/redis/worker.py:36:                    # Physically execute the agent chain via the Orchestrator
+./services/redis/worker.py:37:                    self.orchestrator.run_for_client(client_id, payload.get("payload"))
+./core/orchestrator.py:45:class Orchestrator:
+./core/orchestrator.py:47:        self.logger = get_logger("Orchestrator")
+./core/orchestrator.py:61:        self.logger.info("Orchestrator instantiated and agents registered.")
+./core/orchestrator.py:142:    def run_for_client(self, client_id: str, context: dict = None):
+./core/agents/__init__.py:13:# The Single Source of Truth for the Orchestrator [Source 397]
+./core/agents/fiverr_publisher.py:44:            "technical_hook": "Powered by a decoupled MetaOrchestrator architecture for 100% data integrity."
+./app.py:148:                        f"{backend_url.rstrip('/')}/upload-file",
+./app.py:174:                                    f"{backend_url.rstrip('/')}/upload-status/{job_id}",
+./main.py:2:from core.orchestrator import Orchestrator
+./main.py:11:    orchestrator = Orchestrator(config)
+./main.py:22:    result = orchestrator.run_for_client("client_enterprise_777", test_payload)

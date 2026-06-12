@@ -1,0 +1,56 @@
+# Resolution Context — Post-Upload Silence
+
+## PROBLEM (CONFIRMED)
+
+- POST /upload-file parses successfully
+- Orchestrator.run_for_client() is NOT triggered
+- Streamlit stops polling at PARSED
+- No durable job state tracking exists
+
+Result:
+System appears alive but performs NO agent execution.
+
+---
+
+## REQUIRED PIPELINE (MUST EXIST)
+
+A single job must progress through:
+
+RECEIVED → STORED → PARSED → ORCHESTRATION_STARTED → AGENT_* → COMPLETED/FAILED
+
+---
+
+## MISSING LINK (CRITICAL)
+
+After parsing completes:
+
+Orchestrator.run_for_client(client_id, job_id)
+
+MUST be called.
+
+If this does not happen → system is broken.
+
+---
+
+## NON-NEGOTIABLE RULES
+
+- Every stage must update PostgreSQL
+- UI must NOT stop at PARSED
+- UI stops ONLY at COMPLETED or FAILED
+- One job = one source of truth (DB)
+
+---
+
+## DEFINITION OF DONE
+
+- upload returns job_id
+- DB state goes beyond PARSED
+- orchestrator executes agents
+- UI shows progress until COMPLETED
+- no silent state exists
+
+---
+
+## FAILURE CONDITION
+
+If orchestrator is not triggered after parsing, the pipeline is NOT complete.

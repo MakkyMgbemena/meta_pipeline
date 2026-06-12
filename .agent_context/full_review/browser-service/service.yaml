@@ -1,0 +1,40 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: meta-pipeline-browser
+  annotations:
+    run.googleapis.com/launch-stage: BETA
+spec:
+  template:
+    metadata:
+      annotations:
+        run.googleapis.com/execution-environment: gen2
+    spec:
+      containers:
+      - image: northamerica-northeast2-docker.pkg.dev/project-24b04b3d-fdd9-4b07-855/meta-pipeline/meta-pipeline-browser:latest
+        ports:
+        - containerPort: 4444
+        resources:
+          limits:
+            cpu: "2"
+            memory: 4Gi
+        env:
+        - name: SELENIUM_REMOTE_URL
+          value: "http://localhost:4444/wd/hub"
+        - name: INSTANCE_CONNECTION_NAME
+          value: "project-24b04b3d-fdd9-4b07-855:northamerica-northeast2:meta-pipeline-db"
+        volumeMounts:
+        - name: shm
+          mountPath: /dev/shm
+        startupProbe:
+          httpGet:
+            port: 4444
+            path: /status
+          timeoutSeconds: 240
+          periodSeconds: 10
+          failureThreshold: 24
+      volumes:
+      - name: shm
+        emptyDir:
+          medium: Memory
+          sizeLimit: 1Gi

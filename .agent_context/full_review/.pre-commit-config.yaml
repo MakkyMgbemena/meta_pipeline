@@ -1,0 +1,30 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: debug-statements
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.4.0
+    hooks:
+      - id: ruff
+        args: [--fix]
+
+  - repo: local
+    hooks:
+      - id: ripgrep-pattern-guard
+        name: 🦀 Ripgrep Codebase Quality Gate
+        entry: rg --files-with-matches --invert-match
+        language: system
+        pass_filenames: true
+        types: [python]
+        args:
+          - -e
+          - 'pp\.'
+          - -e
+          - '\\x07'
+          - -e
+          - '-&gt;'

@@ -56,3 +56,12 @@ def validate_numeric(value, field_name: str, warnings: list):
         warnings.append(f"{field_name} is negative — verify correctness.")
 def validate_client_id(client_id: str, config: dict) -> bool:
     return client_id in config.get("meta_pipeline", {}).get("clients", {})
+
+def clean_client_id(client_id: str) -> str:
+    """
+    Normalize client IDs used by FastAPI routes.
+    Keeps IDs predictable without requiring config lookup.
+    """
+    if client_id is None:
+        return ""
+    return str(client_id).strip()

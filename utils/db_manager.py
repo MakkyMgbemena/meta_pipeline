@@ -1,20 +1,23 @@
 import os
 import datetime
+from urllib.parse import quote_plus
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 from utils.logger import get_logger
 from contextlib import contextmanager
 
 # Import your models so the manager knows which 'drawers' to open
-from services.fastapi.models import FinancialLedger, ClientRegistry
-
+from services.fastapi.models import FinancialLedger, ClientRegistry, MissionJob
 
 class DatabaseManager:
+    _engine = None
+    _Session = None
+
     def __init__(self, config: dict = None):
         self.logger = get_logger("DatabaseManager")
         self.config = config
 
-        # 1. Environment-aware Authentication [Source 453, 468]
+        # 1. Environment-aware Authentication
         user = os.getenv("DB_USER", "postgres")
         password = os.getenv("DB_PASS")
         host = os.getenv("DB_HOST", "34.130.156.62")
@@ -25,31 +28,49 @@ class DatabaseManager:
             self.logger.error("CRITICAL: DB_PASS not found!")
             raise ValueError("Database password is required.")
 
-        try:
-            # 2. Establish the Physical Bridge via native container socket
-            db_uri = f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{db_name}"
-            self.engine = create_engine(db_uri)
+        if DatabaseManager._engine is None:
+            try:
+                if host.startswith("/cloudsql/"):
+                    db_uri = (
+                        f"postgresql+psycopg2://{quote_plus(user)}:{quote_plus(password)}@/{quote_plus(db_name)}"
+                        f"?host={quote_plus(host)}"
+                    )
+                else:
+                    db_uri = (
+                        f"postgresql+psycopg2://{quote_plus(user)}:{quote_plus(password)}"
+                        f"@{host}:{port}/{quote_plus(db_name)}"
+                    )
 
-            # Auto-initialize missing database tables natively
-            from services.fastapi.models import FinancialLedger, ClientRegistry
-            FinancialLedger.__table__.create(bind=self.engine, checkfirst=True)
-            ClientRegistry.__table__.create(bind=self.engine, checkfirst=True)
+                DatabaseManager._engine = create_engine(
+                    db_uri,
+                    pool_size=10,
+                    max_overflow=20,
+                    pool_pre_ping=True
+                )
 
-            # 3. Create the Session Factory (The "Clerk" that handles the vault)
-            self.Session = sessionmaker(bind=self.engine)
+                # Auto-create tables
+                FinancialLedger.__table__.create(bind=DatabaseManager._engine, checkfirst=True)
+                ClientRegistry.__table__.create(bind=DatabaseManager._engine, checkfirst=True)
+                MissionJob.__table__.create(bind=DatabaseManager._engine, checkfirst=True)
 
-            # 4. FIX: Restore .session attribute for backward compatibility
-            self.session = self.Session()
+                # Create session factory
+                DatabaseManager._Session = sessionmaker(bind=DatabaseManager._engine)
 
-            # 5. FIX: Auto-grant sequence permissions to fix InsufficientPrivilege for ID generation [2]
-            self._ensure_sequence_permissions(user)
+                self._ensure_sequence_permissions(user)
 
-            self.logger.info(
-                "DatabaseManager successfully initialized and authenticated."
-            )
-        except Exception as e:
-            self.logger.error(f"Database Engine Failed: {str(e)}")
-            raise e
+            except Exception as e:
+                self.logger.error(f"Database Engine Failed: {str(e)}")
+                raise
+
+        self.engine = DatabaseManager._engine
+        self.Session = DatabaseManager._Session
+
+        # Backward compatibility session
+        self.session = self.Session()
+
+        self.logger.info(
+            "DatabaseManager successfully initialized and authenticated."
+        )
 
     def _ensure_sequence_permissions(self, user: str):
         """USAGE/SELECT on sequences is required for auto-increment IDs."""
@@ -126,4 +147,65 @@ class DatabaseManager:
                 return None
         except Exception as e:
             self.logger.error(f"Failed to fetch latest mission: {e}")
+            return None
+
+    def create_mission_job(self, job_id: str, client_id: str, file_name: str, file_type: str, storage_path: str):
+        try:
+            with self.session_scope() as session:
+                new_job = MissionJob(
+                    job_id=job_id,
+                    client_id=client_id,
+                    file_name=file_name,
+                    file_type=file_type,
+                    storage_path=storage_path,
+                    status="RECEIVED"
+                )
+                session.add(new_job)
+                session.commit()
+            self.logger.info(f"PostgreSQL MissionJob created: {job_id}")
+        except Exception as e:
+            self.logger.error(f"Failed to create MissionJob: {e}")
+            raise e
+
+    def update_job_status(self, job_id: str, status: str, payload: dict = None, error: str = None):
+        try:
+            with self.session_scope() as session:
+                job = session.query(MissionJob).filter_by(job_id=job_id).first()
+                if job:
+                    job.status = status
+                    if payload is not None:
+                        # Merge payload if it's a dict
+                        if isinstance(job.payload, dict) and isinstance(payload, dict):
+                            merged = {**job.payload, **payload}
+                            job.payload = merged
+                        else:
+                            job.payload = payload
+                    if error is not None:
+                        job.error_message = error
+                    job.updated_at = datetime.datetime.utcnow()
+                    session.commit()
+            self.logger.info(f"PostgreSQL MissionJob updated: {job_id} -> {status}")
+        except Exception as e:
+            self.logger.error(f"Failed to update MissionJob {job_id}: {e}")
+            raise e
+
+    def get_mission_job(self, job_id: str):
+        try:
+            with self.session_scope() as session:
+                job = session.query(MissionJob).filter_by(job_id=job_id).first()
+                if job:
+                    return {
+                        "job_id": job.job_id,
+                        "client_id": job.client_id,
+                        "status": job.status,
+                        "file_name": job.file_name,
+                        "file_type": job.file_type,
+                        "storage_path": job.storage_path,
+                        "payload": job.payload,
+                        "error_message": job.error_message,
+                        "updated_at": job.updated_at
+                    }
+                return None
+        except Exception as e:
+            self.logger.error(f"Failed to get MissionJob {job_id}: {e}")
             return None

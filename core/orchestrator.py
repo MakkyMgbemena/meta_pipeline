@@ -1,3 +1,5 @@
+import vertexai
+from vertexai.generative_models import GenerativeModel
 from core.agents.registry import RegistryAgent
 from utils.logger import get_logger
 from core.mission_switcher import MissionSwitcher
@@ -63,84 +65,101 @@ class Orchestrator:
     # ---------------------------------------------------------
     # AI CLIENT
     # ---------------------------------------------------------
+
     def _init_ai_client(self):
-        class MockAI:
+        vertexai.init()
+        model = GenerativeModel("gemini-pro")
+
+        class GeminiClient:
+            def __init__(self, model):
+                self.model = model
+
             def generate(self, prompt, data):
-                failed = []
-                passed = []
-                skipped = []
+                # Ensure data is formatted for the prompt
+                response = self.model.generate_content(
+                    f"{prompt}\n\nDATA:\n{data}"
+                )
+                return response.text
 
-                for step, result in data.items():
-                    if not isinstance(result, dict):
-                        continue
-                    status = str(result.get("status", "")).lower()
-                    verdict = str(result.get("verdict", "")).lower()
+        return GeminiClient(model)
 
-                    if status == "failed":
-                        failed.append(step)
-                    elif status == "skipped":
-                        skipped.append(step)
-                    elif (
-                        status in ["graded", "recorded", "synced", "pass", "success"]
-                        or verdict == "pass"
-                    ):
-                        passed.append(step)
-                    else:
-                        passed.append(step)
+    def _get_failed_steps(self, routing_chain: list, context: dict):
+        failed = []
+        for step in routing_chain:
+            result = context.get(step)
+            if isinstance(result, dict) and result.get("status", "").lower() == "failed":
+                failed.append(step)
+        return failed
 
-                overall = "FAILED" if failed else "SUCCESS"
+    def _generate_summary_html(self, data: dict):
+        passed = []
+        failed = []
+        skipped = []
 
-                html = [
-                    f"<html><body><h2>Mission Summary</h2><p><strong>Overall status:</strong> {overall}</p>"
-                ]
+        for step, result in data.items():
+            if not isinstance(result, dict):
+                continue
+            status = str(result.get("status", "")).lower()
+            verdict = str(result.get("verdict", "")).lower()
 
-                if passed:
-                    html.append(
-                        f"<p><strong>Completed:</strong> {', '.join(passed)}</p>"
-                    )
-                if skipped:
-                    html.append(
-                        f"<p><strong>Skipped:</strong> {', '.join(skipped)}</p>"
-                    )
-                if failed:
-                    html.append(f"<p><strong>Failed:</strong> {', '.join(failed)}</p>")
+            if status == "failed":
+                failed.append(step)
+            elif status == "skipped":
+                skipped.append(step)
+            elif (
+                status in ["graded", "recorded", "synced", "pass", "success"]
+                or verdict == "pass"
+            ):
+                passed.append(step)
+            else:
+                passed.append(step)
 
-                html.append("</body></html>")
-                return "".join(html)
+        overall = "FAILED" if failed else "SUCCESS"
 
-        return MockAI()
+        html = [
+            f"<html><body><h2>Mission Summary</h2><p><strong>Overall status:</strong> {overall}</p>"
+        ]
+
+        if passed:
+            html.append(
+                f"<p><strong>Completed:</strong> {', '.join(passed)}</p>"
+            )
+        if failed:
+            html.append(
+                f"<p style='color:red;'><strong>Failed:</strong> {', '.join(failed)}</p>"
+            )
+        if skipped:
+            html.append(
+                f"<p style='color:gray;'><strong>Skipped:</strong> {', '.join(skipped)}</p>"
+            )
+
+        html.append("</body></html>")
+        return "".join(html)
 
     # ---------------------------------------------------------
     # AGENT REGISTRY
     # ---------------------------------------------------------
     def _register_agents(self):
-        self.registry["smart_cleaner"] = SmartCleaner
-        self.registry["ghost_audit"] = GhostAudit
-        self.registry["verifier_agent"] = VerifierAgent
-        self.registry["ledger_entry"] = LedgerAgent
-        self.registry["client_registry"] = RegistryAgent
-        self.registry["social_manage"] = SocialMediaAgent
-        self.registry["socialmedia_agent"] = SocialMediaAgent
-        self.registry["seo_optimize"] = SEOAgent
-        self.registry["validation_grader"] = ValidationGrader
-        self.registry["narrative_grader"] = NarrativeGrader
-
-    # ---------------------------------------------------------
-    # ROUTING
-    # ---------------------------------------------------------
-    def route(self, task_name: str, payload: dict):
-        agent_class = self.registry.get(task_name)
-        if not agent_class:
-            raise ValueError(f"Agent '{task_name}' is not registered.")
-
-        agent = agent_class(self.config, payload.get("client_id"), db=self.db)
-        return agent.run(payload)
+        self.registry = {
+            "smart_cleaner": SmartCleaner,
+            "ghost_audit": GhostAudit,
+            "verifier_agent": VerifierAgent,
+            "socialmedia_agent": SocialMediaAgent,
+            "seo_agent": SEOAgent,
+            "ledger_agent": LedgerAgent,
+            "registry_agent": RegistryAgent,
+            "validation_grader": ValidationGrader,
+            "narrative_grader": NarrativeGrader,
+        }
 
     # ---------------------------------------------------------
     # MAIN EXECUTION FLOW
     # ---------------------------------------------------------
-    def run_for_client(self, client_id: str, context: dict = None):
+    def run_for_client(self, client_id: str, context: dict = None, job_id: str = None):
         self.logger.info(f"Starting mission flow for client: {client_id}")
+
+        if job_id and self.db:
+            self.db.update_job_status(job_id, "ORCHESTRATION_STARTED")
 
         context = context or {}
         context["client_id"] = client_id
@@ -155,11 +174,15 @@ class Orchestrator:
         routing_chain = self.mission_switcher.resolve_routing(client_id)
         self.logger.info(f"Resolved routing chain: {routing_chain}")
 
-        context = self._execute_chain(routing_chain, context)
+        context = self._execute_chain(routing_chain, context, job_id=job_id)
 
         failed_steps = self._get_failed_steps(routing_chain, context)
         context["failed_steps"] = failed_steps
         context["mission_status"] = "FAILED" if failed_steps else "SUCCESS"
+
+        if job_id and self.db:
+            final_status = "FAILED" if failed_steps else "COMPLETED"
+            self.db.update_job_status(job_id, final_status)
 
         if failed_steps:
             self.logger.error(
@@ -195,22 +218,28 @@ class Orchestrator:
     # ---------------------------------------------------------
     # EXECUTION CHAIN
     # ---------------------------------------------------------
-    def _execute_chain(self, routing_chain: list, context: dict):
+    def _execute_chain(self, routing_chain: list, context: dict, job_id: str = None):
         if "ghost_audit" in routing_chain:
             idx = routing_chain.index("ghost_audit")
             if "validation_grader" not in routing_chain[:idx]:
                 routing_chain.insert(idx, "validation_grader")
 
         for step in routing_chain:
+            if job_id and self.db:
+                self.db.update_job_status(job_id, f"AGENT_{step.upper()}_STARTED")
             try:
                 task_payload = {**context, "client_id": context.get("client_id")}
                 context[step] = self.route(step, task_payload)
+                if job_id and self.db:
+                    self.db.update_job_status(job_id, f"AGENT_{step.upper()}_DONE")
             except ValueError as e:
                 self.logger.warning(f"Step '{step}' skipped: {str(e)}")
                 context[step] = {"status": "skipped", "message": str(e)}
             except Exception as e:
                 self.logger.error(f"Step '{step}' CRITICAL FAILURE: {str(e)}")
                 context[step] = {"status": "failed", "error": str(e)}
+                if job_id and self.db:
+                    self.db.update_job_status(job_id, "FAILED", error=str(e))
 
         return context
 
@@ -218,86 +247,25 @@ class Orchestrator:
     # PIPELINE METRICS
     # ---------------------------------------------------------
     def gather_pipeline_results(self, context: dict) -> dict:
-        metrics = {}
-        for key, value in context.items():
-            if isinstance(value, dict) and "status" in value:
-                metrics[key] = value
-        return metrics
+        results = {}
+        for key, val in context.items():
+            if isinstance(val, dict) and "status" in val:
+                results[key] = val
+        return results
 
-    # ---------------------------------------------------------
-    # FINALIZATION
-    # ---------------------------------------------------------
-    def finalize_mission(self, client_id: str, client_email: str, context: dict):
-        self.logger.info(f"Finalizing mission for {client_id}...")
-
-        if context.get("hitl_status") == "delivered":
-            self.logger.warning(
-                f"Mission for {client_id} already delivered. Skipping duplicate send."
-            )
-            return
-
-        if context.get("mission_status") == "FAILED":
-            self.logger.error(
-                f"Email blocked for {client_id} because mission_status=FAILED"
-            )
-            context["delivery_status"] = "blocked_failed_mission"
-            return {"delivery_status": "blocked_failed_mission"}
-
-        before_path = f"./reports/screenshots/before_{client_id}.png"
-        after_path = f"./reports/screenshots/after_{client_id}.png"
-
-        raw_metrics = self.gather_pipeline_results(context)
-        human_html_content = self.ai_client.generate(
-            prompt=REPORT_PROMPT_TEMPLATE, data=raw_metrics
-        )
-
-        self.logger.info("Executing Narrative Grader node...")
-        grading_payload = {**context, "generated_narrative": human_html_content}
-        context["narrative_evaluation"] = self.route(
-            "narrative_grader", grading_payload
-        )
-
-        import os
-
-        before_exists = os.path.exists(before_path)
-        after_exists = os.path.exists(after_path)
+    def finalize_mission(self, client_id: str, email: str, context: dict):
+        pipeline_data = self.gather_pipeline_results(context)
+        html_narrative = self.ai_client.generate(REPORT_PROMPT_TEMPLATE, pipeline_data)
 
         mailer = EmailSender()
-        delivery_report = mailer.send_mission_report(
-            to_email=client_email,
-            client_id=client_id,
-            status=context.get("mission_status"),
-            human_html_content=human_html_content,
-            before_img_path=before_path if before_exists else None,
-            after_img_path=after_path if after_exists else None,
-        )
+        mailer.send_mission_report(email, client_id, html_narrative)
+        self.logger.info(f"Final mission report sent to {email}")
 
-        self.logger.info(f"Mission report dispatched: {delivery_report}")
-        context["hitl_status"] = "delivered"
-        context["delivery_status"] = "sent"
-        return delivery_report
+    def route(self, step: str, payload: dict):
+        if step not in self.registry:
+            raise ValueError(f"Agent '{step}' not registered in the system.")
 
-    # ---------------------------------------------------------
-    # RESUME MISSION
-    # ---------------------------------------------------------
-    def resume_mission(self, client_id: str, context: dict):
-        self.logger.info(f"Resuming mission for {client_id}")
-        context["hitl_status"] = "approved"
-        client_email = (
-            context.get("mission_brief", {}).get("email") or "annastecias@gmail.com"
-        )
-        return self.finalize_mission(client_id, client_email, context)
+        agent_class = self.registry[step]
+        agent = agent_class(self.config, payload.get("client_id"), self.db)
 
-    # ---------------------------------------------------------
-    # FAILURE DETECTION
-    # ---------------------------------------------------------
-    def _get_failed_steps(self, routing_chain: list, context: dict) -> list:
-        failed_steps = []
-        for step in routing_chain:
-            result = context.get(step, {})
-            if (
-                isinstance(result, dict)
-                and str(result.get("status", "")).lower() == "failed"
-            ):
-                failed_steps.append(step)
-        return failed_steps
+        return agent.run(payload)

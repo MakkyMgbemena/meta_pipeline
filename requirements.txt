@@ -28,3 +28,4 @@ pdfplumber
 python-multipart
 google-cloud-storage
 aiofiles
+google-cloud-aiplatform

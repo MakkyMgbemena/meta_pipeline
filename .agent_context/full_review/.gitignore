@@ -1,0 +1,21 @@
+# --- SENSITIVE SECRETS (NEVER COMMIT) ---
+.env
+*.env
+
+# --- LOCAL DATA VAULT ---
+# Prevents leaking client history and financial records [Source 476, 477]
+data/*.json
+reports/bundles/
+
+# --- PYTHON RUNTIME ---
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+
+# --- SYSTEM TELEMETRY ---
+pipeline.log
+logs/dashboard-key.json
+dashboard-key.json
+dashboard-key.json

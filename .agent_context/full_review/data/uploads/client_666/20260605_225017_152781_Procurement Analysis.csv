@@ -1,0 +1,245 @@
+Transaction_ID,Order_Date,WareHouse_Region,Fulfillment_City,Product_Category,Product_Name,Unit_Sold,Unit_price,Total_Revenue,Vendor_unit_price ,Price_Variance,Variance_%
+ID07351,2024-01-01,East Coast,Ontario,Laptops,Samsung,33,899,29667,880,19,2%
+ID07352,2024-01-02,East Coast,Ontario,HeadPhones,Apple,87,560,48720,560,0,0%
+ID07353,2024-01-07,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,58,128,7424,160,-32,-20%
+ID07354,2024-01-10,East Coast,Alberta,Auto_Doorkeypads,ASSA ABLOY,82,128,10496,160,-32,-20%
+ID07355,2024-01-13,East Coast,Ontario,Auto_Doorkeypads,ASSA ABLOY,38,128,4864,160,-32,-20%
+ID07356,2024-01-16,East Coast,Ontario,Laptops,Samsung,54,899,48546,880,19,2%
+ID07357,2024-01-19,East Coast,Ontario,HeadPhones,Apple,149,560,83440,560,0,0%
+ID07358,2024-01-22,Vancouver,Vancouver,Laptops,Samsung,51,899,45849,880,19,2%
+ID07359,2024-01-25,East Coast,Alberta,Laptops,Samsung,100,899,89900,880,19,2%
+ID07360,2024-01-28,East Coast,Alberta,Monitors,DELL,28,345,9660,325,20,6%
+ID07361,2024-01-31,East Coast,Ontario,Auto_Doorkeypads,ASSA ABLOY,36,128,4608,160,-32,-20%
+ID07362,2024-02-03,East Coast,Ontario,Auto_Doorkeypads,ASSA ABLOY,31,128,3968,160,-32,-20%
+ID07363,2024-02-06,East Coast,Ontario,HeadPhones,Apple,28,560,15680,560,0,0%
+ID07364,2024-02-09,Vancouver,Vancouver,Laptops,Samsung,44,899,39556,880,19,2%
+ID07365,2024-02-12,East Coast,Alberta,Laptops,Samsung,23,899,20677,880,19,2%
+ID07366,2024-02-15,East Coast,Alberta,Monitors,DELL,27,345,9315,325,20,6%
+ID07367,2024-02-18,East Coast,Ontario,Auto_Doorkeypads,ASSA ABLOY,43,128,5504,160,-32,-20%
+ID07368,2024-02-21,East Coast,Ontario,Auto_Doorkeypads,ASSA ABLOY,123,128,15744,160,-32,-20%
+ID07369,2024-02-24,Vancouver,Vancouver,Laptops,Samsung,42,899,37758,880,19,2%
+ID07370,2024-02-27,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,33,128,4224,160,-32,-20%
+ID07371,2024-03-02,East Coast,Alberta,Auto_Doorkeypads,ASSA ABLOY,85,128,10880,160,-32,-20%
+ID07372,2024-03-05,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,30,128,3840,160,-32,-20%
+ID07373,2024-03-08,East Coast,Ontario,Laptops,Samsung,61,899,54839,880,19,2%
+ID07374,2024-03-11,East Coast,Ontario,HeadPhones,Apple,40,560,22400,560,0,0%
+ID07375,2024-03-14,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,86,128,11008,160,-32,-20%
+ID07376,2024-03-17,East Coast,Alberta,Laptops,Samsung,38,899,34162,880,19,2%
+ID07377,2024-03-20,East Coast,Alberta,Monitors,DELL,68,345,23460,325,20,6%
+ID07378,2024-03-23,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,39,128,4992,160,-32,-20%
+ID07379,2024-03-26,East Coast,Ontario,Laptops,Samsung,103,899,92597,880,19,2%
+ID07380,2024-03-29,East Coast,Ontario,Auto_Doorkeypads,ASSA ABLOY,193,128,24704,160,-32,-20%
+ID07381,2024-04-01,Vancouver,Vancouver,Laptops,Samsung,58,899,52142,880,19,2%
+ID07382,2024-04-04,Vancouver,Vancouver,Monitors,DELL,68,345,23460,325,20,6%
+ID07383,2024-04-07,East Coast,Alberta,Laptops,Samsung,91,899,81809,880,19,2%
+ID07384,2024-04-10,East Coast,Alberta,HeadPhones,Apple,23,560,12880,560,0,0%
+ID07385,2024-04-13,Vancouver,Vancouver,Monitors,DELL,28,345,9660,325,20,6%
+ID07386,2024-04-16,East Coast,Ontario,Laptops,Samsung,48,899,43152,880,19,2%
+ID07387,2024-04-19,East Coast,Ontario,Monitors,DELL,134,345,46230,325,20,6%
+ID07388,2024-04-22,Vancouver,Vancouver,Laptops,Samsung,20,899,17980,880,19,2%
+ID07389,2024-04-25,East Coast,Alberta,Laptops,Samsung,53,899,47647,880,19,2%
+ID07390,2024-04-28,East Coast,Alberta,Monitors,DELL,64,345,22080,325,20,6%
+ID07391,2024-05-01,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,63,128,8064,160,-32,-20%
+ID07392,2024-05-04,East Coast,Ontario,Laptops,Samsung,105,899,94395,880,19,2%
+ID07393,2024-05-07,East Coast,Ontario,Auto_Doorkeypads,ASSA ABLOY,138,128,17664,160,-32,-20%
+ID07394,2024-05-10,Vancouver,Vancouver,Laptops,Samsung,25,899,22475,880,19,2%
+ID07395,2024-05-13,Vancouver,Vancouver,HeadPhones,Apple,21,560,11760,560,0,0%
+ID07396,2024-05-16,East Coast,Alberta,Laptops,Samsung,61,899,54839,880,19,2%
+ID07397,2024-05-19,East Coast,Alberta,Monitors,DELL,49,345,16905,325,20,6%
+ID07398,2024-05-22,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,55,128,7040,160,-32,-20%
+ID07399,2024-05-25,East Coast,Ontario,Auto_Doorkeypads,ASSA ABLOY,27,128,3456,160,-32,-20%
+ID07400,2024-05-28,East Coast,Ontario,Laptops,Samsung,58,899,52142,880,19,2%
+ID07401,2024-05-31,East Coast,Ontario,HeadPhones,Apple,33,560,18480,560,0,0%
+ID07402,2024-06-03,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,288,128,36864,160,-32,-20%
+ID07403,2024-06-06,East Coast,Alberta,Auto_Doorkeypads,ASSA ABLOY,76,128,9728,160,-32,-20%
+ID07404,2024-06-09,Vancouver,Vancouver,Laptops,Samsung,42,899,37758,880,19,2%
+ID07405,2024-06-12,Vancouver,Vancouver,HeadPhones,Apple,20,560,11200,560,0,0%
+ID07406,2024-06-15,East Coast,Ontario,Laptops,Samsung,75,899,67425,880,19,2%
+ID07407,2024-06-18,East Coast,Ontario,HeadPhones,Apple,38,560,21280,560,0,0%
+ID07408,2024-06-21,Vancouver,Vancouver,Laptops,Samsung,306,899,275094,880,19,2%
+ID07409,2024-06-24,Vancouver,Vancouver,Monitors,DELL,28,345,9660,325,20,6%
+ID07410,2024-06-27,East Coast,Alberta,Laptops,Samsung,110,899,98890,880,19,2%
+ID07411,2024-06-30,East Coast,Alberta,Auto_Doorkeypads,ASSA ABLOY,51,128,6528,160,-32,-20%
+ID07412,2024-07-03,Vancouver,Vancouver,Laptops,Samsung,52,899,46748,880,19,2%
+ID07413,2024-07-06,Vancouver,Vancouver,HeadPhones,Apple,28,560,15680,560,0,0%
+ID07414,2024-07-09,East Coast,Ontario,Laptops,Samsung,136,899,122264,880,19,2%
+ID07415,2024-07-12,East Coast,Ontario,HeadPhones,Apple,42,560,23520,560,0,0%
+ID07416,2024-07-15,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,75,128,9600,160,-32,-20%
+ID07417,2024-07-18,East Coast,Alberta,Laptops,Samsung,72,899,64728,880,19,2%
+ID07418,2024-07-21,East Coast,Alberta,Auto_Doorkeypads,ASSA ABLOY,56,128,7168,160,-32,-20%
+ID07419,2024-07-24,Vancouver,Vancouver,Laptops,Samsung,51,899,45849,880,19,2%
+ID07420,2024-07-27,Vancouver,Vancouver,Monitors,DELL,31,345,10695,325,20,6%
+ID07421,2024-07-30,East Coast,Ontario,Laptops,Samsung,56,899,50344,880,19,2%
+ID07422,2024-08-02,East Coast,Ontario,Auto_Doorkeypads,ASSA ABLOY,137,128,17536,160,-32,-20%
+ID07423,2024-08-05,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,107,128,13696,160,-32,-20%
+ID07424,2024-08-08,East Coast,Alberta,Laptops,Samsung,24,899,21576,880,19,2%
+ID07425,2024-08-11,East Coast,Alberta,HeadPhones,Apple,30,560,16800,560,0,0%
+ID07426,2024-08-14,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,70,128,8960,160,-32,-20%
+ID07427,2024-08-17,East Coast,Ontario,Auto_Doorkeypads,ASSA ABLOY,31,128,3968,160,-32,-20%
+ID07428,2024-08-20,East Coast,Ontario,Laptops,Samsung,109,899,97991,880,19,2%
+ID07429,2024-08-23,East Coast,Ontario,HeadPhones,Apple,21,560,11760,560,0,0%
+ID07430,2024-08-26,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,80,128,10240,160,-32,-20%
+ID07431,2024-08-29,East Coast,Alberta,Laptops,Samsung,75,899,67425,880,19,2%
+ID07432,2024-09-01,East Coast,Alberta,Auto_Doorkeypads,ASSA ABLOY,74,128,9472,160,-32,-20%
+ID07433,2024-09-04,Vancouver,Vancouver,Laptops,Samsung,45,899,40455,880,19,2%
+ID07434,2024-09-07,East Coast,Ontario,Auto_Doorkeypads,ASSA ABLOY,28,128,3584,160,-32,-20%
+ID07435,2024-09-10,East Coast,Ontario,Laptops,Samsung,143,899,128557,880,19,2%
+ID07436,2024-09-13,East Coast,Ontario,Monitors,DELL,27,345,9315,325,20,6%
+ID07437,2024-09-16,Vancouver,Vancouver,Laptops,Samsung,133,899,119567,880,19,2%
+ID07438,2024-09-19,East Coast,Alberta,Auto_Doorkeypads,ASSA ABLOY,110,128,14080,160,-32,-20%
+ID07439,2024-09-22,East Coast,Alberta,Auto_Doorkeypads,ASSA ABLOY,65,128,8320,160,-32,-20%
+ID07440,2024-09-25,Vancouver,Vancouver,Laptops,Samsung,33,899,29667,880,19,2%
+ID07441,2024-09-28,East Coast,Ontario,Auto_Doorkeypads,ASSA ABLOY,81,128,10368,160,-32,-20%
+ID07442,2024-10-01,East Coast,Ontario,Laptops,Samsung,77,899,69223,880,19,2%
+ID07443,2024-10-04,East Coast,Ontario,HeadPhones,Apple,38,560,21280,560,0,0%
+ID07444,2024-10-07,Vancouver,Vancouver,Laptops,Samsung,40,899,35960,880,19,2%
+ID07445,2024-10-10,Vancouver,Vancouver,Monitors,DELL,114,345,39330,325,20,6%
+ID07446,2024-10-13,East Coast,Alberta,Auto_Doorkeypads,ASSA ABLOY,224,128,28672,160,-32,-20%
+ID07447,2024-10-16,East Coast,Alberta,Laptops,Samsung,141,899,126759,880,19,2%
+ID07448,2024-10-19,East Coast,Alberta,HeadPhones,Apple,32,560,17920,560,0,0%
+ID07449,2024-10-22,Vancouver,Vancouver,Laptops,Samsung,20,899,17980,880,19,2%
+ID07450,2024-10-25,East Coast,Ontario,Auto_Doorkeypads,ASSA ABLOY,40,128,5120,160,-32,-20%
+ID07451,2024-10-28,East Coast,Ontario,Auto_Doorkeypads,ASSA ABLOY,49,128,6272,160,-32,-20%
+ID07452,2024-10-31,East Coast,Ontario,HeadPhones,Apple,46,560,25760,560,0,0%
+ID07453,2024-11-03,Vancouver,Vancouver,Laptops,Samsung,39,899,35061,880,19,2%
+ID07454,2024-11-06,Vancouver,Vancouver,Monitors,DELL,62,345,21390,325,20,6%
+ID07455,2024-11-09,East Coast,Alberta,Laptops,Samsung,90,899,80910,880,19,2%
+ID07456,2024-11-12,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,103,128,13184,160,-32,-20%
+ID07457,2024-11-15,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,32,128,4096,160,-32,-20%
+ID07458,2024-11-18,East Coast,Ontario,Laptops,Samsung,66,899,59334,880,19,2%
+ID07459,2024-11-21,East Coast,Ontario,Auto_Doorkeypads,ASSA ABLOY,97,128,12416,160,-32,-20%
+ID07460,2024-11-24,Vancouver,Vancouver,Laptops,Samsung,30,899,26970,880,19,2%
+ID07461,2024-11-27,Vancouver,Vancouver,Monitors,DELL,29,345,10005,325,20,6%
+ID07462,2024-11-30,East Coast,Alberta,Laptops,Samsung,92,899,82708,880,19,2%
+ID07463,2024-12-03,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,139,128,17792,160,-32,-20%
+ID07464,2024-12-06,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,29,128,3712,160,-32,-20%
+ID07465,2024-12-09,East Coast,Ontario,Laptops,Samsung,30,899,26970,880,19,2%
+ID07466,2024-12-12,East Coast,Ontario,Auto_Doorkeypads,ASSA ABLOY,36,128,4608,160,-32,-20%
+ID07467,2024-12-15,East Coast,Ontario,HeadPhones,Apple,41,560,22960,560,0,0%
+ID07468,2024-12-18,Vancouver,Vancouver,Laptops,Samsung,44,899,39556,880,19,2%
+ID07469,2024-12-21,Vancouver,Vancouver,Monitors,DELL,29,345,10005,325,20,6%
+ID07470,2024-12-24,East Coast,Alberta,Auto_Doorkeypads,ASSA ABLOY,237,128,30336,160,-32,-20%
+ID07471,2024-12-27,East Coast,Alberta,Auto_Doorkeypads,ASSA ABLOY,65,128,8320,160,-32,-20%
+ID07472,2024-12-30,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,83,128,10624,160,-32,-20%
+ID07473,2025-01-02,East Coast,Ontario,Auto_Doorkeypads,ASSA ABLOY,32,128,4096,160,-32,-20%
+ID07474,2025-01-05,East Coast,Ontario,Laptops,Samsung,63,899,56637,880,19,2%
+ID07475,2025-01-08,East Coast,Ontario,Monitors,DELL,29,345,10005,325,20,6%
+ID07476,2025-01-11,Vancouver,Vancouver,Laptops,Samsung,77,899,69223,880,19,2%
+ID07477,2025-01-14,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,80,128,10240,160,-32,-20%
+ID07478,2025-01-17,East Coast,Alberta,Laptops,Samsung,102,899,91698,880,19,2%
+ID07479,2025-01-20,East Coast,Alberta,HeadPhones,Apple,31,560,17360,560,0,0%
+ID07480,2025-01-23,Vancouver,Vancouver,Laptops,Samsung,56,899,50344,880,19,2%
+ID07481,2025-01-26,East Coast,Ontario,Auto_Doorkeypads,ASSA ABLOY,52,128,6656,160,-32,-20%
+ID07482,2025-01-29,East Coast,Ontario,Laptops,Samsung,51,899,45849,880,19,2%
+ID07483,2025-02-01,East Coast,Ontario,Monitors,DELL,24,345,8280,325,20,6%
+ID07484,2025-02-04,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,58,128,7424,160,-32,-20%
+ID07485,2025-02-07,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,34,128,4352,160,-32,-20%
+ID07486,2025-02-10,East Coast,Alberta,Laptops,Samsung,34,899,30566,880,19,2%
+ID07487,2025-02-13,East Coast,Alberta,Monitors,DELL,21,345,7245,325,20,6%
+ID07488,2025-02-16,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,29,128,3712,160,-32,-20%
+ID07489,2025-02-19,East Coast,Ontario,Laptops,Samsung,68,899,61132,880,19,2%
+ID07490,2025-02-22,East Coast,Ontario,Monitors,DELL,31,345,10695,325,20,6%
+ID07491,2025-02-25,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,30,128,3840,160,-32,-20%
+ID07492,2025-02-28,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,232,128,29696,160,-32,-20%
+ID07493,2025-03-02,East Coast,Alberta,Laptops,Samsung,68,899,61132,880,19,2%
+ID07494,2025-03-05,East Coast,Alberta,Auto_Doorkeypads,ASSA ABLOY,97,128,12416,160,-32,-20%
+ID07495,2025-03-08,Vancouver,Vancouver,Laptops,Samsung,86,899,77314,880,19,2%
+ID07496,2025-03-11,Vancouver,Vancouver,Monitors,DELL,41,345,14145,325,20,6%
+ID07497,2025-03-14,East Coast,Ontario,Laptops,Samsung,93,899,83607,880,19,2%
+ID07498,2025-03-17,East Coast,Ontario,Monitors,DELL,47,345,16215,325,20,6%
+ID07499,2025-03-20,Vancouver,Vancouver,Laptops,Samsung,103,899,92597,880,19,2%
+ID07500,2025-03-23,Vancouver,Vancouver,Monitors,DELL,33,345,11385,325,20,6%
+ID07501,2025-03-26,East Coast,Alberta,Laptops,Samsung,57,899,51243,880,19,2%
+ID07502,2025-03-29,East Coast,Alberta,Auto_Doorkeypads,ASSA ABLOY,65,128,8320,160,-32,-20%
+ID07503,2025-04-01,Vancouver,Vancouver,Laptops,Samsung,118,899,106082,880,19,2%
+ID07504,2025-04-04,East Coast,Ontario,Auto_Doorkeypads,ASSA ABLOY,36,128,4608,160,-32,-20%
+ID07505,2025-04-07,East Coast,Ontario,Auto_Doorkeypads,ASSA ABLOY,123,128,15744,160,-32,-20%
+ID07506,2025-04-10,Vancouver,Vancouver,Laptops,Samsung,90,899,80910,880,19,2%
+ID07507,2025-04-13,Vancouver,Vancouver,HeadPhones,Apple,21,560,11760,560,0,0%
+ID07508,2025-04-16,East Coast,Alberta,Laptops,Samsung,48,899,43152,880,19,2%
+ID07509,2025-04-19,East Coast,Alberta,Monitors,DELL,24,345,8280,325,20,6%
+ID07510,2025-04-22,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,67,128,8576,160,-32,-20%
+ID07511,2025-04-25,East Coast,Ontario,Laptops,Samsung,27,899,24273,880,19,2%
+ID07512,2025-04-28,East Coast,Ontario,Auto_Doorkeypads,ASSA ABLOY,129,128,16512,160,-32,-20%
+ID07513,2025-05-01,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,77,128,9856,160,-32,-20%
+ID07514,2025-05-04,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,58,128,7424,160,-32,-20%
+ID07515,2025-05-07,East Coast,Alberta,Laptops,Samsung,47,899,42253,880,19,2%
+ID07516,2025-05-10,East Coast,Alberta,Auto_Doorkeypads,ASSA ABLOY,33,128,4224,160,-32,-20%
+ID07517,2025-05-13,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,82,128,10496,160,-32,-20%
+ID07518,2025-05-16,East Coast,Ontario,Laptops,Samsung,58,899,52142,880,19,2%
+ID07519,2025-05-19,East Coast,Ontario,Monitors,DELL,30,345,10350,325,20,6%
+ID07520,2025-05-22,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,43,128,5504,160,-32,-20%
+ID07521,2025-05-25,East Coast,Alberta,Laptops,Samsung,84,899,75516,880,19,2%
+ID07522,2025-05-28,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,36,128,4608,160,-32,-20%
+ID07523,2025-05-31,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,44,128,5632,160,-32,-20%
+ID07524,2025-06-03,East Coast,Ontario,Laptops,Samsung,27,899,24273,880,19,2%
+ID07525,2025-06-06,East Coast,Ontario,Auto_Doorkeypads,ASSA ABLOY,120,128,15360,160,-32,-20%
+ID07526,2025-06-09,East Coast,Ontario,HeadPhones,Apple,26,560,14560,560,0,0%
+ID07527,2025-06-12,Vancouver,Vancouver,Laptops,Samsung,73,899,65627,880,19,2%
+ID07528,2025-06-15,East Coast,Alberta,Laptops,Samsung,38,899,34162,880,19,2%
+ID07529,2025-06-18,East Coast,Alberta,Auto_Doorkeypads,ASSA ABLOY,40,128,5120,160,-32,-20%
+ID07530,2025-06-21,Vancouver,Vancouver,Laptops,Samsung,41,899,36859,880,19,2%
+ID07531,2025-06-24,East Coast,Ontario,Laptops,Samsung,27,899,24273,880,19,2%
+ID07532,2025-06-27,East Coast,Ontario,Auto_Doorkeypads,ASSA ABLOY,38,128,4864,160,-32,-20%
+ID07533,2025-06-30,East Coast,Ontario,HeadPhones,Apple,34,560,19040,560,0,0%
+ID07534,2025-07-03,Vancouver,Vancouver,Laptops,Samsung,65,899,58435,880,19,2%
+ID07535,2025-07-06,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,60,128,7680,160,-32,-20%
+ID07536,2025-07-09,East Coast,Alberta,Auto_Doorkeypads,ASSA ABLOY,37,128,4736,160,-32,-20%
+ID07537,2025-07-12,East Coast,Alberta,Auto_Doorkeypads,ASSA ABLOY,40,128,5120,160,-32,-20%
+ID07538,2025-07-15,Vancouver,Vancouver,Laptops,Samsung,26,899,23374,880,19,2%
+ID07539,2025-07-18,East Coast,Ontario,Laptops,Samsung,22,899,19778,880,19,2%
+ID07540,2025-07-21,East Coast,Ontario,Auto_Doorkeypads,ASSA ABLOY,32,128,4096,160,-32,-20%
+ID07541,2025-07-24,East Coast,Ontario,HeadPhones,Apple,23,560,12880,560,0,0%
+ID07542,2025-07-27,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,20,128,2560,160,-32,-20%
+ID07543,2025-07-30,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,64,128,8192,160,-32,-20%
+ID07544,2025-08-02,East Coast,Alberta,Laptops,Samsung,71,899,63829,880,19,2%
+ID07545,2025-08-05,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,90,128,11520,160,-32,-20%
+ID07546,2025-08-08,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,38,128,4864,160,-32,-20%
+ID07547,2025-08-11,East Coast,Ontario,Laptops,Samsung,55,899,49445,880,19,2%
+ID07548,2025-08-14,East Coast,Ontario,Monitors,DELL,22,345,7590,325,20,6%
+ID07549,2025-08-17,Vancouver,Vancouver,Laptops,Samsung,34,899,30566,880,19,2%
+ID07550,2025-08-20,East Coast,Alberta,Laptops,Samsung,39,899,35061,880,19,2%
+ID07551,2025-08-23,East Coast,Alberta,Auto_Doorkeypads,ASSA ABLOY,41,128,5248,160,-32,-20%
+ID07552,2025-08-26,Vancouver,Vancouver,Laptops,Samsung,41,899,36859,880,19,2%
+ID07553,2025-08-29,East Coast,Ontario,Auto_Doorkeypads,ASSA ABLOY,136,128,17408,160,-32,-20%
+ID07554,2025-09-01,East Coast,Ontario,Laptops,Samsung,25,899,22475,880,19,2%
+ID07555,2025-09-04,East Coast,Ontario,Monitors,DELL,26,345,8970,325,20,6%
+ID07556,2025-09-07,Vancouver,Vancouver,Laptops,Samsung,50,899,44950,880,19,2%
+ID07557,2025-09-10,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,79,128,10112,160,-32,-20%
+ID07558,2025-09-13,East Coast,Alberta,Laptops,Samsung,30,899,26970,880,19,2%
+ID07559,2025-09-16,East Coast,Alberta,Monitors,DELL,20,345,6900,325,20,6%
+ID07560,2025-09-19,Vancouver,Vancouver,Laptops,Samsung,49,899,44051,880,19,2%
+ID07561,2025-09-22,East Coast,Ontario,Auto_Doorkeypads,ASSA ABLOY,40,128,5120,160,-32,-20%
+ID07562,2025-09-25,East Coast,Ontario,Laptops,Samsung,31,899,27869,880,19,2%
+ID07563,2025-09-28,East Coast,Ontario,Monitors,DELL,21,345,7245,325,20,6%
+ID07564,2025-10-01,Vancouver,Vancouver,Laptops,Samsung,43,899,38657,880,19,2%
+ID07565,2025-10-04,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,47,128,6016,160,-32,-20%
+ID07566,2025-10-07,East Coast,Alberta,Auto_Doorkeypads,ASSA ABLOY,175,128,22400,160,-32,-20%
+ID07567,2025-10-10,East Coast,Alberta,Auto_Doorkeypads,ASSA ABLOY,23,128,2944,160,-32,-20%
+ID07568,2025-10-13,Vancouver,Vancouver,Laptops,Samsung,40,899,35960,880,19,2%
+ID07569,2025-10-16,East Coast,Ontario,Auto_Doorkeypads,ASSA ABLOY,87,128,11136,160,-32,-20%
+ID07570,2025-10-19,East Coast,Ontario,Laptops,Samsung,43,899,38657,880,19,2%
+ID07571,2025-10-22,East Coast,Ontario,HeadPhones,Apple,30,560,16800,560,0,0%
+ID07572,2025-10-25,Vancouver,Vancouver,Laptops,Samsung,35,899,31465,880,19,2%
+ID07573,2025-10-28,East Coast,Alberta,Laptops,Samsung,57,899,51243,880,19,2%
+ID07574,2025-10-31,East Coast,Alberta,Monitors,DELL,25,345,8625,325,20,6%
+ID07575,2025-11-03,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,24,128,3072,160,-32,-20%
+ID07576,2025-11-06,East Coast,Ontario,Laptops,Samsung,83,899,74617,880,19,2%
+ID07577,2025-11-09,East Coast,Ontario,Auto_Doorkeypads,ASSA ABLOY,124,128,15872,160,-32,-20%
+ID07578,2025-11-12,Vancouver,Vancouver,Laptops,Samsung,137,899,123163,880,19,2%
+ID07579,2025-11-15,East Coast,Alberta,Auto_Doorkeypads,ASSA ABLOY,146,128,18688,160,-32,-20%
+ID07580,2025-11-18,East Coast,Alberta,Auto_Doorkeypads,ASSA ABLOY,34,128,4352,160,-32,-20%
+ID07581,2025-11-21,Vancouver,Vancouver,Laptops,Samsung,20,899,17980,880,19,2%
+ID07582,2025-11-24,East Coast,Ontario,Auto_Doorkeypads,ASSA ABLOY,139,128,17792,160,-32,-20%
+ID07583,2025-11-27,East Coast,Ontario,Auto_Doorkeypads,ASSA ABLOY,211,128,27008,160,-32,-20%
+ID07584,2025-11-30,East Coast,Ontario,HeadPhones,Apple,20,560,11200,560,0,0%
+ID07585,2025-12-03,Vancouver,Vancouver,Laptops,Samsung,42,899,37758,880,19,2%
+ID07586,2025-12-06,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,100,128,12800,160,-32,-20%
+ID07587,2025-12-09,East Coast,Alberta,Laptops,Samsung,38,899,34162,880,19,2%
+ID07588,2025-12-12,East Coast,Alberta,HeadPhones,Apple,25,560,14000,560,0,0%
+ID07589,2025-12-15,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,96,128,12288,160,-32,-20%
+ID07590,2025-12-18,East Coast,Ontario,Auto_Doorkeypads,ASSA ABLOY,34,128,4352,160,-32,-20%
+ID07591,2025-12-21,East Coast,Ontario,Auto_Doorkeypads,ASSA ABLOY,245,128,31360,160,-32,-20%
+ID07592,2025-12-24,East Coast,Ontario,HeadPhones,Apple,30,560,16800,560,0,0%
+ID07593,2025-12-27,Vancouver,Vancouver,Laptops,Samsung,30,899,26970,880,19,2%
+ID07594,2025-12-30,Vancouver,Vancouver,Auto_Doorkeypads,ASSA ABLOY,44,128,5632,160,-32,-20%
