@@ -1,6 +1,7 @@
 import os
 import logging
-from fastapi import APIRouter, Depends, HTTPException, File, UploadFile, Form
+from fastapi import FastAPI, APIRouter, Depends, HTTPException, File, UploadFile, Form
+from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional
 from services.fastapi.dependencies import get_orchestrator
 from services.fastapi.models import (
@@ -14,9 +15,25 @@ from services.fastapi.models import (
     UploadStorageInfo,
     ResumeMissionRequest,
 )
-from utils.validators import clean_client_id
-from utils.data_seeder import ensure_client_registered, seed_financial_ledger
+from utils.validators import validate_client_id, clean_client_id
+from utils.data_seeder import seed_financial_ledger
+from utils.auth import ensure_client_registered
 import resend
+
+app = FastAPI(title="Meta Pipeline Backend")
+resend.api_key = os.getenv("RESEND_API_KEY")
+
+# --- CORS CONFIGURATION ---
+# Allows the Streamlit UI to communicate with this API when hosted on different domains
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "https://meta-pipeline-dashboard-680132354800.northamerica-northeast2.run.app",
+        "http://localhost:8501",
+    ],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 router = APIRouter()
 logger = logging.getLogger("FastAPI")
@@ -135,7 +152,11 @@ async def deliver_mission(request: dict, orchestrator = Depends(get_orchestrator
             resend.Emails.send({
                 # Configurable via environment variable set in cloudbuild.yaml
                 "from": os.getenv("RESEND_FROM_EMAIL", "Universal Headquarters <reports@yourdomain.com>"),
-                "to": f"{client_id}@example.com",
+                "to": (
+                    orchestrator.db.get_client_email(client_id)
+                    or request.get("mission_brief", {}).get("email")
+                    or "fallback@email.com"
+                ),
                 "subject": f"Mission Delivery: {client_id}",
                 "html": html_content
             })
@@ -273,11 +294,12 @@ async def upload_status(job_id: str):
 
 @router.post("/resume-mission")
 async def resume_mission(request: ResumeMissionRequest, orchestrator = Depends(get_orchestrator)):
-    logger.info(f"RESUME_REQUEST: client_id={request.client_id}")
+    logger.info(f"RESUME_REQUEST: client_id={request.client_id} thread_id={request.thread_id}")
     try:
         result = orchestrator.resume_mission(
             client_id=request.client_id,
-            context=request.context
+            context=request.context,
+            thread_id=request.thread_id
         )
         return {
             "status": "resumed",
@@ -287,4 +309,5 @@ async def resume_mission(request: ResumeMissionRequest, orchestrator = Depends(g
     except Exception as e:
         logger.error(f"RESUME_FAILED: client_id={request.client_id} error={e}")
         raise HTTPException(status_code=500, detail=str(e))
+
 app.include_router(router)

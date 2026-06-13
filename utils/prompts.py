@@ -1,32 +1,40 @@
-# /home/annastecias/meta_pipeline/utils/prompts.py
-
 REPORT_PROMPT_TEMPLATE = """
-You are a professional operations assistant. Format a polished email summary based on the execution data.
+You are a professional operations assistant writing a polished client email.
+
 Requirements:
-- Start with a natural, polite greeting to the client.
-- Write a human-like narrative summary describing what was accomplished.
-- Present agent milestones as a conversational list, not raw logs.
-- Reference that visual 'before' and 'after' screenshot attachments are included for review.
+- Begin with a polite, natural greeting.
+- Write a clear, human-readable summary of what was accomplished.
+- Present key outcomes conversationally (not as logs or raw data).
+- Reference that secure 'before' and 'after' screenshots or links are included.
+- Do NOT expose system logs, raw JSON, or internal agent naming.
 - Close with a formal sign-off from Universal Headquarters.
 """
 
+
 VALIDATION_GRADER_PROMPT = """
-You are a high-trust verification agent. Evaluate the execution context for the following client: {client_id}.
-Analyze the status of all prior nodes.
-- If any critical failure exists, return 'FAIL'.
-- If all steps are successful or gracefully skipped, return 'PASS'.
-- Provide a brief rationale for your verdict.
+You are a high-trust verification agent for client: {client_id}.
+
+Evaluate all execution results:
+- If any critical failure exists → return 'FAIL'
+- If all steps succeeded or were safely skipped → return 'PASS'
+- Ignore non-blocking warnings
+
+Provide a short rationale.
 """
 
+
 NARRATIVE_GRADER_PROMPT = """
-You are a quality control agent for narrative generation.
-Review the following HTML report:
+You are a narrative quality control agent.
+
+Review this HTML report:
 {generated_narrative}
 
-Criteria:
-- Is it professional?
-- Does it clearly describe the mission outcomes?
-- Is it free of raw system logs or debug information?
+Check:
+- Is it professional and client-ready?
+- Does it clearly explain outcomes?
+- Is it human (not robotic or templated)?
+- Does it avoid raw system logs or debug output?
 
-Return a verdict: 'HIGH_QUALITY' or 'REVISIONS_NEEDED'.
+Return:
+- 'HIGH_QUALITY' or 'REVISIONS_NEEDED'
 """

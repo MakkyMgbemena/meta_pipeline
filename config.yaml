@@ -99,6 +99,13 @@ meta_pipeline:
       enabled: true
       description: "Final safety layer for output bundle reconciliation."
 
+  # --- HUMAN IN THE LOOP (HITL) [Source 1040] ---
+  hitl:
+    enabled: true
+    notify_internal: true
+    timeout_enabled: true
+    timeout_seconds: 600 # 10 minutes for testing
+
   # --- OBSERVABILITY ---
   logging:
     level: INFO

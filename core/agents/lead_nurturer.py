@@ -1,58 +1,96 @@
+import os
+import datetime
 from core.unified_agent import UnifiedAgent
 from utils.logger import get_logger
-from utils.json_store import JSONStore
-from pathlib import Path
-import datetime
+from services.fastapi.models import ClientRegistry
 
 class LeadNurturer(UnifiedAgent):
     """
     Handles lead tracking, funnel progression, and interaction history.
-    Aligns with Phase 3 CRM goals: capture, contact, and conversion tracking.
+    Saves CRM lead states directly to PostgreSQL to prevent serverless data loss on Cloud Run.
     """
 
-    # Path aligned with Phase 3 Internal Operations vault
-    NURTURE_LOG_PATH = "data/internal/lead_nurture_log.json"
-
-    def __init__(self, config: dict, client_id: str = None, db=None):
-        super().__init__(config, client_id, db)
+    def __init__(self, config: dict = None, client_id: str = None, db=None):
+        super().__init__(config or {}, client_id, db)
         self.logger = get_logger("LeadNurturer")
+        self.db = db
 
-        # Ensure the internal data directory exists safely
-        Path("data/internal").mkdir(parents=True, exist_ok=True)
-        self.store = JSONStore(self.NURTURE_LOG_PATH)
-
-        # Funnel states defined in the Master Blueprint [3]
+        # Funnel states defined in the Master Blueprint
         self.funnel_states = ["captured", "contacted", "proposal_sent", "converted", "churned"]
-        self.logger.info("LeadNurturer initialized.")
+        self.logger.info("LeadNurturer successfully initialized.")
 
-    def run(self, payload: dict = None):
+    def run(self, payload: dict = None) -> dict:
         """
-        Logs a nurturing event or updates a lead's funnel position.
-        Tracks preferred communication platforms (X, Instagram, LinkedIn).
+        Logs a nurturing event and updates a lead's funnel position dynamically.
+        Saves states to persistent PostgreSQL to avoid ephemeral disk loss.
         """
+        payload = payload or {}
         self.logger.info(f"Processing lead update for: {self.client_id}")
 
-        # Determine funnel stage or default to 'captured'
-        stage = payload.get("stage", "captured") if payload else "captured"
+        # 1. Determine funnel stage or default to 'captured'
+        stage = payload.get("stage", "captured")
         if stage not in self.funnel_states:
             self.logger.warning(f"Invalid stage '{stage}' provided. Defaulting to 'captured'.")
             stage = "captured"
 
-        # Build the interaction entry
+        # 2. Build the interaction entry
         entry = {
             "timestamp": datetime.datetime.utcnow().isoformat(),
             "client_id": self.client_id,
             "funnel_stage": stage,
-            "platform": payload.get("platform", "direct") if payload else "direct",
-            "notes": payload.get("notes", "Automated system update") if payload else "Initial capture"
+            "platform": payload.get("platform", "direct"),
+            "notes": payload.get("notes", "Automated system update")
         }
 
-        # Use the durable append-safe storage engine
-        self.store.append(entry)
-        self.logger.info(f"Lead status for {self.client_id} updated to: {stage}")
+        # 3. FIXED: Replace the volatile JSONStore with persistent PostgreSQL
+        if not self.db:
+            self.logger.error("Database connection missing. Nurturing event could not be saved!")
+            return {"status": "failed", "error": "Database connection unavailable."}
 
-        # Trigger onboarding hook if converted [3]
-        if stage == "converted":
-            self.logger.info(f"LEAD CONVERTED: Triggering Phase 3 auto-onboarding hooks for {self.client_id}.")
+        try:
+            with self.db.session_scope() as session:
+                # Find the client in our registry
+                record = session.query(ClientRegistry).filter_by(client_id=self.client_id).first()
 
-        return {"status": "success", "nurture_entry": entry}
+                if record:
+                    self.logger.info(f"Updating existing CRM client record status to: {stage}")
+                    record.status = stage
+                    record.last_sync = datetime.datetime.utcnow()
+                    
+                    # Accumulate notes or profile updates safely
+                    profile = record.profile_data or {}
+                    history = profile.get("nurture_history", [])
+                    history.append(entry)
+                    profile["nurture_history"] = history
+                    record.profile_data = profile
+                else:
+                    # If this is a newly captured lead, register them automatically!
+                    self.logger.info(f"Lead {self.client_id} not found. Creating new CRM entry with stage: {stage}")
+                    new_lead = ClientRegistry(
+                        client_id=self.client_id,
+                        status=stage,
+                        routing_chain=["smart_cleaner", "ghost_audit", "verifier_agent"],
+                        profile_data={"nurture_history": [entry], "initial_notes": entry["notes"]},
+                        last_sync=datetime.datetime.utcnow()
+                    )
+                    session.add(new_lead)
+
+            self.logger.info(f"Lead status for {self.client_id} securely saved in PostgreSQL: {stage}")
+
+            # 4. Trigger auto-onboarding triggers on successful conversion
+            if stage == "converted":
+                self.logger.info(f"LEAD CONVERTED: Triggering Phase 3 auto-onboarding hooks for {self.client_id}.")
+
+            return {
+                "status": "success",
+                "client_id": self.client_id,
+                "nurture_entry": entry
+            }
+
+        except Exception as e:
+            self.logger.error(f"LeadNurturer database transaction failed: {e}", exc_info=True)
+            return {
+                "status": "failed",
+                "error": str(e),
+                "client_id": self.client_id
+            }

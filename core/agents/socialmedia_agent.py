@@ -1,6 +1,6 @@
 import os
 import time
-import datetime
+from datetime import datetime, timedelta  # FIXED: Clean import of datetime objects
 import numpy as np
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -13,9 +13,10 @@ class SocialMediaAgent(UnifiedAgent):
     Final Verified Hybrid Agent.
     Bridges Authorized API access with Hacker Era Headless stealth.
     """
-    def __init__(self, config: dict, client_id: str = None, db=None):
-        super().__init__(config, client_id, db)
+    def __init__(self, config: dict = None, client_id: str = None, db=None):
+        super().__init__(config or {}, client_id, db)
         self.logger = get_logger("SocialMediaAgent")
+        self.db = db
         # Standard selectors derived from Gaussian pattern matching
         self.targets = {
             "UNLIKE": '//button[@data-testid="unlike"]',
@@ -24,9 +25,8 @@ class SocialMediaAgent(UnifiedAgent):
         }
 
     def _upload_to_gcs(self, local_path: str, destination_blob: str) -> str:
+        """Safely uploads screenshots to Google Cloud Storage."""
         from google.cloud import storage
-        import os
-        import datetime
 
         client = storage.Client()
         bucket_name = os.getenv("GCS_BUCKET_NAME")
@@ -34,47 +34,50 @@ class SocialMediaAgent(UnifiedAgent):
             self.logger.warning("GCS_BUCKET_NAME not set, using local path")
             return local_path
 
-        bucket = client.bucket(bucket_name)
-        blob = bucket.blob(destination_blob)
-        blob.upload_from_filename(local_path)
-
-        # Bypasses Public Access Prevention policies safely using Signed URLs
         try:
+            bucket = client.bucket(bucket_name)
+            blob = bucket.blob(destination_blob)
+            blob.upload_from_filename(local_path)
+
+            # Bypasses Public Access Prevention policies safely using Signed URLs
             signed_url = blob.generate_signed_url(
                 version="v4",
-                expiration=datetime.timedelta(days=7),
+                expiration=timedelta(days=7),  # FIXED: Using clean timedelta
                 method="GET"
             )
             return signed_url
         except Exception as e:
             self.logger.error(f"Failed to generate signed URL: {str(e)}. Falling back to public URL.")
-            return blob.public_url
+            try:
+                return blob.public_url
+            except Exception:
+                return local_path
 
     def _take_screenshot(self, driver, stage: str) -> dict:
-        import os
-
+        """Takes driver screenshot, uploads it, and safely cleans up local storage."""
         os.makedirs("reports/screenshots", exist_ok=True)
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")[:-3]
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")[:-3]  # FIXED: Clean datetime usage
         filename = f"reports/screenshots/{self.client_id}_{stage}_{timestamp}.png"
 
+        public_url = ""
         try:
             driver.save_screenshot(filename)
             gcs_blob = f"screenshots/{self.client_id}/{stage}_{timestamp}.png"
             public_url = self._upload_to_gcs(filename, gcs_blob)
         except Exception as e:
             self.logger.error(f"Screenshot capture or upload failed: {str(e)}")
-            public_url = ""
 
-        # Clean up local ephemeral disk file securely
+        # FIXED: Only delete the file if it was successfully uploaded to GCS
         if os.path.exists(filename):
             try:
-                os.remove(filename)
+                if public_url and public_url != filename:
+                    os.remove(filename)
             except OSError:
                 pass
 
         return {
             "local_path": filename,
-            "public_url": public_url
+            "public_url": public_url or filename
         }
 
     def run(self, payload: dict = None) -> dict:
@@ -82,8 +85,7 @@ class SocialMediaAgent(UnifiedAgent):
         Main execution gate. Checks for authorization before falling back
         to stealth headless automation.
         """
-        if payload is None:
-            payload = {}
+        payload = payload or {}
         platform = payload.get("platform", "X").upper()
         task = payload.get("task", "UNLIKE").upper()
 
@@ -121,12 +123,12 @@ class SocialMediaAgent(UnifiedAgent):
         options = self._get_stealth_options()
         driver = self._create_webdriver(options)
 
-        # Prevent screenshots running on an uninitialized browser view
-        before_path = self._take_screenshot(driver, "before")
-
         try:
             driver.get(f"https://{platform.lower()}.com")
             self.logger.info(f"Navigated to {platform}. Proceeding with automated cloud execution...")
+
+            # Capture state *after* navigation has initialized
+            before_path = self._take_screenshot(driver, "before")
 
             xpath = self.targets.get(task, self.targets["UNLIKE"])
             btns = driver.find_elements(By.XPATH, xpath)
@@ -135,18 +137,23 @@ class SocialMediaAgent(UnifiedAgent):
                 driver.execute_script("arguments[0].click();", btn)
                 self._gaussian_wait() # Bypasses algorithmic detection
 
-            # Human-in-the-loop: Capture 'AFTER' state for the report
-            after_img = self._capture_state(driver, f"after_{self.client_id}.png")
-
+            # FIXED: Eliminated the non-existent _capture_state method call
             after_path = self._take_screenshot(driver, "after")
+            
+            # Log the successful automation to DB
+            if self.db and self.client_id:
+                try:
+                    self.db.update_registry(self.client_id, f"SocialMedia {task} executed via Headless")
+                except Exception as db_err:
+                    self.logger.warning(f"Failed to update execution registry: {db_err}")
+
             return {
                 "status": "success",
                 "method": "HEADLESS_STEALTH",
                 "platform": platform,
                 "screenshots": {
                     "before": before_path.get("public_url") if isinstance(before_path, dict) else before_path,
-                    "after": after_path.get("public_url") if isinstance(after_path, dict) else after_path,
-                    "local_after": after_img
+                    "after": after_path.get("public_url") if isinstance(after_path, dict) else after_path
                 }
             }
         finally:

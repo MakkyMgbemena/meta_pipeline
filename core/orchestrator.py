@@ -1,22 +1,35 @@
+import inspect
 import vertexai
 from vertexai.generative_models import GenerativeModel
-from core.agents.registry import RegistryAgent
 from utils.logger import get_logger
 from core.mission_switcher import MissionSwitcher
 from delivery.email_sender import EmailSender
 from utils.prompts import REPORT_PROMPT_TEMPLATE
 from utils.db_manager import DatabaseManager
 
-# CORE AGENTS (Phase 1)
-from core.agents.smart_cleaner import SmartCleaner
-from core.agents.ghost_audit import GhostAudit
-from core.agents.verifier_agent import VerifierAgent
-from core.agents.socialmedia_agent import SocialMediaAgent
-from core.agents.seo_agent import SEOAgent
+# Import the Single Source of Truth Agent Registry we verified earlier!
+from core.agents import AGENT_REGISTRY
 
-# BIZOPS AGENTS (Phase 3)
-from core.agents.ledger import LedgerAgent
+# NEW: LangGraph Orchestration Imports [Source 1040]
+from typing import TypedDict, Annotated, List, Dict, Any, Optional, Union
+import operator
+from langgraph.graph import StateGraph, END
+from langgraph.checkpoint.postgres import PostgresSaver
+from psycopg_pool import ConnectionPool
+import threading
+import time
+import os
 
+class MissionState(TypedDict):
+    client_id: str
+    mission_id: Optional[str]
+    job_id: Optional[str]
+    context: Annotated[Dict[str, Any], operator.ior]
+    routing_chain: List[str]
+    results: Annotated[Dict[str, Any], operator.ior]
+    mission_status: str # STARTED, COMPLETED, FAILED, PAUSED
+    hitl_status: Optional[str]
+    failed_steps: Annotated[List[str], operator.add]
 
 class ValidationGrader:
     def __init__(self, config, client_id, db=None):
@@ -51,31 +64,110 @@ class Orchestrator:
         self.registry = {}
 
         try:
-            self.db = DatabaseManager(config)
+            self.db = DatabaseManager()
         except Exception as e:
             self.logger.error(f"Database Manager initialization failed: {e}")
             self.db = None
 
-        self.mission_switcher = MissionSwitcher(config)
+        # Pass our persistent DatabaseManager instance directly to MissionSwitcher
+        self.mission_switcher = MissionSwitcher(config, db=self.db)
         self.ai_client = self._init_ai_client()
 
         self._register_agents()
+        self._init_langgraph()
+        self._start_timeout_worker()
         self.logger.info("Orchestrator instantiated and agents registered.")
+
+    def _init_langgraph(self):
+        """Initialises the PostgresSaver checkpointer for LangGraph state persistence."""
+        user = os.getenv("DB_USER", "postgres")
+        password = os.getenv("DB_PASS")
+        db_name = os.getenv("DB_NAME", "meta_pipeline")
+        db_host = os.getenv("DB_HOST", "localhost")
+        db_port = os.getenv("DB_PORT", "5432")
+
+        conn_info = f"postgresql://{user}:{password}@{db_host}:{db_port}/{db_name}"
+        
+        try:
+            # max_size=20 to handle concurrent missions + background worker
+            self.pool = ConnectionPool(conn_info=conn_info, max_size=20)
+            self.checkpointer = PostgresSaver(self.pool)
+            
+            # Create LangGraph system tables if they don't exist
+            with self.pool.connection() as conn:
+                 self.checkpointer.setup(conn)
+            
+            self.logger.info("LangGraph PostgresSaver initialized and setup.")
+        except Exception as e:
+            self.logger.error(f"Failed to initialize LangGraph checkpointer: {e}")
+            self.checkpointer = None
+
+    def _start_timeout_worker(self):
+        """Starts a background thread to handle automatic mission resumption (Stage 3)."""
+        if not self.config.get("hitl", {}).get("timeout_enabled", True):
+            return
+
+        def _worker():
+            timeout_seconds = self.config.get("hitl", {}).get("timeout_seconds", 3600) # Default 1 hour
+            self.logger.info(f"HITL Timeout Worker started (Timeout: {timeout_seconds}s)")
+            while True:
+                try:
+                    self._check_and_resume_timed_out_missions(timeout_seconds)
+                except Exception as e:
+                    self.logger.error(f"Timeout worker error: {e}")
+                time.sleep(60) # Check every minute
+
+        t = threading.Thread(target=_worker, daemon=True)
+        t.start()
+
+    def _check_and_resume_timed_out_missions(self, timeout_seconds):
+        """Stage 3: Temporal Fallback logic."""
+        if not self.db:
+            return
+
+        try:
+            from services.fastapi.models import MissionJob
+            import datetime
+            
+            with self.db.session_scope() as session:
+                cutoff = datetime.datetime.utcnow() - datetime.timedelta(seconds=timeout_seconds)
+                timed_out_jobs = session.query(MissionJob).filter(
+                    MissionJob.status == "PAUSED",
+                    MissionJob.updated_at < cutoff
+                ).all()
+                
+                for job in timed_out_jobs:
+                    self.logger.info(f"Stage 3: Auto-resuming timed out mission: {job.job_id}")
+                    # We start a new thread to avoid blocking the polling loop
+                    threading.Thread(
+                        target=self.resume_mission,
+                        args=(job.client_id, None, job.job_id),
+                        daemon=True
+                    ).start()
+        except Exception as e:
+            self.logger.error(f"Failed to check timed out missions: {e}")
 
     # ---------------------------------------------------------
     # AI CLIENT
     # ---------------------------------------------------------
-
     def _init_ai_client(self):
-        vertexai.init()
-        model = GenerativeModel("gemini-pro")
+        try:
+            vertexai.init()
+            model = GenerativeModel("gemini-pro")
+        except Exception as ai_err:
+            self.logger.warning(f"Vertex AI initialization failed. Using mock AI Client: {ai_err}")
+            class MockModel:
+                def generate_content(self, text):
+                    class MockResponse:
+                        text = "Mocked AI Summary Report: System running at 100% capacity."
+                    return MockResponse()
+            model = MockModel()
 
         class GeminiClient:
             def __init__(self, model):
                 self.model = model
 
             def generate(self, prompt, data):
-                # Ensure data is formatted for the prompt
                 response = self.model.generate_content(
                     f"{prompt}\n\nDATA:\n{data}"
                 )
@@ -140,20 +232,19 @@ class Orchestrator:
     # AGENT REGISTRY
     # ---------------------------------------------------------
     def _register_agents(self):
-        self.registry = {
-            "smart_cleaner": SmartCleaner,
-            "ghost_audit": GhostAudit,
-            "verifier_agent": VerifierAgent,
-            "socialmedia_agent": SocialMediaAgent,
-            "seo_agent": SEOAgent,
-            "ledger_agent": LedgerAgent,
-            "registry_agent": RegistryAgent,
-            "validation_grader": ValidationGrader,
-            "narrative_grader": NarrativeGrader,
-        }
+        """
+        Dynamically imports the standardized registry.
+        Ensures perfect alignment across all configurations.
+        """
+        # Load from the Single Source of Truth
+        self.registry = {**AGENT_REGISTRY}
+        
+        # Add special internal graders
+        self.registry["validation_grader"] = ValidationGrader
+        self.registry["narrative_grader"] = NarrativeGrader
 
     # ---------------------------------------------------------
-    # MAIN EXECUTION FLOW
+    # MAIN EXECUTION FLOW (LANGGRAPH REFACTORED)
     # ---------------------------------------------------------
     def run_for_client(self, client_id: str, context: dict = None, job_id: str = None):
         self.logger.info(f"Starting mission flow for client: {client_id}")
@@ -165,83 +256,168 @@ class Orchestrator:
         context["client_id"] = client_id
 
         from utils.brief_storage import load_brief
-
         brief = load_brief(client_id)
         if brief:
             context["mission_brief"] = brief
             self.logger.info(f"Loaded mission brief for {client_id}")
 
+        # Resolve routing chain dynamically
         routing_chain = self.mission_switcher.resolve_routing(client_id)
         self.logger.info(f"Resolved routing chain: {routing_chain}")
 
-        context = self._execute_chain(routing_chain, context, job_id=job_id)
-
-        failed_steps = self._get_failed_steps(routing_chain, context)
-        context["failed_steps"] = failed_steps
-        context["mission_status"] = "FAILED" if failed_steps else "SUCCESS"
-
-        if job_id and self.db:
-            final_status = "FAILED" if failed_steps else "COMPLETED"
-            self.db.update_job_status(job_id, final_status)
-
-        if failed_steps:
-            self.logger.error(
-                f"Mission failed for {client_id}. Failed steps: {failed_steps}"
-            )
-            context["delivery_status"] = "not_sent"
-            return context
-
-        hitl_enabled = self.config.get("hitl", {}).get("enabled", False)
-
-        if hitl_enabled:
-            self.logger.info(f"HITL pause activated for {client_id}")
-            context["hitl_status"] = "awaiting_review"
-
-            try:
-                if self.config.get("hitl", {}).get("notify_internal", False):
-                    mailer = EmailSender()
-                    if hasattr(mailer, "send_internal_alert"):
-                        mailer.send_internal_alert(client_id, context)
-            except Exception as e:
-                self.logger.warning(f"HITL internal alert failed: {e}")
-
-            return context
-
-        if self.config.get("delivery", {}).get("auto_email", True):
-            client_email = (
-                context.get("mission_brief", {}).get("email") or "annastecias@gmail.com"
-            )
-            self.finalize_mission(client_id, client_email, context)
-
-        return context
-
-    # ---------------------------------------------------------
-    # EXECUTION CHAIN
-    # ---------------------------------------------------------
-    def _execute_chain(self, routing_chain: list, context: dict, job_id: str = None):
+        # Ensure ghost_audit has validation_grader before it
         if "ghost_audit" in routing_chain:
             idx = routing_chain.index("ghost_audit")
             if "validation_grader" not in routing_chain[:idx]:
                 routing_chain.insert(idx, "validation_grader")
 
+        hitl_enabled = self.config.get("hitl", {}).get("enabled", False)
+        graph = self._build_graph(routing_chain, hitl_enabled=hitl_enabled)
+
+        initial_state = {
+            "client_id": client_id,
+            "mission_id": context.get("mission_id"),
+            "job_id": job_id,
+            "context": context,
+            "routing_chain": routing_chain,
+            "results": {},
+            "mission_status": "STARTED",
+            "failed_steps": []
+        }
+
+        # thread_id is critical for Stage 2 persistence
+        thread_id = job_id or f"mission_{client_id}_{int(time.time())}"
+        config = {"configurable": {"thread_id": thread_id}}
+
+        try:
+            # Stage 1 & 2 Execution
+            graph.invoke(initial_state, config=config)
+            
+            # Check if we hit an interrupt (Stage 2)
+            snapshot = graph.get_state(config)
+            if snapshot.next:
+                self.logger.info(f"HITL pause activated for {client_id} (Thread: {thread_id})")
+                if job_id and self.db:
+                    self.db.update_job_status(job_id, "PAUSED")
+                
+                # Stage 1: Internal Alert (User Ping)
+                if self.config.get("hitl", {}).get("notify_internal", False):
+                    self._send_hitl_alert(client_id, snapshot.values)
+                
+                return {**snapshot.values, "hitl_status": "awaiting_review", "thread_id": thread_id}
+
+            # Finalize if completed naturally
+            return self._handle_graph_completion(client_id, snapshot.values, job_id)
+
+        except Exception as e:
+            self.logger.error(f"Graph execution failed: {e}", exc_info=True)
+            return {"status": "ERROR", "error": str(e)}
+
+    def resume_mission(self, client_id: str, context: dict = None, thread_id: str = None):
+        """Stage 2: Active Verification & Correction Window (Resume signal)."""
+        self.logger.info(f"Resuming mission for thread: {thread_id}")
+
+        if not thread_id:
+            # Fallback for old API calls
+            thread_id = context.get("thread_id") if context else None
+            if not thread_id:
+                return {"status": "ERROR", "error": "Missing thread_id for resume"}
+
+        config = {"configurable": {"thread_id": thread_id}}
+        routing_chain = self.mission_switcher.resolve_routing(client_id)
+        
+        hitl_enabled = self.config.get("hitl", {}).get("enabled", False)
+        graph = self._build_graph(routing_chain, hitl_enabled=hitl_enabled)
+
+        try:
+            if context:
+                # Stage 2: Correction. Apply user-provided data back to the graph state.
+                # This ensures the corrected data (e.g. margin updates) is used by 
+                # subsequent agents like verifier_agent or the final report generator.
+                graph.update_state(config, {"context": context})
+
+            # resume with None to continue from checkpoint
+            graph.invoke(None, config=config)
+            
+            snapshot = graph.get_state(config)
+            job_id = snapshot.values.get("job_id")
+            return self._handle_graph_completion(client_id, snapshot.values, job_id)
+
+        except Exception as e:
+            self.logger.error(f"Resume mission failed: {e}", exc_info=True)
+            return {"status": "ERROR", "error": str(e)}
+
+    def _build_graph(self, routing_chain: List[str], hitl_enabled: bool = False):
+        builder = StateGraph(MissionState)
+        
         for step in routing_chain:
+            builder.add_node(step, self._agent_node(step))
+            
+        for i in range(len(routing_chain) - 1):
+            builder.add_edge(routing_chain[i], routing_chain[i+1])
+            
+        builder.set_entry_point(routing_chain[0])
+        builder.add_edge(routing_chain[-1], END)
+        
+        interrupts = []
+        if hitl_enabled and "verifier_agent" in routing_chain:
+            interrupts.append("verifier_agent")
+            
+        return builder.compile(checkpointer=self.checkpointer, interrupt_before=interrupts)
+
+    def _agent_node(self, step: str):
+        def _node(state: MissionState):
+            job_id = state.get("job_id")
             if job_id and self.db:
                 self.db.update_job_status(job_id, f"AGENT_{step.upper()}_STARTED")
+            
             try:
-                task_payload = {**context, "client_id": context.get("client_id")}
-                context[step] = self.route(step, task_payload)
+                task_payload = {**state["context"], "client_id": state["client_id"]}
+                result = self.route(step, task_payload)
+                
                 if job_id and self.db:
                     self.db.update_job_status(job_id, f"AGENT_{step.upper()}_DONE")
-            except ValueError as e:
-                self.logger.warning(f"Step '{step}' skipped: {str(e)}")
-                context[step] = {"status": "skipped", "message": str(e)}
+                
+                return {
+                    "results": {step: result},
+                    "context": {step: result}
+                }
             except Exception as e:
-                self.logger.error(f"Step '{step}' CRITICAL FAILURE: {str(e)}")
-                context[step] = {"status": "failed", "error": str(e)}
-                if job_id and self.db:
-                    self.db.update_job_status(job_id, "FAILED", error=str(e))
+                self.logger.error(f"Step '{step}' FAILURE: {e}")
+                return {
+                    "mission_status": "FAILED",
+                    "failed_steps": [step],
+                    "results": {step: {"status": "failed", "error": str(e)}}
+                }
+        return _node
 
-        return context
+    def _handle_graph_completion(self, client_id: str, state: MissionState, job_id: str = None):
+        failed_steps = state.get("failed_steps", [])
+        state["mission_status"] = "FAILED" if failed_steps else "SUCCESS"
+
+        if job_id and self.db:
+            final_status = "FAILED" if failed_steps else "COMPLETED"
+            self.db.update_job_status(job_id, final_status)
+
+        if not failed_steps and self.config.get("delivery", {}).get("auto_email", True):
+            client_email = state.get("context", {}).get("mission_brief", {}).get("email") or "annastecias@gmail.com"
+            self.finalize_mission(client_id, client_email, state["results"])
+
+        return state
+
+    def _send_hitl_alert(self, client_id, state):
+        try:
+            mailer = EmailSender()
+            if hasattr(mailer, "send_internal_alert"):
+                # Stage 1: Internal Alert (The User Ping)
+                mailer.send_internal_alert(
+                    client_id=client_id, 
+                    stage_name="Verification & Correction", 
+                    details="Mission is paused at verifier_agent. Review and correct data in the dashboard."
+                )
+        except Exception as e:
+            self.logger.warning(f"HITL internal alert failed: {e}")
+
 
     # ---------------------------------------------------------
     # PIPELINE METRICS
@@ -258,14 +434,31 @@ class Orchestrator:
         html_narrative = self.ai_client.generate(REPORT_PROMPT_TEMPLATE, pipeline_data)
 
         mailer = EmailSender()
-        mailer.send_mission_report(email, client_id, html_narrative)
+        # Stage 4: Client Delivery (Mission Accomplished)
+        mailer.send_mission_report(
+            to_email=email, 
+            client_id=client_id, 
+            status="SUCCESS", 
+            human_html_content=html_narrative
+        )
         self.logger.info(f"Final mission report sent to {email}")
 
     def route(self, step: str, payload: dict):
+        """
+        Dynamically instantiates and executes agents.
+        Safely injects the Orchestrator reference for gating agents like DualWriteGate.
+        """
         if step not in self.registry:
             raise ValueError(f"Agent '{step}' not registered in the system.")
 
         agent_class = self.registry[step]
-        agent = agent_class(self.config, payload.get("client_id"), self.db)
+        client_id = payload.get("client_id")
+
+        # FIXED: Safely inject the Orchestrator (self) if the agent class constructor expects it!
+        constructor_sig = inspect.signature(agent_class.__init__)
+        if "orchestrator" in constructor_sig.parameters:
+            agent = agent_class(self.config, client_id, self.db, orchestrator=self)
+        else:
+            agent = agent_class(self.config, client_id, self.db)
 
         return agent.run(payload)

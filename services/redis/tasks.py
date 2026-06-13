@@ -7,7 +7,7 @@ logger = logging.getLogger("Redis_Tasks")
 def execute_mission_task(client_id: str, payload: dict):
     """
     Background task wrapper for the MetaOrchestrator.
-    Enables parallel processing for 50+ concurrent clients [Source 481, 608].
+    Enables parallel processing for 50+ concurrent clients.
     """
     try:
         # Re-initialize the brain within the worker context
@@ -15,7 +15,7 @@ def execute_mission_task(client_id: str, payload: dict):
         orchestrator = Orchestrator(config)
 
         logger.info(f"Worker starting background mission for: {client_id}")
-        result = orchestrator.run_for_client(client_id, payload)
+        result = orchestrator.run_for_client(client_id, context=payload)
 
         return {"status": "success", "client_id": client_id, "result": result}
     except Exception as e:

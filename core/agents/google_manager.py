@@ -1,7 +1,8 @@
+import os
+import datetime
 from core.unified_agent import UnifiedAgent
 from utils.logger import get_logger
 from config.env_loader import EnvLoader
-import datetime
 
 class GoogleManager(UnifiedAgent):
     """
@@ -9,9 +10,10 @@ class GoogleManager(UnifiedAgent):
     Search Console, and Ads. Functions as a Bridge Agent.
     """
 
-    def __init__(self, config: dict, client_id: str, db=None):
-        super().__init__(config, client_id, db)
+    def __init__(self, config: dict = None, client_id: str = None, db=None):
+        super().__init__(config or {}, client_id, db)
         self.logger = get_logger("GoogleManager")
+        self.db = db
         self.env = EnvLoader()  # Load secure API credentials
         self.bridge_log = []
 
@@ -22,31 +24,43 @@ class GoogleManager(UnifiedAgent):
         2. Platform Orchestration
         3. Internal-External Dual Write
         """
-        if not payload or "task" not in payload:
+        payload = payload or {}
+        if "task" not in payload:
             self.logger.warning("No specific Google task provided. Skipping.")
             return {"status": "skipped", "reason": "no_task"}
 
-        self.logger.info(f"Executing Google Management task: {payload['task']} for {self.client_id}")
+        task = payload.get("task")
+        data = payload.get("data", {})
+        self.logger.info(f"Executing Google Management task: {task} for client: {self.client_id}")
 
-        # Step 1: Secure Credential Retrieval (Phase 2 Hardening)
-        api_key = self.env.get("GOOGLE_API_KEY")
+        # Step 1: Secure Credential Retrieval
+        api_key = self.env.get("GOOGLE_API_KEY") or os.getenv("GOOGLE_API_KEY")
         if not api_key:
             self.logger.error("Missing Google API Key in .env. Execution halted.")
             return {"status": "failed", "reason": "auth_error"}
 
         # Step 2: Orchestration Logic (Deterministic Mapping)
-        task = payload.get("task")
-        data = payload.get("data", {})
-
         if task == "gmb_update":
             result = self._orchestrate_business_profile(data)
         elif task == "search_console_audit":
             result = self._orchestrate_search_console(data)
         else:
-            result = {"status": "error", "message": "Unknown Google task profile"}
+            result = {"status": "error", "message": f"Unknown Google task profile: {task}"}
 
-        # Step 3: Dual-Write Confirmation (Internal Source of Truth)
-        self.bridge_log.append(f"Task '{task}' synchronized with Internal Registry.")
+        # Step 3: TRUE Dual-Write Confirmation (Internal Source of Truth)
+        log_message = f"Task '{task}' synchronized with External Google APIs."
+        self.bridge_log.append(log_message)
+
+        # FIXED: Make the dual-write real by committing state to your database headquarters!
+        if self.db and self.client_id:
+            try:
+                db_status = f"Google Sync Passed ({task})"
+                self.db.update_registry(self.client_id, db_status)
+                self.bridge_log.append(f"Task '{task}' safely dual-written to PostgreSQL database.")
+                self.logger.info("Successfully dual-wrote Google execution status to PostgreSQL.")
+            except Exception as db_err:
+                self.logger.warning(f"Database dual-write failed: {db_err}")
+                self.bridge_log.append(f"Database dual-write failed: {db_err}")
 
         return {
             "status": "success",

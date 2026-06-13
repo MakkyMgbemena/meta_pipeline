@@ -31,6 +31,10 @@ class ClientRegistry(Base):
     status = Column(String(50), default="active")
     last_sync = Column(DateTime, default=datetime.datetime.utcnow)
 
+    # ✅ REQUIRED FOR ENTERPRISE + AGENT FLOW
+    profile_data = Column(JSON, default=dict)
+    routing_chain = Column(JSON, default=list)
+    
 class MissionJob(Base):
     """Blueprints for the Mission Job tracking table."""
     __tablename__ = "mission_jobs"
@@ -42,7 +46,7 @@ class MissionJob(Base):
     file_name = Column(String(255))
     file_type = Column(String(50))
     storage_path = Column(String(512))
-    payload = Column(JSON, default={})
+    payload = Column(JSON, default=dict)
     error_message = Column(String(1024))
     updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
 
@@ -50,18 +54,23 @@ class MissionJob(Base):
 # These are the models uvicorn is currently looking for
 
 class MissionRequest(BaseModel):
+    mission_id: str
     client_id: str
     task_name: str
     payload: Optional[Dict[str, Any]] = None
 
 class UnifiedRequest(BaseModel):
     client_id: str
+    mission_id: Optional[str] = None
     data: Optional[Dict[str, Any]] = None
 
 class MissionResponse(BaseModel):
     status: str
     client_id: str
-    results: Dict[str, Any]
+    mission_id: Optional[str] = None
+    action: Optional[str] = None
+    results: Optional[Dict[str, Any]] = None
+    result: Optional[Dict[str, Any]] = None
 
 
 # -------------------------
@@ -114,3 +123,4 @@ class UploadFileResponse(BaseModel):
 class ResumeMissionRequest(BaseModel):
     client_id: str
     context: Dict[str, Any]
+    thread_id: Optional[str] = None

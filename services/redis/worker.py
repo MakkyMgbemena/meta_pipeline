@@ -34,7 +34,7 @@ class RedisWorker:
 
                     self.logger.info(f"MISSION RECEIVED: {client_id}")
                     # Physically execute the agent chain via the Orchestrator
-                    self.orchestrator.run_for_client(client_id, payload.get("payload"))
+                    self.orchestrator.run_for_client(client_id, context=payload.get("payload"))
 
             except Exception as e:
                 self.logger.error(f"Worker Loop Error: {str(e)}")

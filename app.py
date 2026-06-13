@@ -65,11 +65,11 @@ st.header("Run Mission")
 
 # Default to a local dev backend so the UI (upload/trigger) appears during development.
 # Override by setting the BACKEND_URL environment variable.
-backend_url = os.getenv("BACKEND_URL", "https://meta-pipeline-680132354800.northamerica-northeast2.run.app")
+backend_url = os.getenv("BACKEND_URL", "https://meta-pipeline-backend-680132354800.northamerica-northeast2.run.app")
 
 if "BACKEND_URL" not in os.environ:
     st.info(
-        "BACKEND_URL not set; using default backend for production. Set BACKEND_URL to override."
+        f"Connecting to: {backend_url}"
     )
 
 mission_id = st.text_input("Mission ID")
@@ -98,26 +98,48 @@ if st.button("Trigger Mission"):
             data = response.json()
             st.success("Mission triggered successfully.")
             st.json(data)
-
-            # --- HITL AWARENESS ---
-            context = data.get("results", {})
-            if context.get("hitl_status") == "awaiting_review":
-                st.warning("⚠️ Mission is paused for human review (HITL).")
-                if st.button("✅ Approve & Resume Mission"):
-                    try:
-                        resume_resp = requests.post(
-                            f"{backend_url.rstrip('/')}/resume-mission",
-                            json={"client_id": client_id, "context": context},
-                            timeout=20,
-                        )
-                        resume_resp.raise_for_status()
-                        st.success("Mission resumed successfully.")
-                        st.json(resume_resp.json())
-                    except requests.exceptions.RequestException as e:
-                        st.error(f"Resume failed: {e}")
-
+            st.session_state["last_mission_results"] = data.get("results", {})
         except requests.exceptions.RequestException as exc:
             st.error(f"Mission trigger failed: {exc}")
+
+# --- HITL AWARENESS (Moved out of button block for persistence) ---
+if "last_mission_results" in st.session_state:
+    context = st.session_state["last_mission_results"]
+    if context.get("hitl_status") == "awaiting_review":
+        st.warning("⚠️ Mission is paused for human review (HITL).")
+        
+        # Stage 2: Active Verification & Correction Window
+        st.markdown("### Mission Context Review")
+        st.info("You can review and modify the mission data before resuming.")
+        
+        # Use a text area for raw JSON editing to ensure precision for nested data
+        import json
+        context_str = st.text_area(
+            "Mission Payload (JSON)", 
+            value=json.dumps(context, indent=2),
+            height=300
+        )
+        
+        if st.button("✅ Approve & Resume Mission"):
+            try:
+                updated_context = json.loads(context_str)
+                resume_resp = requests.post(
+                    f"{backend_url.rstrip('/')}/resume-mission",
+                    json={
+                        "client_id": client_id, 
+                        "context": updated_context,
+                        "thread_id": context.get("thread_id")
+                    },
+                    timeout=20,
+                )
+                resume_resp.raise_for_status()
+                st.success("Mission resumed successfully.")
+                st.json(resume_resp.json())
+                del st.session_state["last_mission_results"]
+            except json.JSONDecodeError:
+                st.error("Invalid JSON format in payload.")
+            except requests.exceptions.RequestException as e:
+                st.error(f"Resume failed: {e}")
 
 # File upload section
 st.markdown("---")

@@ -38,12 +38,14 @@ def get_job(job_id: str) -> Optional[JobRecord]:
     if not job_data:
         return None
     
+    from utils.storage import detect_storage_mode
+    
     return JobRecord(
         job_id=job_data["job_id"],
         status=job_data["status"],
         file_name=job_data["file_name"],
         file_type=job_data["file_type"],
-        storage={"path": job_data["storage_path"]},
+        storage={"mode": detect_storage_mode(), "path": job_data["storage_path"]},
         processing=job_data["payload"] or {},
         errors=[{"type": "error", "message": job_data["error_message"]}] if job_data["error_message"] else []
     )
