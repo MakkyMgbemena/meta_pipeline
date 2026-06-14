@@ -1,6 +1,4 @@
 import inspect
-import vertexai
-from vertexai.generative_models import GenerativeModel
 from utils.logger import get_logger
 from core.mission_switcher import MissionSwitcher
 from delivery.email_sender import EmailSender
@@ -80,15 +78,39 @@ class Orchestrator:
 
     def _init_langgraph(self):
         """Initialises the PostgresSaver checkpointer for LangGraph state persistence."""
+        from urllib.parse import quote_plus
         user = os.getenv("DB_USER", "postgres")
         password = os.getenv("DB_PASS")
+        if not password:
+            self.logger.warning("LangGraph checkpointer skipped: DB_PASS not found.")
+            self.checkpointer = None
+            return
+
         db_name = os.getenv("DB_NAME", "meta_pipeline")
         db_host = os.getenv("DB_HOST", "localhost")
         db_port = os.getenv("DB_PORT", "5432")
+        instance_connection_name = os.getenv("INSTANCE_CONNECTION_NAME", "")
 
-        conn_info = f"postgresql://{user}:{password}@{db_host}:{db_port}/{db_name}"
-        
         try:
+            # Format connection string for psycopg (v3)
+            # Standard URI: postgresql://user:pass@host:port/dbname
+            # Unix Socket URI: postgresql://user:pass@/dbname?host=/cloudsql/instance
+            
+            encoded_user = quote_plus(user)
+            encoded_password = quote_plus(password)
+            encoded_db_name = quote_plus(db_name)
+
+            if instance_connection_name:
+                socket_dir = f"/cloudsql/{instance_connection_name}"
+                conn_info = f"postgresql://{encoded_user}:{encoded_password}@/{encoded_db_name}?host={socket_dir}"
+                self.logger.info(f"LangGraph connecting via Cloud SQL Unix socket: {socket_dir}")
+            elif db_host.startswith("/cloudsql/"):
+                conn_info = f"postgresql://{encoded_user}:{encoded_password}@/{encoded_db_name}?host={db_host}"
+                self.logger.info(f"LangGraph connecting via Unix socket: {db_host}")
+            else:
+                conn_info = f"postgresql://{encoded_user}:{encoded_password}@{db_host}:{db_port}/{encoded_db_name}"
+                self.logger.info(f"LangGraph connecting via TCP/IP: {db_host}:{db_port}")
+            
             # max_size=20 to handle concurrent missions + background worker
             self.pool = ConnectionPool(conn_info=conn_info, max_size=20)
             self.checkpointer = PostgresSaver(self.pool)
@@ -151,17 +173,15 @@ class Orchestrator:
     # AI CLIENT
     # ---------------------------------------------------------
     def _init_ai_client(self):
+        """Initializes the AI client, falling back to a mock if vertexai is missing."""
         try:
+            import vertexai
+            from vertexai.generative_models import GenerativeModel
             vertexai.init()
             model = GenerativeModel("gemini-pro")
         except Exception as ai_err:
-            self.logger.warning(f"Vertex AI initialization failed. Using mock AI Client: {ai_err}")
-            class MockModel:
-                def generate_content(self, text):
-                    class MockResponse:
-                        text = "Mocked AI Summary Report: System running at 100% capacity."
-                    return MockResponse()
-            model = MockModel()
+            self.logger.critical(f"Vertex AI initialization failed. Narrative generation will be unavailable: {ai_err}")
+            return None
 
         class GeminiClient:
             def __init__(self, model):
@@ -431,6 +451,11 @@ class Orchestrator:
 
     def finalize_mission(self, client_id: str, email: str, context: dict):
         pipeline_data = self.gather_pipeline_results(context)
+        
+        if not self.ai_client:
+            self.logger.error(f"Cannot finalize mission for {client_id}: AI Client (Gemini) is not initialized.")
+            return
+
         html_narrative = self.ai_client.generate(REPORT_PROMPT_TEMPLATE, pipeline_data)
 
         mailer = EmailSender()

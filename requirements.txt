@@ -29,3 +29,4 @@ python-multipart
 google-cloud-storage
 aiofiles
 google-cloud-aiplatform
+psycopg[pool]
