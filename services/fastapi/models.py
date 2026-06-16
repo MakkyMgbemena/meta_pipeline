@@ -2,18 +2,17 @@ from sqlalchemy import Column, Integer, String, Float, DateTime, JSON
 from sqlalchemy.ext.declarative import declarative_base
 from pydantic import BaseModel
 from typing import Dict, Any, Optional, List
-import datetime
+from datetime import datetime, timezone
 
 # --- PART 1: DATABASE MODELS (The Vault Drawers) ---
 Base = declarative_base()
-
 
 class FinancialLedger(Base):
     """Blueprints for the Financial Ledger table."""
     __tablename__ = "financial_ledger"
 
     id = Column(Integer, primary_key=True, index=True)
-    timestamp = Column(DateTime, default=datetime.datetime.utcnow)
+    timestamp = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     client_id = Column(String(100), index=True)
     task = Column(String(100))
     revenue = Column(Float, default=0.0)
@@ -29,7 +28,7 @@ class ClientRegistry(Base):
     id = Column(Integer, primary_key=True, index=True)
     client_id = Column(String(100), unique=True, index=True)
     status = Column(String(50), default="active")
-    last_sync = Column(DateTime, default=datetime.datetime.utcnow)
+    last_sync = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
     # ✅ REQUIRED FOR ENTERPRISE + AGENT FLOW
     profile_data = Column(JSON, default=dict)
@@ -48,7 +47,7 @@ class MissionJob(Base):
     storage_path = Column(String(512))
     payload = Column(JSON, default=dict)
     error_message = Column(String(1024))
-    updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
+    updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
 # --- PART 2: API MODELS (The Receptionists) ---
 # These are the models uvicorn is currently looking for

@@ -1,6 +1,6 @@
 import os
 import logging
-from fastapi import FastAPI, APIRouter, Depends, HTTPException, File, UploadFile, Form
+from fastapi import FastAPI, APIRouter, Depends, HTTPException, File, UploadFile, Form, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional
 from services.fastapi.dependencies import get_orchestrator
@@ -168,6 +168,7 @@ async def deliver_mission(request: dict, orchestrator = Depends(get_orchestrator
 
 @router.post("/upload-file", response_model=UploadFileResponse)
 async def upload_file(
+    background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
     client_id: Optional[str] = Form(None),
     orchestrator = Depends(get_orchestrator),
@@ -230,29 +231,52 @@ async def upload_file(
         )
 
     # ---- background processing thread ----
-    import threading
-
-    def _work():
+    def process_upload_task(job_id, safe_client, file_type, file_data):
         try:
+            from utils.upload_processing import process_by_type
+            from utils.jobs import update_job
+            import datetime
+
+                        # Helper to turn raw parsed Excel/CSV dates into strings
+            def _sanitize_for_json(data):
+                if isinstance(data, dict):
+                    return {k: _sanitize_for_json(v) for k, v in data.items()}
+                elif isinstance(data, list):
+                    return [_sanitize_for_json(item) for item in data]
+                # FIXED: Force any object with an 'isoformat' method (like pandas.Timestamp) to convert to string
+                elif hasattr(data, "isoformat"):  
+                    return data.isoformat()
+                # Fallback: converts any remaining numpy/pandas date types into safe strings
+                elif "datetime" in str(type(data)).lower() or "timestamp" in str(type(data)).lower():
+                    return str(data)
+                return data
+
+
             # 4. PARSED stage
-            result: ProcessResult = process_by_type(file_type, data)
+            result = process_by_type(file_type, file_data)
+            
+            # FIXED: Sanitize parsed Excel/CSV dates into JSON-safe strings
+            sanitized_summary = _sanitize_for_json(result.summary)
+            sanitized_preview = _sanitize_for_json(result.preview)
+
             payload = {
-                "summary": result.summary,
-                "preview": result.preview,
+                "summary": sanitized_summary,
+                "preview": sanitized_preview,
             }
             if result.status != "success":
-                update_job(job.job_id, status="FAILED", errors=result.errors)
+                update_job(job_id, status="FAILED", errors=result.errors)
                 return
 
-            update_job(job.job_id, status="PARSED", processing=payload)
+            update_job(job_id, status="PARSED", processing=payload)
+
             
             # 5. ORCHESTRATION trigger
-            orchestrator.run_for_client(safe_client, context=payload, job_id=job.job_id)
+            orchestrator.run_for_client(safe_client, context=payload, job_id=job_id)
             
         except Exception as e:
-            update_job(job.job_id, status="FAILED", errors=[{"type": "processing_exception", "message": str(e)}])
+            update_job(job_id, status="FAILED", errors=[{"type": "processing_exception", "message": str(e)}])
 
-    threading.Thread(target=_work, daemon=True).start()
+    background_tasks.add_task(process_upload_task, job.job_id, safe_client, file_type, data)
 
     return UploadFileResponse(
         success=True,
@@ -310,4 +334,4 @@ async def resume_mission(request: ResumeMissionRequest, orchestrator = Depends(g
         logger.error(f"RESUME_FAILED: client_id={request.client_id} error={e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-app.include_router(router)
+

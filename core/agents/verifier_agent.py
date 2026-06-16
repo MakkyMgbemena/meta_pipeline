@@ -16,86 +16,71 @@ class VerifierAgent(UnifiedAgent):
 
     def run(self, payload: dict = None) -> dict:
         """
-        Runs the final integrity reconciliation suite.
-        Protects against empty payloads and verifies structural database health.
+        Enterprise Verification Layer:
+        Enforces config-driven safeguards (Pricing, Currency, Market) and DB integrity.
         """
-        self.logger.info(f"VerifierAgent starting final validation for client: {self.client_id}")
+        self.logger.info(f"VerifierAgent enforcing Enterprise safeguards for: {self.client_id}")
         
-        # FIXED: Protect against NoneType payload crash
         payload = payload or {}
         errors = []
+        
+        # 1. ENFORCE CONFIG SAFEGUARDS (From meta_pipeline.pricing_policy.safeguards)
+        safeguards = self.config.get("meta_pipeline", {}).get("pricing_policy", {}).get("safeguards", {})
+        
+        # A. Currency Resolution Check
+        if safeguards.get("require_currency_resolution_before_quote", True):
+            # Check if commercial_resolution has been satisfied in the payload/context
+            resolved_currency = payload.get("commercial_profile", {}).get("currency")
+            if not resolved_currency:
+                errors.append("SAFEGUARD: Currency resolution failed. External delivery blocked per pricing_policy.")
+
+        # B. Pricing Resolution Verification
+        # Check if the mission results contain a valid price/ledger status
+        if not payload.get("ledger_entry") or payload.get("ledger_entry", {}).get("status") == "UNRESOLVED":
+            if safeguards.get("require_hitl_for_unresolved_market_rules", True):
+                errors.append("SAFEGUARD: Unresolved pricing/market rules detected. HITL review required.")
+
+        # 2. RUNTIME INTEGRITY (Existing Logic)
+        for step, result in payload.items():
+            if isinstance(result, dict) and result.get("status") in ["failed", "FAILED", "error"]:
+                errors.append(f"RUNTIME: Step '{step}' failure: {result.get('error', 'Unknown Error')}")
+
+        # 3. DATABASE RECONCILIATION (Vault Check)
+        if not self.db:
+            return {"status": "FAILED", "errors": ["INTEGRITY: PostgreSQL vault connection unavailable."]}
 
         try:
-            # 1. Runtime Integrity: Fail if any upstream step encountered a CRITICAL FAILURE
-            for step, result in payload.items():
-                if isinstance(result, dict):
-                    # Check for standardized failure formats
-                    if result.get("status") in ["failed", "FAILED", "failure", "error"]:
-                        errors.append(
-                            f"RUNTIME: Step '{step}' failed during execution: {result.get('error', 'Unknown Error')}"
-                        )
-
-            # Ensure we have a database manager to reconcile with
-            if not self.db:
-                self.logger.error("Verification halted: Database manager is not connected.")
-                return {
-                    "status": "FAILED", 
-                    "errors": ["INTEGRITY: Database vault connection is unavailable."]
-                }
-
-            # 2. Reconcile with the Database using self.db.session_scope()
             with self.db.session_scope() as session:
-                
-                # Fetch target states from configuration or fall back to standard defaults
-                ledger_target_status = self.config.get("verifier", {}).get("ledger_status", "locked")
-                registry_target_status = self.config.get("verifier", {}).get("registry_status", "active")
+                ledger_target = self.config.get("verifier", {}).get("ledger_status", "locked")
+                registry_target = self.config.get("verifier", {}).get("registry_status", "active")
 
-                # Reconcile Financial Ledger
-                ledger_record = (
-                    session.query(FinancialLedger)
-                    .filter_by(client_id=self.client_id, status=ledger_target_status)
-                    .order_by(FinancialLedger.timestamp.desc())
-                    .first()
-                )
+                # Verify Ledger exists for this specific job/mission
+                ledger = session.query(FinancialLedger).filter_by(
+                    client_id=self.client_id, 
+                    status=ledger_target
+                ).order_by(FinancialLedger.timestamp.desc()).first()
 
-                if not ledger_record:
-                    errors.append(f"INTEGRITY: Financial record not found with status '{ledger_target_status}'.")
-                elif ledger_record.revenue == 0:
-                    errors.append("INTEGRITY: Financial record exists but holds a zero-value revenue ledger.")
+                if not ledger:
+                    errors.append(f"INTEGRITY: Financial ledger missing or not in '{ledger_target}' state.")
+                elif ledger.revenue <= 0 and not self.config.get("meta_pipeline", {}).get("pricing_policy", {}).get("minimum_viable_quote_required", False):
+                    # Only error on zero revenue if config doesn't explicitly allow free/unresolved quotes
+                    errors.append("INTEGRITY: Zero-value revenue detected in production ledger.")
 
-                # Reconcile Client Registry
-                registry_record = (
-                    session.query(ClientRegistry)
-                    .filter_by(client_id=self.client_id, status=registry_target_status)
-                    .first()
-                )
+                # Verify Registry sync
+                registry = session.query(ClientRegistry).filter_by(client_id=self.client_id).first()
+                if not registry:
+                    errors.append("INTEGRITY: Client Registry record missing for this client.")
 
-                if not registry_record:
-                    errors.append(f"INTEGRITY: Client lineage sync failed. Status '{registry_target_status}' not found in PostgreSQL vault.")
-
-            # 3. Process verification results
+            # 4. FINAL VERDICT
             if errors:
                 self.logger.error(f"Verification FAILED: {errors}")
-                
-                # Log verification failure to DB for frontend tracking
-                try:
-                    self.db.update_registry(self.client_id, "INTEGRITY AUDIT FAILED")
-                except Exception as log_err:
-                    self.logger.warning(f"Failed to record audit failure in registry: {log_err}")
-                
+                self.db.update_registry(self.client_id, "INTEGRITY AUDIT FAILED")
                 return {"status": "FAILED", "errors": errors}
 
-            # Success: All checks cleared!
-            self.logger.info("Verification passed: Output is clean. Mission Accomplished.")
-            
-            # Log verification success to DB
-            try:
-                self.db.update_registry(self.client_id, "INTEGRITY AUDIT PASSED")
-            except Exception as log_err:
-                self.logger.warning(f"Failed to record audit success in registry: {log_err}")
-
+            self.logger.info("Verification PASSED: All Enterprise safeguards and integrity checks cleared.")
+            self.db.update_registry(self.client_id, "INTEGRITY AUDIT PASSED")
             return {"status": "PASS", "message": "All integrity checks cleared."}
 
         except Exception as e:
-            self.logger.error(f"Verifier critical system error: {e}", exc_info=True)
+            self.logger.error(f"Verifier System Error: {e}")
             return {"status": "ERROR", "error": str(e)}

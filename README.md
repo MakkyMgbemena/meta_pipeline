@@ -28,6 +28,7 @@ The application follows a modern decoupled architecture, moving from a user-faci
 *   **Key Components:**
     *   **Registry:** Dynamic mapping of task names to specialized Agent classes.
     *   **Mission Switcher:** Resolves the specific sequence of agents (routing chain) based on client-specific configurations in `config.yaml`.
+    *   **Pricing Resolver:** Dynamically determines service costs by climbing the priority ladder (Contract -> Registry -> Brief -> Payload).
     *   **HITL Gate:** An optional safety pause that requires human approval before mission finalization.
 
 ### 4. **Agent Layer: Specialized Labor (`core/agents/`)**

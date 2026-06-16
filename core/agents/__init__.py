@@ -19,9 +19,11 @@ AGENT_REGISTRY = {
     "ledger_entry": LedgerAgent,
     "client_registry": RegistryAgent,
     "lead_nurture": LeadNurturer,
-    "seo_optimize": SEOAgent,      # Strategic Agent 1
-    "google_manage": GoogleManager, # Strategic Agent 2
+    "seo_optimize": SEOAgent,
+    "google_manage": GoogleManager,
     "upwork_manage": UpworkManager,
     "linkedin_manage": LinkedInManager,
-    "dual_write": DualWriteGate
+    "dual_write": DualWriteGate,
+    "socialmedia_agent": LinkedInManager 
 }
+

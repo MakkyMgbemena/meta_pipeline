@@ -1,88 +1,410 @@
 # --- PHASE 7: MASTER ENTERPRISE CONFIGURATION ---
+# This replacement keeps config.yaml as the routing/policy source of truth and aligns with the documented use
+# of config.yaml for mission routing, HITL pauses, delivery, and PostgreSQL-backed client state. [1](https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/sdks/overview)[2](https://onedrive.live.com/?id=4785ac96-3af2-420c-9bb8-836b7cd69e70&cid=0c3e66407279fbe6&web=1)
+
 meta_pipeline:
   environment: DEVELOPMENT
-  base_currency: CAD
 
-  # --- AI ENGINE REDUNDANCY [Source 442, 443] ---
-  # Drives automatic failover if primary service hits limits
+  # --- COMMERCIAL / MARKET RESOLUTION ---
+  # No single hardcoded currency or price: resolve per client, mission, market, or contract.
+  commercial_resolution:
+    currency_source_priority:
+      - client_contract.currency
+      - client_registry.billing.currency
+      - mission_brief.currency
+      - payload.currency
+      - payload.market.currency
+      - market_rules.default_currency_by_country
+      - environment_defaults.currency
+    pricing_source_priority:
+      - client_contract.pricing
+      - client_registry.pricing
+      - mission_brief.pricing
+      - payload.pricing
+      - pricing_policy
+    market_source_priority:
+      - client_contract.market
+      - client_registry.market
+      - mission_brief.market
+      - payload.market
+      - geo_resolution
+    geo_resolution:
+      source_priority:
+        - client_contract.billing_country
+        - client_registry.billing_country
+        - mission_brief.country
+        - payload.country
+        - payload.location.country
+      market_map:
+        CA:
+          market: "canada"
+          default_currency: "CAD"
+        US:
+          market: "united_states"
+          default_currency: "USD"
+    environment_defaults:
+      currency: "CAD"
+      market: "canada"
+
+  # --- AI ENGINE REDUNDANCY / TRIPLE THREAT ---
   api_redundancy:
-    primary_llm: "openai"
-    fallback_llm: "gemini"
+    enabled: true
+    strategy: "ordered_failover"
     max_retries: 3
+    timeout_seconds: 60
+    provider_order:
+      - vertex_ai
+      - openai
+      - gemini_api
 
-  # --- PRICING & LOGIC ---
-  pricing:
-    smart_cleaner_rate: 65.00
-    currency: CAD
+    vertex_ai:
+      enabled: true
+      provider: "google"
+      project_env_var: "GOOGLE_CLOUD_PROJECT"
+      location_env_var: "GOOGLE_CLOUD_LOCATION"
+      credentials_env_var: "GOOGLE_APPLICATION_CREDENTIALS"
+      use_vertex_env_var: "GOOGLE_GENAI_USE_VERTEXAI"
+      default_model: "gemini-2.5-flash"
+      model_source_priority:
+        - mission_brief.ai.vertex_ai_model
+        - payload.ai.vertex_ai_model
+        - client_registry.ai.vertex_ai_model
+        - api_redundancy.vertex_ai.default_model
+
+    openai:
+      enabled: true
+      provider: "openai"
+      api_key_env_var: "OPENAI_API_KEY"
+      default_model: "gpt-4o-mini"
+      model_source_priority:
+        - mission_brief.ai.openai_model
+        - payload.ai.openai_model
+        - client_registry.ai.openai_model
+        - api_redundancy.openai.default_model
+
+    gemini_api:
+      enabled: true
+      provider: "google"
+      api_key_env_var: "GEMINI_API_KEY"
+      default_model: "gemini-2.5-flash"
+      model_source_priority:
+        - mission_brief.ai.gemini_api_model
+        - payload.ai.gemini_api_model
+        - client_registry.ai.gemini_api_model
+        - api_redundancy.gemini_api.default_model
+
+  # --- PRICING POLICY ---
+  # Use policy/rules, not fixed amounts. If a runtime resolver cannot determine price, HITL should review.
+  pricing_policy:
+    strategy: "resolve_from_contract_or_rules"
+    unresolved_pricing_action: "flag_for_hitl"
+    minimum_viable_quote_required: false
+
+    service_models:
+      smart_cleaner:
+        pricing_model: "per_project_or_volume"
+        source_priority:
+          - client_contract.services.smart_cleaner
+          - client_registry.services.smart_cleaner
+          - mission_brief.services.smart_cleaner
+          - payload.services.smart_cleaner
+          - pricing_policy.rules.smart_cleaner
+        rules:
+          volume_basis_source_priority:
+            - payload.file_metrics.row_count
+            - payload.file_metrics.record_count
+            - payload.summary.record_count
+            - mission_brief.volume.record_count
+          complexity_basis_source_priority:
+            - payload.complexity
+            - mission_brief.complexity
+            - client_registry.complexity_profile
+          urgency_basis_source_priority:
+            - mission_brief.urgency
+            - payload.urgency
+          market_adjustment_source_priority:
+            - client_contract.market_adjustment
+            - client_registry.market_adjustment
+            - market_rules.service_adjustments.smart_cleaner
+
+      seo_optimize:
+        pricing_model: "per_project_or_retainer"
+        source_priority:
+          - client_contract.services.seo_optimize
+          - client_registry.services.seo_optimize
+          - mission_brief.services.seo_optimize
+          - payload.services.seo_optimize
+          - pricing_policy.rules.seo_optimize
+
+      socialmedia_agent:
+        pricing_model: "per_platform_scope_or_retainer"
+        source_priority:
+          - client_contract.services.socialmedia_agent
+          - client_registry.services.socialmedia_agent
+          - mission_brief.services.socialmedia_agent
+          - payload.services.socialmedia_agent
+          - pricing_policy.rules.socialmedia_agent
+
+      google_manage:
+        pricing_model: "retainer_or_project"
+        source_priority:
+          - client_contract.services.google_manage
+          - client_registry.services.google_manage
+          - mission_brief.services.google_manage
+          - payload.services.google_manage
+          - pricing_policy.rules.google_manage
+
+      lead_nurture:
+        pricing_model: "retainer_or_stage_based"
+        source_priority:
+          - client_contract.services.lead_nurture
+          - client_registry.services.lead_nurture
+          - mission_brief.services.lead_nurture
+          - payload.services.lead_nurture
+          - pricing_policy.rules.lead_nurture
+
+    marketplace_rules:
+      fiverr:
+        enabled: true
+        pricing_model: "tiered_dynamic"
+        source_priority:
+          - client_contract.marketplaces.fiverr
+          - mission_brief.marketplaces.fiverr
+          - payload.marketplaces.fiverr
+          - pricing_policy.marketplace_rules.fiverr
+        tier_resolution:
+          source_priority:
+            - payload.delivery_tier
+            - mission_brief.delivery_tier
+            - payload.scope.tier
+            - payload.package_tier
+        dynamic_inputs:
+          - volume
+          - complexity
+          - urgency
+          - deliverable_count
+          - platform_count
+
+      upwork:
+        enabled: true
+        pricing_model: "hourly_or_fixed_dynamic"
+        source_priority:
+          - client_contract.marketplaces.upwork
+          - mission_brief.marketplaces.upwork
+          - payload.marketplaces.upwork
+          - pricing_policy.marketplace_rules.upwork
+        billing_type_source_priority:
+          - payload.billing_type
+          - mission_brief.billing_type
+          - client_registry.billing_type
+        dynamic_inputs:
+          - scope
+          - complexity
+          - urgency
+          - client_size
+          - market
+
+    safeguards:
+      require_currency_resolution_before_quote: true
+      require_hitl_for_unresolved_market_rules: true
+      allow_client_specific_overrides: true
+
+  # --- DATA IMPUTATION / NORMALISATION POLICY ---
   imputation:
-    fallback_vector_target: "unknown"
+    fallback_vector_target_source_priority:
+      - mission_brief.imputation.fallback_vector_target
+      - payload.imputation.fallback_vector_target
+      - client_registry.imputation.fallback_vector_target
+      - system_defaults.imputation.fallback_vector_target
+    missing_value_strategy_source_priority:
+      - mission_brief.imputation.missing_value_strategy
+      - payload.imputation.missing_value_strategy
+      - client_registry.imputation.missing_value_strategy
+      - system_defaults.imputation.missing_value_strategy
+    system_defaults:
+      imputation:
+        fallback_vector_target: "unknown"
+        missing_value_strategy: "preserve_and_flag"
 
-  # --- CLEANING ENGINE SCOPE [Source 443, 444] ---
-  # Defines which social networks the SmartCleaner processes
-  target_platforms:
-    - google
-    - x
+  # --- PLATFORM CAPABILITY / CLEANING SCOPE ---
+  # Supported platforms are allowlists only; active scope resolves per mission/client.
+  platform_capabilities:
+    supported_platforms:
+      - google
+      - x
+      - linkedin
+      - instagram
+      - tiktok
+      - facebook
+      - email
+    active_scope_resolution:
+      source_priority:
+        - mission_brief.platforms
+        - mission_brief.social_platforms
+        - payload.platforms
+        - payload.social_platforms
+        - client_registry.social_platforms
+        - meta_pipeline.seed_clients_default_scope
+      process_only_declared_platforms: true
+      unknown_platform_action: "flag_for_hitl"
+      unsupported_platform_action: "reject_with_validation_error"
+
+  seed_clients_default_scope:
     - linkedin
-    - instagram
-    - tiktok
-    - facebook
+    - email
 
-  # --- CLIENT REGISTRY & ROUTING ---
+  # --- CLIENT RESOLUTION / SEED REGISTRY ---
+  # README describes PostgreSQL ClientRegistry as the source of truth for client lifecycle and sync state. [1](https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/sdks/overview)[3](https://googleapis.github.io/python-genai/genai.html)
+  client_resolution:
+    source_priority:
+      - client_registry
+      - mission_brief
+      - payload
+      - config_seed_clients
+    require_client_id: true
+    auto_register_unknown_clients: true
+    missing_client_email_action: "block_external_delivery_and_alert_internal"
+    missing_billing_profile_action: "flag_for_hitl"
+
+  # Seed/demo clients only. Production values should be resolved from PostgreSQL / brief / payload first.
   clients:
     client_enterprise_777:
+      seed_only: true
       priority: high
       profile:
         name: "Enterprise Client 777"
-        email: "enterprise777@example.com"
+        email: null
         industry: "Enterprise SaaS"
         location: "Toronto, Canada"
-        social_platforms: ["linkedin", "email"]
-      routing_chain:
-        - smart_cleaner
-        - seo_optimize
-        - socialmedia_agent    # HYBRID BRIDGE: Uses LinkedIn Key or Headless Fallback
-        - ledger_entry     # Commits financial data to PostgreSQL
-        - client_registry  # Syncs lifecycle data to PostgreSQL
-        - verifier_agent   # Final relational integrity check
+        market: "canada"
+        social_platforms:
+          - linkedin
+          - email
+      commercial_profile:
+        billing_country: "CA"
+        currency: null
+        pricing: null
+      routing_profile:
+        mission_type_defaults:
+          data_cleanup: "standard_data_cleanup"
+          seo: "seo_mission"
+          social: "social_mission"
+          google_business: "google_business_mission"
 
     client_ecom_099:
+      seed_only: true
       priority: medium
       profile:
         name: "E-Commerce Client 099"
+        email: null
+        industry: "E-Commerce"
         location: "Vancouver, Canada"
-        social_platforms: ["instagram", "tiktok"]
-      routing_chain:
-        - smart_cleaner
-        - socialmedia_agent    # HYBRID BRIDGE: Prioritizes API for cleaning history
-        - ledger_entry
-        - verifier_agent
+        market: "canada"
+        social_platforms:
+          - instagram
+          - tiktok
+      commercial_profile:
+        billing_country: "CA"
+        currency: null
+        pricing: null
+      routing_profile:
+        mission_type_defaults:
+          social: "social_mission"
+          data_cleanup: "standard_data_cleanup"
 
     test_social:
+      seed_only: true
       priority: high
       profile:
         name: "Social Test Client"
-      routing_chain:
-        - socialmedia_agent
+        email: null
+        industry: "Testing"
+        location: "Toronto, Canada"
+        market: "canada"
+        social_platforms:
+          - linkedin
+          - x
+      commercial_profile:
+        billing_country: "CA"
+        currency: null
+        pricing: null
+      routing_profile:
+        mission_type_defaults:
+          social: "social_mission"
+
+  # --- ROUTING RESOLUTION ---
+  # Project docs describe MissionSwitcher resolving routing from config.yaml and the orchestrator pausing for HITL when enabled. [1](https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/sdks/overview)[3](https://googleapis.github.io/python-genai/genai.html)
+  routing_resolution:
+    strategy: "dynamic_by_mission_type"
+    source_priority:
+      - client_registry.routing_chain
+      - mission_brief.routing_chain
+      - payload.routing_chain
+      - client_registry.mission_type
+      - mission_brief.mission_type
+      - payload.mission_type
+      - routing_resolution.default_chains
+    unknown_mission_type_action: "flag_for_hitl"
+    default_chain: "standard_data_cleanup"
+
+    default_chains:
+      standard_data_cleanup:
+        - smart_cleaner
+        - ghost_audit
+        - ledger_entry
+        - client_registry
         - verifier_agent
 
-  # --- AGENT REGISTRY [Source 325, 613] ---
-  # Single source of truth for the MetaOrchestrator
+      seo_mission:
+        - smart_cleaner
+        - seo_optimize
+        - ghost_audit
+        - ledger_entry
+        - client_registry
+        - verifier_agent
+
+      social_mission:
+        - smart_cleaner
+        - socialmedia_agent
+        - ghost_audit
+        - ledger_entry
+        - client_registry
+        - verifier_agent
+
+      google_business_mission:
+        - smart_cleaner
+        - google_manage
+        - seo_optimize
+        - ghost_audit
+        - ledger_entry
+        - client_registry
+        - verifier_agent
+
+      lead_nurture_mission:
+        - lead_nurture
+        - client_registry
+        - verifier_agent
+
+      verification_only:
+        - verifier_agent
+
+  # --- AGENT REGISTRY ---
   agents:
     smart_cleaner:
       enabled: true
-      description: "Cleans and normalizes tabular digital data."
+      description: "Cleans and normalises tabular digital data."
     ghost_audit:
       enabled: true
       description: "Passive anomaly detection and risk flagging."
     seo_optimize:
       enabled: true
-      description: "4-pass metadata and GMB keyword audit."
+      description: "4-pass metadata and search keyword audit."
     google_manage:
       enabled: true
-      description: "GMB profile synchronization and maps management."
+      description: "Google Business, Search Console, and ads bridge agent."
     socialmedia_agent:
       enabled: true
-      description: "Hybrid bridge between Authorized APIs and Headless Stealth."
+      description: "Hybrid bridge between authorised APIs and headless browser automation."
     ledger_entry:
       enabled: true
       description: "Relational financial recording in PostgreSQL headquarters."
@@ -91,23 +413,108 @@ meta_pipeline:
       description: "Persistent client lifecycle and lineage tracking."
     lead_nurture:
       enabled: true
-      description: "CRM automated lead progression engine."
+      description: "CRM lead progression engine."
     dual_write:
       enabled: true
       description: "Transactional gatekeeper for atomic writes."
     verifier_agent:
       enabled: true
       description: "Final safety layer for output bundle reconciliation."
+    linkedin_manage:
+      enabled: true
+      description: "LinkedIn outbound engagement and market positioning agent."
+    upwork_manage:
+      enabled: true
+      description: "Upwork profile strategy and proposal positioning agent."
 
-  # --- HUMAN IN THE LOOP (HITL) [Source 1040] ---
-  hitl:
-    enabled: true
-    notify_internal: true
-    timeout_enabled: true
-    timeout_seconds: 600 # 10 minutes for testing
+# --- HUMAN IN THE LOOP (HITL) ---
+# README explicitly documents an optional HITL pause before mission finalisation. [1](https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/sdks/overview)[3](https://googleapis.github.io/python-genai/genai.html)
+hitl:
+  enabled: true
+  notify_internal: true
+  timeout_enabled: true
+  timeout_seconds: 600
+  internal_recipients:
+    - "reports@travelbunny.services"
+    - "makky@travelbunny.services"
+  approval_required_before_client_delivery: true
+  destructive_actions_require_hitl: true
+  unresolved_pricing_requires_hitl: true
+  unresolved_market_requires_hitl: true
+  unresolved_client_email_requires_hitl: true
 
-  # --- OBSERVABILITY ---
-  logging:
-    level: INFO
-    file: "pipeline.log"
-    format: "%(asctime)s | %(name)s | %(levelname)s | %(message)s"
+# --- DELIVERY CONFIGURATION ---
+delivery:
+  auto_email: true
+  from_email: "Universal Headquarters <reports@travelbunny.services>"
+  internal_recipients:
+    - "reports@travelbunny.services"
+    - "makky@travelbunny.services"
+  client_email_required: true
+  client_email_source_priority:
+    - mission_brief.email
+    - client_registry.email
+    - payload.email
+    - payload.contact.email
+    - meta_pipeline.clients.profile.email
+  internal_copy_on_client_delivery: true
+  block_delivery_if_client_email_missing: true
+  hitl_flow:
+    review_email_goes_to_internal_only: true
+    approved_report_goes_to_client: true
+    internal_team_copied_on_approved_delivery: true
+
+# --- OBSERVABILITY ---
+logging:
+  level: INFO
+  file: ""
+  format: "%(asctime)s | %(name)s | %(levelname)s | %(message)s"
+
+# --- LOCAL / DEVELOPMENT DEFAULTS ---
+development:
+  backend_url: "http://localhost:8080"
+  frontend_port: 80
+  api_port: 8080
+  max_upload_mb: 25
+
+# --- STORAGE ---
+storage:
+  mode: gcs
+  bucket_env_var: "GCS_BUCKET_NAME"
+  signed_url_expiration_days: 7
+
+# --- DATABASE ---
+database:
+  engine: postgresql
+  user_env_var: "DB_USER"
+  password_env_var: "DB_PASS"
+  name_env_var: "DB_NAME"
+  host_env_var: "DB_HOST"
+  port_env_var: "DB_PORT"
+  instance_connection_name_env_var: "INSTANCE_CONNECTION_NAME"
+  prefer_cloud_sql_unix_socket: true
+
+# --- BROWSER / AUTOMATION SERVICES ---
+browser:
+  selenium_remote_url_env_var: "SELENIUM_REMOTE_URL"
+  skip_headless_env_var: "SKIP_HEADLESS"
+  screenshot_storage: gcs
+
+# --- MARKET RULES ---
+market_rules:
+  default_currency_by_country:
+    CA: "CAD"
+    US: "USD"
+  service_adjustments:
+    smart_cleaner: {}
+    seo_optimize: {}
+    socialmedia_agent: {}
+    google_manage: {}
+    lead_nurture: {}
+
+# --- SECURITY / SAFETY ---
+security:
+  require_client_email_for_external_delivery: true
+  allow_internal_test_delivery_without_client_email: true
+  destructive_actions_require_hitl: true
+  secrets_must_use_environment_variables: true

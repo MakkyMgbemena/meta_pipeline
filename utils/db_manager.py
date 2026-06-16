@@ -1,5 +1,6 @@
 import os
 import datetime
+from typing import Optional
 from urllib.parse import quote_plus
 from contextlib import contextmanager
 
@@ -17,18 +18,20 @@ class DatabaseManager:
     def __init__(self, config: dict = None):
         self.logger = get_logger("DatabaseManager")
         self.config = config or {}
-
-        user = os.getenv("DB_USER", "postgres")
-        password = os.getenv("DB_PASS")
-        db_name = os.getenv("DB_NAME", "meta_pipeline")
-
-        # Values from environment
-        db_host = os.getenv("DB_HOST", "")
-        db_port = os.getenv("DB_PORT", "5432")
-        instance_connection_name = os.getenv("INSTANCE_CONNECTION_NAME", "")
+        
+        # --- ENTERPRISE CONFIG RESOLUTION ---
+        # We read the KEY name from config, then fetch the VALUE from os.environ
+        db_cfg = self.config.get("database", {})
+        
+        user = self._get_env_val(db_cfg, "user_env_var", "DB_USER", "postgres")
+        password = self._get_env_val(db_cfg, "password_env_var", "DB_PASS")
+        db_name = self._get_env_val(db_cfg, "name_env_var", "DB_NAME", "meta_pipeline")
+        db_host = self._get_env_val(db_cfg, "host_env_var", "DB_HOST", "")
+        db_port = self._get_env_val(db_cfg, "port_env_var", "DB_PORT", "5432")
+        instance_connection_name = self._get_env_val(db_cfg, "instance_connection_name_env_var", "INSTANCE_CONNECTION_NAME", "")
 
         if not password:
-            self.logger.error("CRITICAL: DB_PASS not found!")
+            self.logger.error("CRITICAL: Database password not found in environment!")
             raise ValueError("Database password is required.")
 
         if DatabaseManager._engine is None:
@@ -37,72 +40,28 @@ class DatabaseManager:
                 encoded_password = quote_plus(password)
                 encoded_db_name = quote_plus(db_name)
 
-                # Prefer Cloud Run / Cloud SQL Unix socket when INSTANCE_CONNECTION_NAME is present
+                # Prefer Cloud SQL Unix socket
                 if instance_connection_name:
                     socket_dir = f"/cloudsql/{instance_connection_name}"
+                    db_uri = f"postgresql+psycopg2://{encoded_user}:{encoded_password}@/{encoded_db_name}?host={socket_dir}"
+                    self.logger.info(f"Connecting via Cloud SQL Socket: {socket_dir}")
 
-                    db_uri = (
-                        f"postgresql+psycopg2://{encoded_user}:{encoded_password}"
-                        f"@/{encoded_db_name}?host={socket_dir}"
-                    )
-
-                    self.logger.info(
-                        f"Connecting to PostgreSQL via Cloud SQL Unix socket: {socket_dir}"
-                    )
-
-                # Fallback: if DB_HOST itself already contains a Cloud SQL socket path
                 elif db_host.startswith("/cloudsql/"):
-                    db_uri = (
-                        f"postgresql+psycopg2://{encoded_user}:{encoded_password}"
-                        f"@/{encoded_db_name}?host={db_host}"
-                    )
+                    db_uri = f"postgresql+psycopg2://{encoded_user}:{encoded_password}@/{encoded_db_name}?host={db_host}"
+                    self.logger.info(f"Connecting via Unix socket: {db_host}")
 
-                    self.logger.info(
-                        f"Connecting to PostgreSQL via Unix socket from DB_HOST: {db_host}"
-                    )
-
-                # Final fallback: standard TCP/IP (useful for local development / non-Cloud Run)
                 else:
-                    db_uri = (
-                        f"postgresql+psycopg2://{encoded_user}:{encoded_password}"
-                        f"@{db_host}:{db_port}/{encoded_db_name}"
-                    )
-
-                    self.logger.info(
-                        f"Connecting to PostgreSQL via TCP/IP: {db_host}:{db_port}"
-                    )
+                    db_uri = f"postgresql+psycopg2://{encoded_user}:{encoded_password}@{db_host}:{db_port}/{encoded_db_name}"
+                    self.logger.info(f"Connecting via TCP/IP: {db_host}:{db_port}")
 
                 DatabaseManager._engine = create_engine(
-                    db_uri,
-                    pool_size=10,
-                    max_overflow=20,
-                    pool_pre_ping=True,
-                    future=True,
+                    db_uri, pool_size=10, max_overflow=20, pool_pre_ping=True, future=True
                 )
+                DatabaseManager._Session = sessionmaker(bind=DatabaseManager._engine, future=True)
 
-                # Create session factory
-                DatabaseManager._Session = sessionmaker(
-                    bind=DatabaseManager._engine,
-                    autoflush=False,
-                    autocommit=False,
-                    future=True,
-                )
-
-                # Auto-create tables if missing
-                FinancialLedger.__table__.create(
-                    bind=DatabaseManager._engine,
-                    checkfirst=True
-                )
-                ClientRegistry.__table__.create(
-                    bind=DatabaseManager._engine,
-                    checkfirst=True
-                )
-                MissionJob.__table__.create(
-                    bind=DatabaseManager._engine,
-                    checkfirst=True
-                )
-
-                self._ensure_sequence_permissions(user)
+                # Initialize tables
+                for model in [FinancialLedger, ClientRegistry, MissionJob]:
+                    model.__table__.create(bind=DatabaseManager._engine, checkfirst=True)
 
             except Exception as e:
                 self.logger.error(f"Database engine initialisation failed: {e}")
@@ -110,11 +69,21 @@ class DatabaseManager:
 
         self.engine = DatabaseManager._engine
         self.Session = DatabaseManager._Session
+        
+        # Now that self.engine is set, we can safely call sequence permissions
+        if DatabaseManager._engine:
+            self._ensure_sequence_permissions(user)
 
-        # Backward compatibility
         self.session = self.Session()
+        self.logger.info("DatabaseManager successfully initialised using Enterprise Config.")
 
-        self.logger.info("DatabaseManager successfully initialised.")
+    def _get_env_val(self, config_section: dict, config_key: str, default_env_name: str, fallback_val: str = None):
+        """
+        Helper: Resolves the environment variable name from config, 
+        then returns the actual value from the system environment.
+        """
+        env_var_name = config_section.get(config_key, default_env_name)
+        return os.getenv(env_var_name, fallback_val)
 
     def _ensure_sequence_permissions(self, user: str):
         """USAGE/SELECT on sequences is required for auto-increment IDs."""
@@ -190,6 +159,18 @@ class DatabaseManager:
         except Exception as e:
             self.logger.error(f"Registry update failed: {e}")
             raise
+
+    def get_client_email(self, client_id: str) -> Optional[str]:
+        """Retrieves the email address for a registered client."""
+        try:
+            with self.session_scope() as session:
+                record = session.query(ClientRegistry).filter_by(client_id=client_id).first()
+                if record and record.profile_data:
+                    return record.profile_data.get("email")
+                return None
+        except Exception as e:
+            self.logger.error(f"Failed to fetch client email: {e}")
+            return None
 
     def get_latest_mission(self, client_id: str):
         """Retrieve the most recent mission entry for a client."""

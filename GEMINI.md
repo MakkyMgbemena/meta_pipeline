@@ -10,9 +10,10 @@ You are the **Lead AI Architect and Orchestrator** for the Meta Pipeline. Your g
 ## 🏗️ Project Architecture Context
 - **Frontend:** Streamlit (`app.py`) - The mission control dashboard.
 - **Backend:** FastAPI (`services/fastapi/api.py`) - The execution gateway.
-- **Orchestrator:** `core/orchestrator.py` - The central nervous system using LangGraph.
+- **Orchestrator:** `core/orchestrator.py` - The central nervous system using LangGraph. Now integrates `PricingResolver` for commercial validation.
 - **Agents:** Specialized units in `core/agents/` (SmartCleaner, SEOAgent, SocialMediaAgent, VerifierAgent).
-- **Database:** PostgreSQL managed via `utils/db_manager.py`.
+- **Database:** PostgreSQL managed via `utils/db_manager.py`. Recently optimized for initialization order and type safety.
+- **Pricing:** `utils/pricing_resolver.py` - Logic for climbing the priority ladder to resolve service costs.
 
 ## 🛠️ Tool & Prompt Management (Vertex AI Extension)
 You have access to Vertex AI prompt management tools. Use them to maintain the "Agent Personalities" stored in the system.
