@@ -97,8 +97,8 @@ steps:
     - '--platform=managed'
     - '--allow-unauthenticated'
     - '--port=8080'
-    - '--set-env-vars=SERVICE_TYPE=dashboard,BACKEND_URL=https://meta-pipeline-680132354800.northamerica-northeast2.run.app'
-    
+    - '--set-env-vars=SERVICE_TYPE=streamlit,BACKEND_URL=https://meta-pipeline-680132354800.northamerica-northeast2.run.app'
+
   # Step 9: Deploy Browser Service
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     id: 'Deploy Browser'
