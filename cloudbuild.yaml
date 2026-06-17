@@ -83,20 +83,21 @@ steps:
       - '--allow-unauthenticated'
       - '--memory=2Gi'
 
-  # Step 8: Deploy Dashboard (With Port 8080 Probe Fix)
+# Step 8: Deploy Dashboard (WITH backend wiring)
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     id: 'Deploy Dashboard'
     entrypoint: 'gcloud'
     args:
-      - 'run'
-      - 'deploy'
-      - 'meta-pipeline-dashboard'
-      - '--image=northamerica-northeast2-docker.pkg.dev/$PROJECT_ID/meta-pipeline/meta-pipeline-dashboard:$BUILD_ID'
-      - '--region=northamerica-northeast2'
-      - '--platform=managed'
-      - '--allow-unauthenticated'
-      - '--port=8080'  # ✅ Aligns Cloud Run to listen on Streamlit port 8080
-
+    - 'run'
+    - 'deploy'
+    - 'meta-pipeline-dashboard'
+    - '--image=northamerica-northeast2-docker.pkg.dev/$PROJECT_ID/meta-pipeline/meta-pipeline-dashboard:$BUILD_ID'
+    - '--region=northamerica-northeast2'
+    - '--platform=managed'
+    - '--allow-unauthenticated'
+    - '--port=8080'
+    - '--set-env-vars=BACKEND_URL=https://meta-pipeline-680132354800.northamerica-northeast2.run.app'
+    
   # Step 9: Deploy Browser Service
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     id: 'Deploy Browser'
