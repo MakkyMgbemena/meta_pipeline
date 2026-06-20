@@ -115,7 +115,7 @@ steps:
       - '--platform=managed'
       - '--allow-unauthenticated'
       - '--port=8080'
-      - '--startup-probe-path=/health/browser'
+      - '--startup-probe=httpGet.path=/health/browser,httpGet.port=8080'
       - '--memory=4Gi' # Matching the memory in service.yaml for heavy browser tasks
 
 images:
