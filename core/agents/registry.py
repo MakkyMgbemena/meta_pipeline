@@ -36,18 +36,18 @@ class RegistryAgent(UnifiedAgent):
                     self.logger.info(f"Existing client record found. Updating status to: {target_status}")
                     record.status = target_status
                     record.last_sync = datetime.datetime.utcnow()
-                    
+
                     # Update profile and routing if new values are provided
                     if profile_data:
                         record.profile_data = profile_data
                     if routing_chain:
                         record.routing_chain = routing_chain
-                        
+
                     action = "updated"
                 else:
                     # FIXED: Auto-create the record if this is a brand new client onboarding!
                     self.logger.info(f"Client {self.client_id} not found in database. Initializing automatic onboarding registration...")
-                    
+
                     new_client = ClientRegistry(
                         client_id=self.client_id,
                         status=target_status,

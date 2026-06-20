@@ -24,6 +24,5 @@ AGENT_REGISTRY = {
     "upwork_manage": UpworkManager,
     "linkedin_manage": LinkedInManager,
     "dual_write": DualWriteGate,
-    "socialmedia_agent": LinkedInManager 
+    "socialmedia_agent": LinkedInManager
 }
-

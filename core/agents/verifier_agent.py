@@ -20,13 +20,13 @@ class VerifierAgent(UnifiedAgent):
         Enforces config-driven safeguards (Pricing, Currency, Market) and DB integrity.
         """
         self.logger.info(f"VerifierAgent enforcing Enterprise safeguards for: {self.client_id}")
-        
+
         payload = payload or {}
         errors = []
-        
+
         # 1. ENFORCE CONFIG SAFEGUARDS (From meta_pipeline.pricing_policy.safeguards)
         safeguards = self.config.get("meta_pipeline", {}).get("pricing_policy", {}).get("safeguards", {})
-        
+
         # A. Currency Resolution Check
         if safeguards.get("require_currency_resolution_before_quote", True):
             # Check if commercial_resolution has been satisfied in the payload/context
@@ -56,7 +56,7 @@ class VerifierAgent(UnifiedAgent):
 
                 # Verify Ledger exists for this specific job/mission
                 ledger = session.query(FinancialLedger).filter_by(
-                    client_id=self.client_id, 
+                    client_id=self.client_id,
                     status=ledger_target
                 ).order_by(FinancialLedger.timestamp.desc()).first()
 

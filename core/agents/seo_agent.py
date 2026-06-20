@@ -28,11 +28,11 @@ class SEOAgent(UnifiedAgent):
             from google.cloud import storage
             client = storage.Client()
             bucket = client.bucket(bucket_name)
-            
+
             blob_name = f"screenshots/seo/{self.client_id}/{stage}_{datetime.datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.png"
             blob = bucket.blob(blob_name)
             blob.upload_from_filename(local_path)
-            
+
             # Use signed URL or public URL
             return blob.generate_signed_url(
                 version="v4",
@@ -69,11 +69,11 @@ class SEOAgent(UnifiedAgent):
             self.logger.info(f"Launching secure driver session for SEO audit on: {url}")
             driver = init_secure_driver()
             driver.get(url)
-            
+
             # FIXED: Implement a direct, safe screenshot capture instead of calling non-existent self._capture_state
             os.makedirs("reports/screenshots", exist_ok=True)
             local_filename = f"reports/screenshots/seo_{self.client_id}_before.png"
-            
+
             driver.save_screenshot(local_filename)
             before_img = self._upload_screenshot_to_gcs(local_filename, "before")
 

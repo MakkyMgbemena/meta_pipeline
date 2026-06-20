@@ -1,4 +1,3 @@
-import os
 from core.unified_agent import UnifiedAgent
 from utils.logger import get_logger
 
@@ -29,12 +28,12 @@ class UpworkManager(UnifiedAgent):
 
             # 2. Allow dynamic customization of focus and rates via the payload
             niche_focus = payload.get("focus", "Enterprise Data Auditing & Compliance")
-            
+
             # Calculate dynamic hourly targets anchored to the baseline price, or use payload overrides
             min_hourly = payload.get("min_hourly_rate", int(base_price * 1.15))
             max_hourly = payload.get("max_hourly_rate", int(base_price * 2.3))
             currency = payload.get("currency", "CAD")
-            
+
             hourly_rate_target = f"{min_hourly} - {max_hourly} {currency}"
 
             proposal_hook = payload.get(

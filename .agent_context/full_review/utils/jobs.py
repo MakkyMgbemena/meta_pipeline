@@ -18,7 +18,7 @@ class JobRecord:
 def create_job(*, file_name: str, file_type: Optional[str], storage: Dict[str, Any], client_id: str = "anonymous") -> JobRecord:
     job_id = str(uuid.uuid4())
     rec = JobRecord(job_id=job_id, file_name=file_name, file_type=file_type, storage=storage)
-    
+
     config = ConfigLoader().config
     db = DatabaseManager(config)
     db.create_mission_job(
@@ -37,7 +37,7 @@ def get_job(job_id: str) -> Optional[JobRecord]:
     job_data = db.get_mission_job(job_id)
     if not job_data:
         return None
-    
+
     return JobRecord(
         job_id=job_data["job_id"],
         status=job_data["status"],
@@ -52,10 +52,10 @@ def get_job(job_id: str) -> Optional[JobRecord]:
 def update_job(job_id: str, **kwargs) -> None:
     config = ConfigLoader().config
     db = DatabaseManager(config)
-    
+
     status = kwargs.get("status")
     payload = kwargs.get("processing")
     errors = kwargs.get("errors")
     error_msg = str(errors[0]["message"]) if errors and len(errors) > 0 else None
-    
+
     db.update_job_status(job_id, status=status, payload=payload, error=error_msg)

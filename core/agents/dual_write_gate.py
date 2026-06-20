@@ -12,7 +12,7 @@ class DualWriteGate(UnifiedAgent):
         # Pass context to parent class for standardized logging and config access
         super().__init__(config or {}, client_id, db)
         self.logger = get_logger("DualWriteGate")
-        
+
         # FIXED: Inject and bind the master orchestrator to prevent AttributeError crashes!
         self.orchestrator = orchestrator
 
@@ -59,7 +59,7 @@ class DualWriteGate(UnifiedAgent):
 
             # Check if Primary Write failed
             result_a_status = results["result_a"].get("status") if isinstance(results["result_a"], dict) else None
-            
+
             if result_a_status in ["failed", "FAILED", "error"]:
                 self.logger.error(f"Primary Write ({agent_a}) FAILED. Aborting secondary write to preserve transaction integrity.")
                 return {

@@ -33,12 +33,12 @@ class UnifiedAgent:
 
     def _capture_state(self, driver, filename: str) -> str:
         """
-        Ensures the screenshots directory exists, captures driver state, 
+        Ensures the screenshots directory exists, captures driver state,
         and automatically uploads to GCS for permanent Cloud Run persistence.
         """
         local_path = f"./reports/screenshots/{filename}"
         os.makedirs(os.path.dirname(local_path), exist_ok=True)
-        
+
         try:
             # 1. Capture local image state
             driver.save_screenshot(local_path)
@@ -54,7 +54,7 @@ class UnifiedAgent:
             from google.cloud import storage
             client = storage.Client()
             bucket = client.bucket(bucket_name)
-            
+
             blob_name = f"screenshots/{self.client_id}/{filename}"
             blob = bucket.blob(blob_name)
             blob.upload_from_filename(local_path)
@@ -65,11 +65,11 @@ class UnifiedAgent:
                 expiration=datetime.timedelta(days=7),
                 method="GET"
             )
-            
+
             # Clean up local file since it's now securely in GCS
             if os.path.exists(local_path):
                 os.remove(local_path)
-                
+
             self.logger.info(f"Screenshot successfully persisted in GCS: {signed_url}")
             return signed_url
 
@@ -83,7 +83,7 @@ class UnifiedAgent:
         Falls back to config.yaml if client is not in the registry.
         """
         client_id = client_id or self.client_id
-        
+
         # 1. DYNAMIC STEP: Try loading profile from PostgreSQL first!
         if self.db and client_id:
             try:

@@ -13,10 +13,10 @@ class PricingResolver:
         """
         policy = self.config.get("meta_pipeline", {}).get("pricing_policy", {})
         service_cfg = policy.get("service_models", {}).get(service_name, {})
-        
+
         # 1. Get the Priority Ladder from Config
         priority_ladder = service_cfg.get("source_priority", [])
-        
+
         # 2. Iterate through sources in order
         for source in priority_ladder:
             price = self._check_source(source, client_id, service_name, context)
@@ -27,10 +27,10 @@ class PricingResolver:
         # 3. Handle Unresolved Pricing (Enterprise Safeguard)
         action = policy.get("unresolved_pricing_action", "flag_for_hitl")
         self.logger.warning(f"Pricing unresolved for {service_name}. Action: {action}")
-        
+
         if action == "flag_for_hitl":
             return {"status": "UNRESOLVED", "requires_hitl": True}
-        
+
         return {"status": "ERROR", "message": "No pricing found"}
 
     def _check_source(self, source: str, client_id: str, service_name: str, context: dict):
@@ -41,7 +41,7 @@ class PricingResolver:
         # Source Mapping
         if source == "mission_brief.services." + service_name:
             return brief.get("services", {}).get(service_name)
-        
+
         if source == "payload.services." + service_name:
             return payload.get("services", {}).get(service_name)
 

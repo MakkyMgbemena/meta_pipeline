@@ -29,7 +29,7 @@ class MissionSwitcher:
                 with self.db.session_scope() as session:
                     from services.fastapi.models import ClientRegistry
                     client_record = session.query(ClientRegistry).filter_by(client_id=client_id).first()
-                    
+
                     if client_record and hasattr(client_record, 'routing_chain') and client_record.routing_chain:
                         routing_chain = client_record.routing_chain
                         self.logger.info(f"Loaded dynamic DB routing for client {client_id}: {routing_chain}")
@@ -73,7 +73,7 @@ class MissionSwitcher:
         fallback = routing_res.get("default_chain") or \
                    meta.get("default_routing_chain") or \
                    ["smart_cleaner", "ghost_audit", "verifier_agent"]
-        
+
         # If the fallback is a string (name of a chain), resolve it
         if isinstance(fallback, str):
             fallback = self._get_global_default(fallback)

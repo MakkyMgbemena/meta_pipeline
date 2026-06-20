@@ -139,7 +139,7 @@ class SocialMediaAgent(UnifiedAgent):
 
             # FIXED: Eliminated the non-existent _capture_state method call
             after_path = self._take_screenshot(driver, "after")
-            
+
             # Log the successful automation to DB
             if self.db and self.client_id:
                 try:

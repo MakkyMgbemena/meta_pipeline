@@ -1,4 +1,3 @@
-import os
 import datetime
 from core.unified_agent import UnifiedAgent
 from utils.logger import get_logger
@@ -56,7 +55,7 @@ class LeadNurturer(UnifiedAgent):
                     self.logger.info(f"Updating existing CRM client record status to: {stage}")
                     record.status = stage
                     record.last_sync = datetime.datetime.utcnow()
-                    
+
                     # Accumulate notes or profile updates safely
                     profile = record.profile_data or {}
                     history = profile.get("nurture_history", [])

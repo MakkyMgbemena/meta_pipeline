@@ -37,7 +37,7 @@ class GhostAudit(UnifiedAgent):
                 try:
                     status_text = f"Audit Completed - Status: {report['status']}"
                     self.db.update_registry(self.client_id, status_text)
-                    
+
                     # If the payload is a job, we could update the job status in DB
                     job_id = payload.get("job_id") if isinstance(payload, dict) else None
                     if job_id:
@@ -81,7 +81,7 @@ class GhostAudit(UnifiedAgent):
             self.logger.info(f"Batch payload detected. Auditing {len(payload)} items.")
             for index, item in enumerate(payload):
                 item_report = self._audit_single_dict(item, required_keys)
-                
+
                 # Append warnings with batch index references
                 for field in item_report["missing_fields"]:
                     report["missing_fields"].append(f"item[{index}].{field}")
@@ -89,7 +89,7 @@ class GhostAudit(UnifiedAgent):
                     report["empty_values"].append(f"item[{index}].{field}")
                 for mismatch in item_report["type_mismatches"]:
                     report["type_mismatches"].append(f"item[{index}].{mismatch}")
-        
+
         # Handle Single Dictionary Payload
         elif isinstance(payload, dict):
             report = self._audit_single_dict(payload, required_keys)

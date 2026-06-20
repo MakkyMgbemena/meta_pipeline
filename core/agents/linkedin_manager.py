@@ -1,4 +1,3 @@
-import os
 from core.unified_agent import UnifiedAgent
 from utils.logger import get_logger
 
@@ -10,7 +9,7 @@ class LinkedInManager(UnifiedAgent):
         super().__init__(config or {}, client_id, db)
         self.logger = get_logger("LinkedInManager")
         # Store the database manager (such as the one we just configured!)
-        self.db = db 
+        self.db = db
 
     def run(self, payload: dict = None) -> dict:
         """
@@ -25,7 +24,7 @@ class LinkedInManager(UnifiedAgent):
             market_region = payload.get("region", "Greater Toronto Area")
             target_roles = payload.get("roles", ["COO", "VP Operations"])
             target_scale = payload.get("scale", ["SMB", "Agency"])
-            
+
             # Construct boolean search query dynamically
             roles_query = " OR ".join(f'"{role}"' for role in target_roles)
             scale_query = " OR ".join(f'"{scale}"' for scale in target_scale)
@@ -33,13 +32,13 @@ class LinkedInManager(UnifiedAgent):
 
             # 2. Extract context-aware hooks
             outbound_hook = payload.get(
-                "custom_hook", 
+                "custom_hook",
                 "Building a bridge between business goals and affordable AI systems."
             )
 
             # Algorithmic hashtag clusters matching the specific target domain
             target_clusters = payload.get(
-                "hashtags", 
+                "hashtags",
                 ["#OperationsManagement", "#Scalability", "#FractionalCOO", "#BusinessOperations"]
             )
 
@@ -63,7 +62,7 @@ class LinkedInManager(UnifiedAgent):
 
             self.logger.info("LinkedIn engagement blueprint generated successfully.")
             return {
-                "status": "success", 
+                "status": "success",
                 "client_id": self.client_id,
                 "engagement_plan": engagement_plan
             }

@@ -4,10 +4,9 @@ import os
 import threading
 import time
 from typing import Annotated, Any, Dict, List, Optional, TypedDict
-
+from langgraph.checkpoint.memory import MemorySaver
 from langgraph.checkpoint.postgres import PostgresSaver
 from langgraph.graph import END, StateGraph
-from psycopg_pool import ConnectionPool
 
 from core.agents import AGENT_REGISTRY
 from core.mission_switcher import MissionSwitcher
@@ -72,6 +71,7 @@ class Orchestrator:
 
         self.mission_switcher = MissionSwitcher(self.config, db=self.db)
         from utils.pricing_resolver import PricingResolver
+
         self.pricing_resolver = PricingResolver(config, db=self.db)
         self.ai_client = self._init_ai_client()
 
@@ -80,61 +80,73 @@ class Orchestrator:
         self._start_timeout_worker()
         self.logger.info("Orchestrator instantiated and agents registered.")
 
-    def _init_langgraph(self):
-        """Initialises the PostgresSaver checkpointer for LangGraph state persistence."""
-        from urllib.parse import quote_plus
+    # ---------------------------------------------------------
+    # AGENT REGISTRY
+    # ---------------------------------------------------------
+    def _register_agents(self):
+        """Loads the standard agent registry and adds internal grader nodes."""
+        self.registry = {**AGENT_REGISTRY}
+        self.registry["validation_grader"] = ValidationGrader
+        self.registry["narrative_grader"] = NarrativeGrader
 
-        user = os.getenv("DB_USER", "postgres")
-        password = os.getenv("DB_PASS")
-        if not password:
-            self.logger.warning("LangGraph checkpointer skipped: DB_PASS not found.")
-            self.checkpointer = None
+    # ---------------------------------------------------------
+    # LANGGRAPH INITIALIZATION (now properly inside the class)
+    # ---------------------------------------------------------
+    def _init_langgraph(self):
+        from urllib.parse import quote_plus
+        from psycopg_pool import ConnectionPool
+        import os
+
+        env = os.getenv("ENVIRONMENT", "production").lower()
+        if env == "test":
+            self.logger.info("Test mode enabled: using MemorySaver checkpointer")
+            self.checkpointer = MemorySaver()
             return
 
-        db_name = os.getenv("DB_NAME", "meta_pipeline")
-        db_host = os.getenv("DB_HOST", "localhost")
+        # Read environment variables
+        db_user = os.getenv("DB_USER")
+        db_pass = os.getenv("DB_PASS")
+        db_name = os.getenv("DB_NAME", "postgres")
+        db_host = os.getenv("DB_HOST")
         db_port = os.getenv("DB_PORT", "5432")
-        instance_connection_name = os.getenv("INSTANCE_CONNECTION_NAME", "")
+        instance_conn = os.getenv("INSTANCE_CONNECTION_NAME")
+
+        # Encode credentials securely
+        encoded_user = quote_plus(db_user) if db_user else ""
+        encoded_pass = quote_plus(db_pass) if db_pass else ""
+        encoded_db = quote_plus(db_name)
+
+        if instance_conn:
+            # Cloud SQL Unix socket (recommended for GCP environments)
+            socket_dir = f"/cloudsql/{instance_conn}"
+            conn_str = f"postgresql://{encoded_user}:{encoded_pass}@/{encoded_db}?host={socket_dir}"
+            self.logger.info(f"Connecting via Cloud SQL socket: {socket_dir}")
+        elif db_host and db_host.startswith("/cloudsql/"):
+            # Manual socket path
+            conn_str = f"postgresql://{encoded_user}:{encoded_pass}@/{encoded_db}?host={db_host}"
+            self.logger.info(f"Connecting via custom socket: {db_host}")
+        else:
+            # TCP/IP (development or external testing)
+            ssl_mode = "require" if env != "development" else "disable"
+            host = db_host or "localhost"
+            conn_str = f"postgresql://{encoded_user}:{encoded_pass}@{host}:{db_port}/{encoded_db}?sslmode={ssl_mode}"
+            self.logger.info(f"Connecting via TCP/IP to {host}:{db_port}")
 
         try:
-            encoded_user = quote_plus(user)
-            encoded_password = quote_plus(password)
-            encoded_db_name = quote_plus(db_name)
-
-            if instance_connection_name:
-                socket_dir = f"/cloudsql/{instance_connection_name}"
-                conn_info = (
-                    f"postgresql://{encoded_user}:{encoded_password}"
-                    f"@/{encoded_db_name}?host={socket_dir}"
-                )
-                self.logger.info(
-                    f"LangGraph connecting via Cloud SQL Unix socket: {socket_dir}"
-                )
-            elif db_host.startswith("/cloudsql/"):
-                conn_info = (
-                    f"postgresql://{encoded_user}:{encoded_password}"
-                    f"@/{encoded_db_name}?host={db_host}"
-                )
-                self.logger.info(f"LangGraph connecting via Unix socket: {db_host}")
-            else:
-                conn_info = (
-                    f"postgresql://{encoded_user}:{encoded_password}"
-                    f"@{db_host}:{db_port}/{encoded_db_name}"
-                )
-                self.logger.info(f"LangGraph connecting via TCP/IP: {db_host}:{db_port}")
-
-            self.pool = ConnectionPool(conn_info=conn_info, max_size=20)
+            self.pool = ConnectionPool(conninfo=conn_str, max_size=20, open=True)
             self.checkpointer = PostgresSaver(self.pool)
-
-            with self.pool.connection() as conn:
-                self.checkpointer.setup(conn)
-
-            self.logger.info("LangGraph PostgresSaver initialized and setup.")
+            # Setup LangGraph database schemas
+            self.checkpointer.setup()
+            self.logger.info(
+                "PostgresSaver initialized successfully and migrations applied."
+            )
         except Exception as e:
-            self.logger.error(f"Failed to initialize LangGraph checkpointer: {e}")
-            self.pool = None
-            self.checkpointer = None
+            self.logger.critical(f"Failed to initialize PostgresSaver: {e}")
+            raise  # Do not silently fall back in production to avoid losing data
 
+    # ---------------------------------------------------------
+    # TIMEOUT WORKER (restored from your original code)
+    # ---------------------------------------------------------
     def _start_timeout_worker(self):
         """Starts a background thread to handle automatic mission resumption."""
         if not self.config.get("hitl", {}).get("timeout_enabled", True):
@@ -154,6 +166,9 @@ class Orchestrator:
 
         threading.Thread(target=_worker, daemon=True).start()
 
+    # ---------------------------------------------------------
+    # CHECK TIMED‑OUT MISSIONS (now a proper method)
+    # ---------------------------------------------------------
     def _check_and_resume_timed_out_missions(self, timeout_seconds):
         """Automatic mission resumption for timed-out PAUSED missions."""
         if not self.db:
@@ -161,7 +176,6 @@ class Orchestrator:
 
         try:
             import datetime
-
             from services.fastapi.models import MissionJob
 
             with self.db.session_scope() as session:
@@ -178,9 +192,7 @@ class Orchestrator:
                 )
 
                 for job in timed_out_jobs:
-                    self.logger.info(
-                        f"Auto-resuming timed out mission: {job.job_id}"
-                    )
+                    self.logger.info(f"Auto-resuming timed out mission: {job.job_id}")
                     threading.Thread(
                         target=self.resume_mission,
                         args=(job.client_id, None, job.job_id),
@@ -190,7 +202,7 @@ class Orchestrator:
             self.logger.error(f"Failed to check timed out missions: {e}")
 
     # ---------------------------------------------------------
-    # AI CLIENT
+    # AI CLIENT (unchanged – keep as is)
     # ---------------------------------------------------------
     def _init_ai_client(self):
         """
@@ -286,11 +298,17 @@ class Orchestrator:
 
         return None
 
+    # ---------------------------------------------------------
+    # (The rest of your methods – unchanged – are below)
+    # ---------------------------------------------------------
     def _get_failed_steps(self, routing_chain: list, context: dict):
         failed = []
         for step in routing_chain:
             result = context.get(step)
-            if isinstance(result, dict) and result.get("status", "").lower() == "failed":
+            if (
+                isinstance(result, dict)
+                and result.get("status", "").lower() == "failed"
+            ):
                 failed.append(step)
         return failed
 
@@ -309,7 +327,10 @@ class Orchestrator:
                 failed.append(step)
             elif status == "skipped":
                 skipped.append(step)
-            elif status in ["graded", "recorded", "synced", "pass", "success"] or verdict == "pass":
+            elif (
+                status in ["graded", "recorded", "synced", "pass", "success"]
+                or verdict == "pass"
+            ):
                 passed.append(step)
             else:
                 passed.append(step)
@@ -333,16 +354,7 @@ class Orchestrator:
         return "".join(html)
 
     # ---------------------------------------------------------
-    # AGENT REGISTRY
-    # ---------------------------------------------------------
-    def _register_agents(self):
-        """Loads the standard agent registry and adds internal grader nodes."""
-        self.registry = {**AGENT_REGISTRY}
-        self.registry["validation_grader"] = ValidationGrader
-        self.registry["narrative_grader"] = NarrativeGrader
-
-    # ---------------------------------------------------------
-    # MAIN EXECUTION FLOW
+    # MAIN EXECUTION FLOW (already correct)
     # ---------------------------------------------------------
     def run_for_client(self, client_id: str, context: dict = None, job_id: str = None):
         self.logger.info(f"Starting mission flow for client: {client_id}")
@@ -366,9 +378,8 @@ class Orchestrator:
             or context.get("payload", {}).get("mission_type")
         )
 
-        runtime_chain = (
-            context.get("routing_chain")
-            or context.get("payload", {}).get("routing_chain")
+        runtime_chain = context.get("routing_chain") or context.get("payload", {}).get(
+            "routing_chain"
         )
 
         routing_chain = self.mission_switcher.resolve_routing(
@@ -604,6 +615,7 @@ class Orchestrator:
             agent = agent_class(self.config, client_id, self.db)
 
         return agent.run(payload)
+
     def _resolve_client_email(self, client_id: str, state: dict) -> Optional[str]:
         """
         Resolve client email from mission brief, database, or payload/context.
@@ -621,9 +633,7 @@ class Orchestrator:
                 if db_email:
                     return db_email
             except Exception as e:
-                self.logger.warning(
-                    f"Client email lookup failed for {client_id}: {e}"
-                )
+                self.logger.warning(f"Client email lookup failed for {client_id}: {e}")
 
         if context.get("email"):
             return context["email"]
@@ -646,9 +656,7 @@ class Orchestrator:
         state["mission_status"] = "FAILED" if failed_steps else "SUCCESS"
 
         if job_id and self.db:
-            self.db.update_job_status(
-                job_id, "FAILED" if failed_steps else "COMPLETED"
-            )
+            self.db.update_job_status(job_id, "FAILED" if failed_steps else "COMPLETED")
 
         if not failed_steps and self.config.get("delivery", {}).get("auto_email", True):
             client_email = self._resolve_client_email(client_id, state)

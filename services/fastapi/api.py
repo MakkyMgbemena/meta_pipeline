@@ -7,7 +7,6 @@ from services.fastapi.dependencies import get_orchestrator
 from services.fastapi.models import (
     MissionRequest,
     MissionResponse,
-    UnifiedRequest,
     UploadFileResponse,
     ProcessingStatus,
     ValidationError,
@@ -15,7 +14,7 @@ from services.fastapi.models import (
     UploadStorageInfo,
     ResumeMissionRequest,
 )
-from utils.validators import validate_client_id, clean_client_id
+from utils.validators import clean_client_id
 from utils.data_seeder import seed_financial_ledger
 from utils.auth import ensure_client_registered
 import resend
@@ -201,7 +200,7 @@ async def upload_file(
         return UploadFileResponse(success=False, message=f"File too large. Max {max_mb} MB.", file_name=raw_filename)
 
     # ---- detect & job creation (RECEIVED) ----
-    from utils.upload_processing import detect_file_type, process_by_type, ProcessResult
+    from utils.upload_processing import detect_file_type
     from utils.storage import save_upload_bytes
     from utils.jobs import create_job, update_job
 
@@ -209,8 +208,8 @@ async def upload_file(
     safe_client = clean_client_id(client_id or "anonymous")
 
     job = create_job(
-        file_name=raw_filename, 
-        file_type=file_type, 
+        file_name=raw_filename,
+        file_type=file_type,
         storage={"mode": "temporary", "path": "pending"},
         client_id=safe_client
     )
@@ -235,7 +234,6 @@ async def upload_file(
         try:
             from utils.upload_processing import process_by_type
             from utils.jobs import update_job
-            import datetime
 
                         # Helper to turn raw parsed Excel/CSV dates into strings
             def _sanitize_for_json(data):
@@ -244,7 +242,7 @@ async def upload_file(
                 elif isinstance(data, list):
                     return [_sanitize_for_json(item) for item in data]
                 # FIXED: Force any object with an 'isoformat' method (like pandas.Timestamp) to convert to string
-                elif hasattr(data, "isoformat"):  
+                elif hasattr(data, "isoformat"):
                     return data.isoformat()
                 # Fallback: converts any remaining numpy/pandas date types into safe strings
                 elif "datetime" in str(type(data)).lower() or "timestamp" in str(type(data)).lower():
@@ -254,7 +252,7 @@ async def upload_file(
 
             # 4. PARSED stage
             result = process_by_type(file_type, file_data)
-            
+
             # FIXED: Sanitize parsed Excel/CSV dates into JSON-safe strings
             sanitized_summary = _sanitize_for_json(result.summary)
             sanitized_preview = _sanitize_for_json(result.preview)
@@ -269,10 +267,10 @@ async def upload_file(
 
             update_job(job_id, status="PARSED", processing=payload)
 
-            
+
             # 5. ORCHESTRATION trigger
             orchestrator.run_for_client(safe_client, context=payload, job_id=job_id)
-            
+
         except Exception as e:
             update_job(job_id, status="FAILED", errors=[{"type": "processing_exception", "message": str(e)}])
 
@@ -333,5 +331,3 @@ async def resume_mission(request: ResumeMissionRequest, orchestrator = Depends(g
     except Exception as e:
         logger.error(f"RESUME_FAILED: client_id={request.client_id} error={e}")
         raise HTTPException(status_code=500, detail=str(e))
-
-

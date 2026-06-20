@@ -41,7 +41,7 @@ class DeliveryBundler:
                 from google.cloud import storage
                 client = storage.Client()
                 bucket = client.bucket(bucket_name)
-                
+
                 blob_name = f"delivery_bundles/{client_id}/mission_assets_{timestamp}.zip"
                 blob = bucket.blob(blob_name)
                 blob.upload_from_filename(local_bundle_path)
@@ -78,14 +78,14 @@ class DeliveryBundler:
                 from google.cloud import storage
                 client = storage.Client()
                 bucket = client.bucket(bucket_name)
-                
+
                 delivery_links = {}
 
                 # Upload each file individually and get unique signed links
                 for file_path in file_paths:
                     if not os.path.exists(file_path):
                         continue
-                    
+
                     filename = os.path.basename(file_path)
                     blob_name = f"deliveries/{client_id}/{timestamp}_{filename}"
                     blob = bucket.blob(blob_name)
@@ -95,7 +95,7 @@ class DeliveryBundler:
                     signed_url = blob.generate_signed_url(
                         version="v4", expiration=timedelta(days=7), method="GET"
                     )
-                    
+
                     # Deduce format key (e.g. "report_json", "dataset_csv")
                     extension = filename.split(".")[-1]
                     delivery_links[f"{filename.split('.')[0]}_{extension}"] = signed_url

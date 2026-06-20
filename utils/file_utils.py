@@ -1,6 +1,6 @@
 import re
 import unicodedata
-from typing import Any, List
+from typing import Any
 
 def clean_whitespace(text: str) -> str:
     """Removes excessive whitespace, newlines, tabs, and normalizes spacing."""
@@ -33,7 +33,7 @@ def impute_value(value: Any, config: dict) -> Any:
 
     if strategy == "impute_fallback":
         return fallback
-    
+
     # Default: preserve None so VerifierAgent can flag it
     return None
 

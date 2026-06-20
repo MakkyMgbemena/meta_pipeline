@@ -18,11 +18,11 @@ class DatabaseManager:
     def __init__(self, config: dict = None):
         self.logger = get_logger("DatabaseManager")
         self.config = config or {}
-        
+
         # --- ENTERPRISE CONFIG RESOLUTION ---
         # We read the KEY name from config, then fetch the VALUE from os.environ
         db_cfg = self.config.get("database", {})
-        
+
         user = self._get_env_val(db_cfg, "user_env_var", "DB_USER", "postgres")
         password = self._get_env_val(db_cfg, "password_env_var", "DB_PASS")
         db_name = self._get_env_val(db_cfg, "name_env_var", "DB_NAME", "meta_pipeline")
@@ -69,7 +69,7 @@ class DatabaseManager:
 
         self.engine = DatabaseManager._engine
         self.Session = DatabaseManager._Session
-        
+
         # Now that self.engine is set, we can safely call sequence permissions
         if DatabaseManager._engine:
             self._ensure_sequence_permissions(user)
@@ -79,7 +79,7 @@ class DatabaseManager:
 
     def _get_env_val(self, config_section: dict, config_key: str, default_env_name: str, fallback_val: str = None):
         """
-        Helper: Resolves the environment variable name from config, 
+        Helper: Resolves the environment variable name from config,
         then returns the actual value from the system environment.
         """
         env_var_name = config_section.get(config_key, default_env_name)

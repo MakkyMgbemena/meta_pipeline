@@ -107,26 +107,26 @@ if "last_mission_results" in st.session_state:
     context = st.session_state["last_mission_results"]
     if context.get("hitl_status") == "awaiting_review":
         st.warning("⚠️ Mission is paused for human review (HITL).")
-        
+
         # Stage 2: Active Verification & Correction Window
         st.markdown("### Mission Context Review")
         st.info("You can review and modify the mission data before resuming.")
-        
+
         # Use a text area for raw JSON editing to ensure precision for nested data
         import json
         context_str = st.text_area(
-            "Mission Payload (JSON)", 
+            "Mission Payload (JSON)",
             value=json.dumps(context, indent=2),
             height=300
         )
-        
+
         if st.button("✅ Approve & Resume Mission"):
             try:
                 updated_context = json.loads(context_str)
                 resume_resp = requests.post(
                     f"{backend_url.rstrip('/')}/resume-mission",
                     json={
-                        "client_id": client_id, 
+                        "client_id": client_id,
                         "context": updated_context,
                         "thread_id": context.get("thread_id")
                     },

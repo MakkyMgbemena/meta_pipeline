@@ -12,10 +12,10 @@ class SmartCleaner(UnifiedAgent):
         super().__init__(config or {}, client_id, db)
         self.logger = get_logger("SmartCleaner")
         self.db = db
-        
+
         # FIXED: Fields that MUST NEVER be altered or normalized to prevent authorization or URL breakage
         self.protected_keys = {
-            "client_id", "job_id", "api_key", "token", "url", 
+            "client_id", "job_id", "api_key", "token", "url",
             "email", "password", "db_pass", "secret"
         }
 

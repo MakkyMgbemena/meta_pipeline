@@ -63,7 +63,7 @@ class EmailSender:
                 "subject": f"Mission Update: {client_id} - [{status.upper()}]",
                 "html": human_html_content,
             }
-            
+
             # Dynamically resolve attachments
             attachments = []
             if before_img_path:
@@ -74,7 +74,7 @@ class EmailSender:
                 att_after = self._convert_file_to_attachment(after_img_path, "after.png")
                 if att_after:
                     attachments.append(att_after)
-            
+
             if attachments:
                 params["attachments"] = attachments
 

@@ -6,7 +6,6 @@ from services.fastapi.dependencies import get_orchestrator
 from services.fastapi.models import (
     MissionRequest,
     MissionResponse,
-    UnifiedRequest,
     UploadFileResponse,
     ProcessingStatus,
     ValidationError,
@@ -187,8 +186,8 @@ async def upload_file(
     safe_client = clean_client_id(client_id or "anonymous")
 
     job = create_job(
-        file_name=raw_filename, 
-        file_type=file_type, 
+        file_name=raw_filename,
+        file_type=file_type,
         storage={"mode": "temporary", "path": "pending"},
         client_id=safe_client
     )
@@ -224,10 +223,10 @@ async def upload_file(
                 return
 
             update_job(job.job_id, status="PARSED", processing=payload)
-            
+
             # 5. ORCHESTRATION trigger
             orchestrator.run_for_client(safe_client, context=payload, job_id=job.job_id)
-            
+
         except Exception as e:
             update_job(job.job_id, status="FAILED", errors=[{"type": "processing_exception", "message": str(e)}])
 

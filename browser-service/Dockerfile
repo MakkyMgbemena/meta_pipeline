@@ -1,21 +1,42 @@
-# 1. Use the official Selenium image to fix the "no such file" binary error
-FROM selenium/standalone-chrome:latest
+# 1. Use your proven Python 3.12 base (instead of the broken Selenium base)
+FROM python:3.12-slim
 
-# 2. Switch to root to install Python and your logic
+# 2. Switch to root to install Chrome/Selenium
 USER root
-RUN apt-get update && apt-get install -y python3 python3-pip
+
+# 3. Install system dependencies (same as your Backend) + Chrome dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    python3-dev \
+    libpq-dev \
+    curl \
+    g++ \
+    make \
+    wget \
+    gnupg \
+    unzip \
+    && rm -rf /var/lib/apt/lists/*
+
+# 4. Install Google Chrome (Selenium requires this to run)
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+    && echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list \
+    && apt-get update \
+    && apt-get install -y google-chrome-stable \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# 3. Use your tweak to ensure pip installs requirements without system blocks
+# 5. Install your Python requirements (no --break-system-packages needed now)
 COPY requirements.txt .
-RUN pip3 install --no-cache-dir --break-system-packages -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-# 4. Copy the rest of your agent code
+# 6. Copy the rest of your agent code
 COPY . .
 
-# 5. Selenium standalone uses port 4444, matching your Cloud Run health check
-EXPOSE 4444
+# 7. Selenium standalone uses port 4444
+EXPOSE 8080
 
-# 6. Start the Selenium Server using the official entry point
-CMD ["/opt/bin/entry_point.sh"]
+# 8. Copy and run your updated entrypoint script
+COPY entrypoint.sh .
+RUN chmod +x entrypoint.sh
+CMD ["sh", "entrypoint.sh"]

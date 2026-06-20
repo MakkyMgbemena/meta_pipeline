@@ -33,7 +33,7 @@ class ClientRegistry(Base):
     # ✅ REQUIRED FOR ENTERPRISE + AGENT FLOW
     profile_data = Column(JSON, default=dict)
     routing_chain = Column(JSON, default=list)
-    
+
 class MissionJob(Base):
     """Blueprints for the Mission Job tracking table."""
     __tablename__ = "mission_jobs"
