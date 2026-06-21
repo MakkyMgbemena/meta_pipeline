@@ -1,7 +1,5 @@
 FROM python:3.12-slim
 
-USER root
-
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     python3-dev \
@@ -22,10 +20,9 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --d
 
 WORKDIR /app
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY browser-service/ .
 
-COPY . .
+RUN pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 8080
 
