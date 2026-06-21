@@ -331,3 +331,5 @@ async def resume_mission(request: ResumeMissionRequest, orchestrator = Depends(g
     except Exception as e:
         logger.error(f"RESUME_FAILED: client_id={request.client_id} error={e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+    app.include_router(router)
